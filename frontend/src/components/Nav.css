@@ -1,0 +1,119 @@
+/* src/components/Nav.css */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    padding: 10px 20px;
+    flex-wrap: wrap;
+    font-family: 'Poppins', sans-serif;
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+}
+
+.navbar-center {
+    display: flex;
+    align-items:center;
+    margin-right:auto;
+}
+
+.logo {
+    height: 100px;
+    margin-right: 0;
+}
+
+.header-text h1 {
+    font-size: 2.5em;
+    color: #9f100a;
+    margin: 5px;
+}
+
+
+
+.nav-menu ul {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.nav-menu ul li {
+    margin: 0 10px;
+    
+}
+
+.nav-menu ul li a {
+    color: #e88a1d;
+    text-decoration: none;
+    font-weight: 900;
+    font-size: 1.4em;
+}
+
+.nav-menu ul li a.active {
+    background-color: #e88a1d;
+    color: white;
+}
+
+.navbar-right,
+.social-login-container {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-right {
+    margin-top:auto;
+}
+
+.login-button {
+    margin: 0px 5px 10px auto;
+    padding: 5px 15px;
+    font-size: 1.2em;
+    background-color: #e88a1d;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+    border: none;
+    height: 100%;
+}
+
+.social-icons a {
+    color: #e88a1d;
+    margin-right: 10px;
+    margin-bottom: auto;
+    font-size: 2em;
+    height: 100%;
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .navbar-left,
+    .navbar-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .nav-menu ul {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    .nav-menu ul li {
+        margin: 5px 0;
+    }
+
+    .social-icons {
+        margin-top: 10px;
+    }
+}
