@@ -1,8 +1,38 @@
-// RegisterModal.js
-import React from "react";
+import React, { useState } from "react";
 import { Modal, Box, Button, TextField } from "@mui/material";
 
 const RegisterModal = ({ open, onClose }) => {
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+
+  const isValidEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  };
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    setEmailError(!isValidEmail(e.target.value));
+  };
+
+  const handleSubmit = () => {
+    if (isValidEmail(email)) {
+      console.log("Valid email:", email);
+      onClose(); // need something to check the data from eventbright api
+    } else {
+      console.log("Invalid email:", email);
+    }
+  };
+
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+  };
+
   return (
     <div>
       <Modal
@@ -25,8 +55,19 @@ const RegisterModal = ({ open, onClose }) => {
           }}
         >
           <h2 id="register-modal-title">Register</h2>
-          <TextField id="email" label="Email" variant="outlined" fullWidth />
-          <Button variant="contained" onClick={onClose} sx={{ mt: 2 }}>
+          <TextField
+            id="email"
+            label="Email"
+            variant="outlined"
+            fullWidth
+            value={email}
+            onChange={handleEmailChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            error={emailError && !isFocused}
+            helperText={emailError && !isFocused ? "Please enter the valid email address." : ""}
+          />
+          <Button variant="contained" onClick={handleSubmit} sx={{ mt: 2 }}>
             Continue
           </Button>
         </Box>
