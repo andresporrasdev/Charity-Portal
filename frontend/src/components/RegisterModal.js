@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Modal, Box, Button, TextField } from "@mui/material";
+import axios from "axios";
 
 const RegisterModal = ({ open, onClose }) => {
   const [email, setEmail] = useState("");
@@ -16,12 +17,17 @@ const RegisterModal = ({ open, onClose }) => {
     setEmailError(!isValidEmail(e.target.value));
   };
 
-  const handleSubmit = () => {
-    if (isValidEmail(email)) {
-      console.log("Valid email:", email);
-      onClose(); // need something to check the data from eventbright api
-    } else {
-      console.log("Invalid email:", email);
+  const handleSubmit = async () => {
+    try {
+      if (!isValidEmail(email)) {
+        console.log("Invalid email:", email);
+        return;
+      }
+      console.log("email:", email);
+      const response = await axios.post("/api/user/check", { email });
+      console.log("user data saved!", response.data);
+    } catch (error) {
+      console.error("An error occurred:", error);
     }
   };
 
