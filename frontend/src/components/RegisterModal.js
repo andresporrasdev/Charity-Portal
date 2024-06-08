@@ -18,16 +18,17 @@ const RegisterModal = ({ open, onClose }) => {
   };
 
   const handleSubmit = async () => {
+    if (!isValidEmail(email)) {
+      console.log("Invalid email:", email);
+      return;
+    }
+    console.log("email:", email);
     try {
-      if (!isValidEmail(email)) {
-        console.log("Invalid email:", email);
-        return;
-      }
-      console.log("email:", email);
-      const response = await axios.post("/api/user/check", { email });
-      console.log("user data saved!", response.data);
+      const response = await axios.post("http://localhost:3000/api/user/check", { email });
+      console.log(response);
+      console.log("user data saved!");
     } catch (error) {
-      console.error("An error occurred:", error);
+      console.error(error);
     }
   };
 

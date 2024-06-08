@@ -24,7 +24,7 @@ const getUserDataFromMockFile = async (email) => {
   try {
     //const tempUserData = fs.readFileSync('tempUserData.json', 'utf8');
     // const orders = JSON.parse(tempUserData).orders;
-    const tempUserData = require("./tempUserData");
+    const tempUserData = require("../data/tempUserData.json");
     const foundUser = tempUserData.orders.find((order) => order.email === email);
 
     if (foundUser) {
@@ -39,17 +39,21 @@ const getUserDataFromMockFile = async (email) => {
   }
 };
 
-const saveUserToDB = async ({ email, first_name, last_name, created }) => {
+const saveUserToDB = async ({ id, email, first_name, last_name, created, event_id }) => {
   try {
     // const user = new User(userData);
     const user = new User({
+      id,
       email,
       first_name,
       last_name,
       created,
       isVerified: false,
+      event_id,
     });
     await user.save();
+    console.log("user data saved in saveUserToDB method");
+    console.log(user);
   } catch (error) {
     console.error("Error saving user to DB:", error);
     throw error;
@@ -58,7 +62,7 @@ const saveUserToDB = async ({ email, first_name, last_name, created }) => {
 
 exports.checkUser = async (req, res) => {
   const { email } = req.body;
-
+  console.log({ email });
   try {
     const existingUser = await User.findOne({ email });
     console.log(existingUser);
