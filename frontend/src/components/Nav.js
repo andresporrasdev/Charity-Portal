@@ -1,11 +1,13 @@
 // src/components/Nav.js
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import './Nav.css';
 import logo from '../image/logo.jpg'; 
 import { FaFacebook, FaInstagram } from 'react-icons/fa'; 
 
 function Nav() {
+    const navigate = useNavigate();
+
     return (
         <div className='navbar'>
             <div className='navbar-left'>
@@ -32,7 +34,7 @@ function Nav() {
                         <a href="https://www.facebook.com/TamilSangamofOttawa" target="_blank" rel="noopener noreferrer"><FaFacebook /></a>
                         <a href="https://www.instagram.com/ottawatamilsangam/" target="_blank" rel="noopener noreferrer"><FaInstagram /></a>              
                     </div>
-                    <button className="login-button">Log In</button>
+                    <button className="login-button" onClick={() => navigate('/login')}>Log In</button>
                 </div>
             </div>
         </div>

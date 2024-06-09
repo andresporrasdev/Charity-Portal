@@ -9,6 +9,7 @@ import Membership from './components/Membership';
 import Volunteer from './components/Volunteer';
 import News from './components/News';
 import ContactUs from './components/ContactUs';
+import LoginForm from './components/LoginForm';
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                     <Route path="/volunteer" element={<Volunteer />} />
                     <Route path="/news" element={<News />} />
                     <Route path="/contact-us" element={<ContactUs />} />
+                    <Route path="/login" element={<LoginForm />} />
                 </Routes>
             </div>
         </Router>
