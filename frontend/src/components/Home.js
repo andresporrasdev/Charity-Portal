@@ -100,7 +100,7 @@ function Home() {
             </div>
             
             <footer>
-                <p>&copy; 2024 Ottawa Tamil Society. All rights reserved.</p>
+                <p>&copy; 2024 Ottawa Tamil Sangam Community. All rights reserved.</p>
             </footer>
 
         </div>
