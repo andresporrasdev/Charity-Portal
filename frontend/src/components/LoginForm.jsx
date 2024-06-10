@@ -24,10 +24,10 @@ const LoginForm = () => {
                     <a href="#">Forgot password?</a>
                 </div>
 
-                <button type="submit">Login</button>
+                <button type="submit">LOGIN</button>
 
                 <div className="register-link">
-                    <p>Don't have an account? <a href="#">Register</a></p>
+                    <p>Don't have an account? <a href="/Register">Sign up</a></p>
                 </div>
             </form>
         </div>

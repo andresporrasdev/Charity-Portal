@@ -10,6 +10,7 @@ import Volunteer from './components/Volunteer';
 import News from './components/News';
 import ContactUs from './components/ContactUs';
 import LoginForm from './components/LoginForm';
+import Register from './components/Register';
 
 function App() {
     return (
@@ -24,6 +25,7 @@ function App() {
                     <Route path="/news" element={<News />} />
                     <Route path="/contact-us" element={<ContactUs />} />
                     <Route path="/login" element={<LoginForm />} />
+                    <Route path="/register" element={<Register />} />
                 </Routes>
             </div>
         </Router>

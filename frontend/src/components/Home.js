@@ -25,9 +25,8 @@ function Home() {
             
             <div className="home-picture">
                 <img src={currentHome === 1 ? home1 : home2} className="homepic" alt="Home" />
-                {/* Left arrow */}
+
                 {currentHome === 2 && <div className="arrow arrow-left" onClick={prevHome}>&#9664;</div>}
-                {/* Right arrow */}
                 {currentHome === 1 && <div className="arrow arrow-right" onClick={nextHome}>&#9654;</div>}
             </div>
 
@@ -40,7 +39,7 @@ function Home() {
                     community of people who share their love of Tamil language and culture. The Ottawa Tamil Society conducts
                     various events and fun activities throughout the year to nurture the Tamil language and community.
                 </p>
-                <a href="/Membership">Join Us</a>
+                <a href="/Register">Join Us</a>
             </div>
             
             <div className="events">

@@ -5,11 +5,9 @@ import './Nav.css';
 import logo from '../image/logo.jpg'; 
 import { FaFacebook, FaInstagram } from 'react-icons/fa'; 
 
-function Nav() {
-    const [modalOpen, setModalOpen] = React.useState(false);
 
-    const showRegisterModal = () => setModalOpen(true);
-    const closeRegisterModal = () => setModalOpen(false);
+function Nav() {
+
     const navigate = useNavigate();
     return (
         <div className='navbar'>
@@ -38,7 +36,7 @@ function Nav() {
                         <a href="https://www.instagram.com/ottawatamilsangam/" target="_blank" rel="noopener noreferrer"><FaInstagram /></a>              
                     </div>
             <button className="login-button" onClick={() => navigate('/login')}>Log In</button>
-            <button className="login-button" onClick={showRegisterModal}>Sign up</button>
+            <button className="login-button" onClick={() => navigate('/register')}>Sign up</button>
 
                 </div>
             </div>
