@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import './Register.css';
+import React, { useState, useEffect } from "react";
+import "./Register.css";
 import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
-// import axios from "axios"; // Commented out for testing
+import axios from "axios";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -12,8 +12,9 @@ const Register = () => {
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [showOtpModal, setShowOtpModal] = useState(false);
-  const [otp, setOtp] = useState('');
+  const [otp, setOtp] = useState("");
   const [additionalFieldsVisible, setAdditionalFieldsVisible] = useState(false);
+  const [redirectUrl, setRedirectUrl] = useState("");
 
   const isValidEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -51,15 +52,16 @@ const Register = () => {
     }
     console.log("email:", email);
     // Mocking the API response
-    // try {
-    //   const response = await axios.post("http://localhost:3000/api/user/check", { email });
-    //   console.log(response);
-    //   console.log("user data saved!");
-    //   // If registration is successful, show OTP modal
-    //   setShowOtpModal(true);
-    // } catch (error) {
-    //   console.error(error);
-    // }
+
+    try {
+      const response = await axios.post("http://localhost:3000/api/user/check", { email });
+      console.log("response from frontend:", response);
+      console.log("user data saved!");
+      //setRedirectUrl(response.data.redirectUrl);
+      //console.log("redirect url:", response.data.redirectUrl);
+    } catch (error) {
+      console.error(error);
+    }
     console.log("Mock API call: User data saved!");
     setShowOtpModal(true);
   };
@@ -74,7 +76,7 @@ const Register = () => {
 
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
-    console.log('OTP submitted:', otp);
+    console.log("OTP submitted:", otp);
     // Mocking the API response
     // try {
     //   const response = await axios.post("http://localhost:3000/api/user/verify-otp", { email, otp });
@@ -98,7 +100,7 @@ const Register = () => {
       setShowOtpModal(false);
     }
   };
-  
+
   const handleCompleteRegistration = async () => {
     console.log("Complete Registration");
     // Handle the completion of registration here
@@ -113,12 +115,18 @@ const Register = () => {
     }
   };
 
+  useEffect(() => {
+    if (redirectUrl) {
+      window.location.href = redirectUrl;
+    }
+  }, [redirectUrl]);
+
   return (
     <div className="register-wrapper">
       <div className="register-box">
         <h2 id="register-modal-title">Register</h2>
         <div className="input-box">
-          <FaEnvelope className='icon' />
+          <FaEnvelope className="icon" />
           <input
             id="email"
             type="text"
@@ -132,31 +140,51 @@ const Register = () => {
         </div>
         {emailError && !isFocused && <p className="error-text">Please enter a valid email address.</p>}
         {!additionalFieldsVisible && (
-          <button className="register-button" onClick={handleSubmit}>Continue</button>
+          <button className="register-button" onClick={handleSubmit}>
+            Continue
+          </button>
         )}
         {additionalFieldsVisible && (
           <>
             <div className="input-box">
-              <FaUser className='icon' />
+              <FaUser className="icon" />
               <input type="text" placeholder="Firstname" required />
             </div>
             <div className="input-box">
-              <FaUser className='icon' />
+              <FaUser className="icon" />
               <input type="text" placeholder="Lastname" required />
             </div>
             <div className="input-box">
-              <FaLock className='icon' />
-              <input type="password" placeholder="Password" value={password} onChange={handlePasswordChange} required
-                className={passwordError ? "error-input" : ""} />
+              <FaLock className="icon" />
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={handlePasswordChange}
+                required
+                className={passwordError ? "error-input" : ""}
+              />
             </div>
-            {passwordError && <p className="error-text">Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.</p>}
+            {passwordError && (
+              <p className="error-text">
+                Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase
+                letter, one number, and one special character.
+              </p>
+            )}
             <div className="input-box">
-              <FaLock className='icon' />
-              <input type="password" placeholder="Confirm Password" onChange={handleConfirmPasswordChange} required
-                className={confirmPasswordError ? "error-input" : ""} />
+              <FaLock className="icon" />
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                onChange={handleConfirmPasswordChange}
+                required
+                className={confirmPasswordError ? "error-input" : ""}
+              />
             </div>
             {confirmPasswordError && <p className="error-text">Passwords do not match.</p>}
-            <button className="register-button" onClick={handleCompleteRegistration}>Complete Registration</button>
+            <button className="register-button" onClick={handleCompleteRegistration}>
+              Complete Registration
+            </button>
           </>
         )}
       </div>
@@ -165,14 +193,18 @@ const Register = () => {
       {showOtpModal && (
         <div className="otp-modal">
           <div className="otp-modal-content">
-            <span className="close" onClick={() => setShowOtpModal(false)}>&times;</span>
+            <span className="close" onClick={() => setShowOtpModal(false)}>
+              &times;
+            </span>
             <h2>Enter OTP</h2>
             <form onSubmit={handleOtpSubmit}>
               <div className="input-box">
-                <FaLock className='icon' />
+                <FaLock className="icon" />
                 <input type="text" value={otp} onChange={(e) => setOtp(e.target.value)} required />
               </div>
-              <button className="register-button" type="submit">Verify</button>
+              <button className="register-button" type="submit">
+                Verify
+              </button>
             </form>
           </div>
         </div>

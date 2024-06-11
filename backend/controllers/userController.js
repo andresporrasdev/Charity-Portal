@@ -1,4 +1,7 @@
+const nodemailer = require("nodemailer");
+
 const User = require("../models/user");
+const Role = require("../models/role");
 
 // const getUserDataFromEventBrite = async (eventId, email) => {
 //   try {
@@ -7,7 +10,6 @@ const User = require("../models/user");
 //         Authorization: `Bearer ${process.env.EVENTBRITE_API_KEY}`,
 //       },
 //     });
-
 //     const users = response.data.users;
 //     if (users && users.length > 0) {
 //       return users[0];
@@ -30,7 +32,7 @@ const getUserDataFromMockFile = async (email) => {
     if (foundUser) {
       return foundUser;
     } else {
-      console.log("cannot found.");
+      console.log("This email is not exist in mock file.");
       return null;
     }
   } catch (error) {
@@ -39,57 +41,132 @@ const getUserDataFromMockFile = async (email) => {
   }
 };
 
-const saveUserToDB = async ({ id, email, first_name, last_name, created, event_id }) => {
+const saveExistingMemberToDB = async ({ email, first_name, last_name, created, event_id }) => {
   try {
-    // const user = new User(userData);
+    const role = await Role.findOne({ name: "Member" });
+
+    if (!role) {
+      throw new Error("Role not found");
+    }
+
     const user = new User({
-      id,
       email,
       first_name,
       last_name,
       created,
-      isVerified: false,
+      isEmailVerified: false,
+      isPaid: true,
       event_id,
+      roles: [role._id], // _id is Pk
     });
     await user.save();
     console.log("user data saved in saveUserToDB method");
-    console.log(user);
+    //console.log(user);
   } catch (error) {
     console.error("Error saving user to DB:", error);
     throw error;
   }
 };
 
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.MAIL_USER, //this gmail is created for testing purpose
+    pass: process.env.MAIL_PASS,
+  },
+});
+
+const generateNumericOTP = (length) => {
+  let otp = "";
+  for (let i = 0; i < length; i++) {
+    otp += Math.floor(Math.random() * 10);
+  }
+  return otp;
+};
+
+const sendOTPByEmail = async (email) => {
+  const otp = generateNumericOTP(6);
+
+  const mailOptions = {
+    from: "ottawa Sangam Tamil ",
+    to: email,
+    subject: "Verify your email address to register OTS",
+    //text: `Your OTP for registration is: ${otp}`,
+    html: `
+      <div>
+        <img src="cid:logo" style="display:block; margin:auto; width:100px; height:auto;" />
+        <p>To verify your email address, please use the following One Time Password:</p>
+        <h1 style="text-align:center;">${otp}</h1>
+        <p>Do not share this OTP with anyone.</p>
+        <p>Thank you!</p>
+      </div>
+    `,
+    attachments: [
+      {
+        filename: "logo.jpg",
+        path: "../frontend/src/image/logo.jpg",
+        cid: "logo",
+      },
+    ],
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log("OTP sent successfully to", email);
+    return otp;
+  } catch (error) {
+    console.error("Error sending OTP:", error);
+    throw error;
+  }
+};
+
 exports.checkUser = async (req, res) => {
   const { email } = req.body;
-  console.log({ email });
   try {
     const existingUser = await User.findOne({ email });
-    console.log(existingUser);
+    //console.log(existingUser);
+
+    // if the user already signed up
     if (existingUser) {
-      return res.status(200).json({
-        status: "success",
-        message: "User already exists in the database",
-        data: existingUser,
-      });
+      if (!existingUser.isVerified) {
+        const otp = await sendOTPByEmail(email);
+        return res.status(200).json({
+          status: "success",
+          message: "User already exists in the database but email is not verified yet",
+          data: existingUser,
+          otp: otp,
+          redirectUrl: "/otp",
+        });
+      } else {
+        return res.status(200).json({
+          status: "success",
+          message: "User already exists and is verified",
+          data: existingUser,
+          redirectUrl: "/login",
+        });
+      }
     }
 
     const userData = await getUserDataFromMockFile(email);
+    const otp = await sendOTPByEmail(email);
 
+    //if user has a membership, but didn't sign up yet
     if (userData) {
-      console.log(userData);
-      await saveUserToDB(userData);
+      await saveExistingMemberToDB(userData);
       return res.status(200).json({
         status: "success",
-        message: "User data fetched from EventBrite and saved to the database",
+        message: "User data fetched from mock data/EventBrite and saved to the database",
         data: userData,
-        redirectUrl: "/event", // URL for redirection
+        otp: otp,
+        redirectUrl: "/", // URL for redirection
         //openModal: true,
       });
     } else {
-      return res.status(404).json({
-        status: "fail",
-        message: "User not found in mock data",
+      return res.status(200).json({
+        status: "success",
+        message: "User not found in mock data/EventBrite, please sign up as new user",
+        otp: otp,
+        redirectUrl: "/otp",
       });
     }
   } catch (error) {
