@@ -37,7 +37,7 @@ const Register = () => {
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
-    setEmailError(!isValidEmail(e.target.value));
+    setEmailError(!isValidEmail(e.target.value) || e.target.value === "");
   };
 
   const handlePasswordChange = (e) => {
@@ -52,8 +52,11 @@ const Register = () => {
 
   const handleSubmit = async () => {
     if (!isValidEmail(email)) {
+      setEmailError("Please enter a valid email address.");
       console.log("Invalid email:", email);
       return;
+    } else if (email === "") {
+      setEmailError("Please enter your email address.");
     }
     console.log("email:", email);
 
@@ -64,7 +67,7 @@ const Register = () => {
       if (response.data.status === "success") {
         setShowOtpModal(true);
       } else if (response.data.status === "fail") {
-        setRedirectUrl(response.data.redirectUrl); // redirect to login page
+        setEmailError(response.data.message);
       }
     } catch (error) {
       console.error(error);
@@ -185,11 +188,18 @@ const Register = () => {
             className={emailError && !isFocused ? "error-input" : ""}
           />
         </div>
-        {emailError && !isFocused && <p className="error-text">Please enter a valid email address.</p>}
+        {emailError && !isFocused && <p className="error-text">{emailError}</p>}
         {!additionalFieldsVisible && (
-          <button className="register-button" onClick={handleSubmit}>
-            Continue
-          </button>
+          <>
+            <button className="register-button" onClick={handleSubmit}>
+              Continue
+            </button>
+            <div className="register-link">
+              <p>
+                Do you have an account? <a href="/Login">Login</a>
+              </p>
+            </div>
+          </>
         )}
 
         {additionalFieldsVisible && (

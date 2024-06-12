@@ -61,9 +61,9 @@ exports.sendOtp = async (req, res) => {
     if (existingUser) {
       return res.status(200).json({
         status: "fail",
-        message: "User already exists and is verified",
+        message: "User already exists. Please login with your credential.",
         data: existingUser,
-        redirectUrl: "/login",
+        //redirectUrl: "/login",
       });
     } else {
       const otp = generateNumericOTP(6);
