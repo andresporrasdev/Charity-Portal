@@ -1,4 +1,6 @@
 const nodemailer = require("nodemailer");
+const bcrypt = require('bcrypt'); // for hashing password
+const saltRounds = 10; // number of salt rounds
 
 const User = require("../models/user");
 const Role = require("../models/role");
@@ -22,6 +24,18 @@ const Role = require("../models/role");
 //   }
 // };
 
+// this method is used to encrypt the password
+const encryptPassword = async (password) => {
+  try {
+    const salt = await bcrypt.genSalt(saltRounds);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    return hashedPassword;
+  } catch (error) {
+    console.error("Error encrypting password:", error);
+    return null;
+  }
+};
+
 const getUserDataFromMockFile = async (email) => {
   try {
     //const tempUserData = fs.readFileSync('tempUserData.json', 'utf8');
@@ -41,7 +55,7 @@ const getUserDataFromMockFile = async (email) => {
   }
 };
 
-const saveExistingMemberToDB = async ({ email, first_name, last_name, created, event_id }) => {
+const saveExistingMemberToDB = async ({ email, password, first_name, last_name, created, event_id }) => {
   try {
     const role = await Role.findOne({ name: "Member" });
 
@@ -49,8 +63,12 @@ const saveExistingMemberToDB = async ({ email, first_name, last_name, created, e
       throw new Error("Role not found");
     }
 
+    const encryptedPassword = await encryptPassword(password);
+
+
     const user = new User({
       email,
+      password: encryptedPassword, //encrypted password is added to the user object
       first_name,
       last_name,
       created,
