@@ -62,8 +62,6 @@ const Register = () => {
 
     try {
       const response = await axios.post("http://localhost:3000/api/otp/send-otp", { email });
-      console.log("response from frontend:", response);
-      console.log("user data saved!");
       if (response.data.status === "success") {
         setShowOtpModal(true);
       } else if (response.data.status === "fail") {
@@ -101,7 +99,7 @@ const Register = () => {
         setShowNameField(false);
         setShowOtpModal(false);
       } else if (otpResponse.data.status === "success" && userResponse.data.status === "fail") {
-        console.log("OTP verified! and your a new user");
+        console.log("OTP verified!");
         setAdditionalFieldsVisible(true);
         setShowNameField(true);
         setShowOtpModal(false);
@@ -155,10 +153,10 @@ const Register = () => {
     try {
       const response = await axios.post("http://localhost:3000/api/user/save", dataToSend);
       if (response.data.status === "success") {
-        console.log("I am saved!!!!!!!");
+        console.log("Success to save user data");
         setRedirectUrl(response.data.redirectUrl);
       } else if (response.data.status === "fail") {
-        console.log("failed to save data");
+        console.log("Failed to save user data");
       }
     } catch (error) {
       console.error(error);
@@ -257,6 +255,7 @@ const Register = () => {
                 &times;
               </span>
               <h2>Enter OTP</h2>
+              <p>We've sent a verifiaction code to your email</p>
               <form onSubmit={handleOtpSubmit}>
                 <div className="input-box">
                   <FaLock className="icon" />
