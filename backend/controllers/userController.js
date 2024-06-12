@@ -1,5 +1,7 @@
 const User = require("../models/user");
 const Role = require("../models/role");
+const bcrypt = require('bcrypt'); // for hashing password
+const saltRounds = 10; // number of salt rounds
 
 // const getUserDataFromEventBrite = async (eventId, email) => {
 //   try {
@@ -20,6 +22,18 @@ const Role = require("../models/role");
 //   }
 // };
 
+// this method is used to encrypt the password
+const encryptPassword = async (password) => {
+  try {
+    const salt = await bcrypt.genSalt(saltRounds);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    return hashedPassword;
+  } catch (error) {
+    console.error("Error encrypting password:", error);
+    return null;
+  }
+};
+
 const getUserDataFromMockFile = async (email) => {
   try {
     //const tempUserData = fs.readFileSync('tempUserData.json', 'utf8');
@@ -39,6 +53,9 @@ const getUserDataFromMockFile = async (email) => {
   }
 };
 
+//Previous code of saveExistingMemberToDB method
+//const saveExistingMemberToDB = async ({ email, password, first_name, last_name, created, event_id }) => {
+
 const saveExistingMemberToDB = async ({ email, first_name, last_name, created, event_id, isPaid, password }) => {
   try {
     const role = await Role.findOne({ name: "Member" });
@@ -46,6 +63,9 @@ const saveExistingMemberToDB = async ({ email, first_name, last_name, created, e
     if (!role) {
       throw new Error("Role not found");
     }
+
+    const encryptedPassword = await encryptPassword(password);
+
 
     const user = new User({
       email,
@@ -55,6 +75,7 @@ const saveExistingMemberToDB = async ({ email, first_name, last_name, created, e
       password,
       isEmailVerified: true,
       isPaid,
+      password: encryptedPassword, //encrypted password is added to the user object
       event_id,
       roles: [role._id], // _id is Pk
     });
