@@ -32,8 +32,6 @@ const LoginForm = () => {
     e.preventDefault();
     if (validate()) {
       console.log("Email:", email);
-      console.log("Password:", password);
-      // Here you can handle the form submission, e.g., send a request to your server
 
       try {
         const response = await axios.post("http://localhost:3000/api/user/login", { email, password });
@@ -75,13 +73,13 @@ const LoginForm = () => {
             required
           />
         </div>
-        {setLoginError && <p className="error">{setLoginError}</p>}
+        {loginError && <p className="error">{loginError}</p>}
         <div className="remember-forgot">
           <label>
             <input type="checkbox" />
             Remember me
           </label>
-          <a href="#">Forgot password?</a>
+          <a href="/reset-password">Forgot password?</a>
         </div>
 
         <button type="submit">Login</button>

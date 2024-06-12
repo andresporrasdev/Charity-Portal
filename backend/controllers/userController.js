@@ -154,7 +154,7 @@ exports.login = async (req, res) => {
     if (!passwordMatch) {
       return res.status(200).json({
         status: "fail",
-        message: "Password doesn't match. Please try again",
+        message: "Password doesn't match. Please try again.",
         redirectUrl: "/",
       });
     }
