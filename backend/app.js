@@ -1,6 +1,7 @@
 //IMPORT PACKAGE
 const express = require("express");
 const userRouter = require("./routes/user");
+const otpRouter = require("./routes/otp");
 const cors = require("cors");
 
 let app = express();
@@ -14,5 +15,6 @@ app.use(cors());
 
 //USING ROUTES
 app.use("/api/user", userRouter);
+app.use("/api/otp", otpRouter);
 
 module.exports = app;
