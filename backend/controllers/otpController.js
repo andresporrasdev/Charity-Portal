@@ -5,7 +5,7 @@ const User = require("../models/user");
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.MAIL_USER, //this gmail is created for testing purpose
+    user: process.env.MAIL_USER,
     pass: process.env.MAIL_PASS,
   },
 });
@@ -63,7 +63,6 @@ exports.sendOtp = async (req, res) => {
         status: "fail",
         message: "User already exists. Please login with your credential.",
         data: existingUser,
-        //redirectUrl: "/login",
       });
     } else {
       const otp = generateNumericOTP(6);
@@ -72,10 +71,9 @@ exports.sendOtp = async (req, res) => {
 
       return res.status(200).json({
         status: "success",
-        message: "User already exists in the database but email is not verified yet",
+        message: "Sent a verifiaction code successfully",
         data: existingUser,
         otp: otp,
-        //redirectUrl: "/otp",
       });
     }
   } catch (error) {
@@ -98,9 +96,6 @@ exports.verifyOtp = async (req, res) => {
         message: "Invalid OTP",
       });
     }
-    // If OTP is valid, delete after using it
-    //await Otp.deleteOne({ email, otp });
-
     return res.status(200).json({
       status: "success",
       message: "OTP verified successfully",

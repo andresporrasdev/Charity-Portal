@@ -20,6 +20,7 @@ const Register = () => {
   const [showNameField, setShowNameField] = useState(false);
   const [redirectUrl, setRedirectUrl] = useState("");
   const [userData, setUserData] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const isValidEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -58,17 +59,23 @@ const Register = () => {
     } else if (email === "") {
       setEmailError("Please enter your email address.");
     }
-    console.log("email:", email);
+
+    setLoading(true);
 
     try {
+      console.log("Sending OTP request to server...");
       const response = await axios.post("http://localhost:3000/api/otp/send-otp", { email });
+      console.log("OTP response received:", response.data);
+
       if (response.data.status === "success") {
         setShowOtpModal(true);
       } else if (response.data.status === "fail") {
         setEmailError(response.data.message);
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error sending OTP:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -187,6 +194,7 @@ const Register = () => {
           />
         </div>
         {emailError && !isFocused && <p className="error-text">{emailError}</p>}
+        {loading && <p className="loading-spinner">Loading...</p>}
         {!additionalFieldsVisible && (
           <>
             <button className="register-button" onClick={handleSubmit}>
