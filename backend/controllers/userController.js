@@ -1,6 +1,6 @@
 const User = require("../models/user");
 const Role = require("../models/role");
-const bcrypt = require('bcrypt'); // for hashing password
+const bcrypt = require("bcrypt"); // for hashing password
 const saltRounds = 10; // number of salt rounds
 
 // const getUserDataFromEventBrite = async (eventId, email) => {
@@ -66,7 +66,6 @@ const saveExistingMemberToDB = async ({ email, first_name, last_name, created, e
 
     const encryptedPassword = await encryptPassword(password);
 
-
     const user = new User({
       email,
       first_name,
@@ -129,5 +128,44 @@ exports.checkMembershipUser = async (req, res) => {
       status: "error",
       message: "An error occurred while processing the request",
     });
+  }
+};
+
+exports.login = async (req, res) => {
+  const { email, password } = req.body;
+  // If email or password is missing
+  if (!email || !password) {
+    return res.status(400).json({ message: "Please provide both email and password." });
+  }
+
+  try {
+    const existingUser = await User.findOne({ email });
+    console.log("User found:", existingUser);
+
+    if (!existingUser) {
+      return res.status(200).json({
+        status: "fail",
+        message: "user doesn't exist. Please sign up.",
+        redirectUrl: "/",
+      });
+    }
+
+    const passwordMatch = await existingUser.comparePassword(password);
+    if (!passwordMatch) {
+      return res.status(200).json({
+        status: "fail",
+        message: "Password doesn't match. Please try again",
+        redirectUrl: "/",
+      });
+    }
+
+    return res.status(200).json({
+      status: "success",
+      message: "Login successful",
+      redirectUrl: "/",
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Internal server error.", error: error.message });
   }
 };
