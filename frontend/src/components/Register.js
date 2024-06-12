@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Register.css";
-import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
+import { FaEnvelope, FaLock, FaUser, FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 
 const Register = () => {
@@ -21,6 +21,19 @@ const Register = () => {
   const [redirectUrl, setRedirectUrl] = useState("");
   const [userData, setUserData] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const EyeIcon = showPassword ? FaEye : FaEyeSlash;
+  const ConfirmEyeIcon = showConfirmPassword ? FaEye : FaEyeSlash;
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
 
   const isValidEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -225,13 +238,14 @@ const Register = () => {
             <div className="input-box">
               <FaLock className="icon" />
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 value={password}
                 onChange={handlePasswordChange}
                 required
                 className={passwordError ? "error-input" : ""}
               />
+              <EyeIcon onClick={togglePasswordVisibility} className="eye-icon" />
             </div>
             {passwordError && (
               <p className="error-text">
@@ -242,12 +256,13 @@ const Register = () => {
             <div className="input-box">
               <FaLock className="icon" />
               <input
-                type="password"
+                type={showConfirmPassword ? "text" : "password"}
                 placeholder="Confirm Password"
                 onChange={handleConfirmPasswordChange}
                 required
                 className={confirmPasswordError ? "error-input" : ""}
               />
+              <ConfirmEyeIcon onClick={toggleConfirmPasswordVisibility} className="eye-icon" />
             </div>
             {confirmPasswordError && <p className="error-text">Passwords do not match.</p>}
             <button className="register-button" onClick={handleCompleteRegistration}>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import "./LoginForm.css";
-import { FaUser, FaLock } from "react-icons/fa";
+import { FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 
 const LoginForm = () => {
@@ -10,6 +10,12 @@ const LoginForm = () => {
   const [emailError, setEmailError] = useState("");
   const [redirectUrl, setRedirectUrl] = useState("");
   const [loginError, setLoginError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const EyeIcon = showPassword ? FaEye : FaEyeSlash;
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const isValidEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -66,12 +72,14 @@ const LoginForm = () => {
         <div className="input-box">
           <FaLock className="icon" />
           <input
-            type="password"
+            //type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          <EyeIcon onClick={togglePasswordVisibility} className="eye-icon" />
         </div>
         {loginError && <p className="error">{loginError}</p>}
         <div className="remember-forgot">
