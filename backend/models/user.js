@@ -5,17 +5,17 @@ const userSchema = new mongoose.Schema({
   first_name: { type: String },
   last_name: { type: String },
   created: { type: Date, default: Date.now },
-  password: { type: String },
-  confirmPassword: {
-    type: String,
-    required: true,
-    // This validator will only work for save and create
-    validate: function (val) {
-      return val == this.password;
-    },
-    message: "Password & Confirm Password does not match",
-  },
-  isEmailVerified: { type: Boolean, default: false },
+  password: { type: String, required: true },
+  // confirmPassword: {
+  //   type: String,
+  //   required: true,
+  //   //This validator will only work for save and create
+  //   validate: function (val) {
+  //     return val == this.password;
+  //   },
+  //   message: "Password & Confirm Password does not match",
+  // },
+  isEmailVerified: { type: Boolean, default: true },
   isPaid: { type: Boolean, default: false },
   event_id: { type: String },
   roles: [{ type: mongoose.Schema.Types.ObjectId, ref: "Role" }],
