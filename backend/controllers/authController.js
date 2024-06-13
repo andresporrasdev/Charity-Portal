@@ -2,7 +2,14 @@ const User = require("../models/user");
 const Role = require("../models/role");
 const bcrypt = require("bcrypt"); // for hashing password
 const saltRounds = 10; // number of salt rounds
+const jwt = require("jsonwebtoken");
 
+const signToken = (email) => {
+  return jwt.sign({ email }, process.env.SECRET_STR, {
+    // payload, screte string
+    expiresIn: process.env.LOGIN_EXPIRE,
+  });
+};
 const saveExistingMemberToDB = async ({ email, first_name, last_name, created, event_id, isPaid, password }) => {
   try {
     const role = await Role.findOne({ name: "Member" });
@@ -51,9 +58,14 @@ exports.signup = async (req, res) => {
     await saveExistingMemberToDB({ email, first_name, last_name, created, event_id, password });
 
     const userData = { email, first_name, last_name, created, event_id };
+
+    const token = signToken(email);
+
+    console.log("token from signup: ", token);
     return res.status(200).json({
       status: "success",
       message: "Member saved successfully.",
+      token,
       data: userData,
       redirectUrl: "/login",
     });
@@ -91,9 +103,13 @@ exports.login = async (req, res) => {
       });
     }
 
+    const token = signToken(email);
+
+    console.log("token from login: ", token);
     return res.status(200).json({
       status: "success",
       message: "Login successful",
+      token,
       redirectUrl: "/",
     });
   } catch (error) {
