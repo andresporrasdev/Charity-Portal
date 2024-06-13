@@ -42,7 +42,7 @@ const LoginForm = () => {
       console.log("Email:", email);
 
       try {
-        const response = await axios.post("http://localhost:3000/api/user/login", { email, password });
+        const response = await axios.post("http://localhost:3000/api/auth/login", { email, password });
         if (response.data.status === "success") {
           setLoginMessage("You have successfully logged in!");
           setRedirectUrl(response.data.redirectUrl);
