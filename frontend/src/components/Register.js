@@ -23,6 +23,8 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [firstNameError, setFirstNameError] = useState(false);
+  const [lastNameError, setLastNameError] = useState(false);
 
   const EyeIcon = showPassword ? FaEye : FaEyeSlash;
   const ConfirmEyeIcon = showConfirmPassword ? FaEye : FaEyeSlash;
@@ -136,6 +138,35 @@ const Register = () => {
   const handleCompleteRegistration = async (e) => {
     e.preventDefault();
     // Handle the completion of registration here
+    if (!firstName.trim()) {
+      setFirstNameError(true);
+    } else {
+      setFirstNameError(false);
+    }
+
+    if (!lastName.trim()) {
+      setLastNameError(true);
+    } else {
+      setLastNameError(false);
+    }
+
+    if (!password.trim()) {
+      setPasswordError(true);
+    } else {
+      setPasswordError(false);
+    }
+
+    if (!confirmPassword.trim()) {
+      setConfirmPasswordError(true);
+    } else {
+      setConfirmPasswordError(false);
+    }
+
+    if (!firstName.trim() || !lastName.trim() || !password.trim() || !confirmPassword.trim()) {
+      return;
+    }
+
+    
     if (!isValidPassword(password)) {
       console.log("Password does not meet complexity requirements");
       return;
@@ -204,6 +235,7 @@ const Register = () => {
             onFocus={handleFocus}
             onBlur={handleBlur}
             className={emailError && !isFocused ? "error-input" : ""}
+            disabled={additionalFieldsVisible}
           />
         </div>
         {emailError && !isFocused && <p className="error-text">{emailError}</p>}
@@ -227,12 +259,30 @@ const Register = () => {
               <>
                 <div className="input-box">
                   <FaUser className="icon" />
-                  <input type="text" placeholder="First Name" onChange={(e) => setFirstName(e.target.value)} required />
+                  <input
+                    type="text"
+                    placeholder="First Name"
+                    onChange={(e) => {setFirstName(e.target.value);
+                      setFirstNameError(false);
+                    }}
+                    required
+                    className={firstNameError ? "error-input" : ""}
+                  />
                 </div>
+                {firstNameError && <p className="error-text">First Name is required.</p>}
                 <div className="input-box">
                   <FaUser className="icon" />
-                  <input type="text" placeholder="Last Name" onChange={(e) => setLastName(e.target.value)} required />
+                  <input
+                    type="text"
+                    placeholder="Last Name"
+                    onChange={(e) => {setLastName(e.target.value);
+                      setLastNameError(false);
+                    }}
+                    required
+                    className={lastNameError ? "error-input" : ""}
+                  />
                 </div>
+                {lastNameError && <p className="error-text">Last Name is required.</p>}
               </>
             )}
             <div className="input-box">
