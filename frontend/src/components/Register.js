@@ -25,6 +25,7 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [firstNameError, setFirstNameError] = useState(false);
   const [lastNameError, setLastNameError] = useState(false);
+  const [signupMessage, setSignupMessage] = useState(false);
 
   const EyeIcon = showPassword ? FaEye : FaEyeSlash;
   const ConfirmEyeIcon = showConfirmPassword ? FaEye : FaEyeSlash;
@@ -166,7 +167,6 @@ const Register = () => {
       return;
     }
 
-    
     if (!isValidPassword(password)) {
       console.log("Password does not meet complexity requirements");
       return;
@@ -205,6 +205,7 @@ const Register = () => {
       const response = await axios.post("http://localhost:3000/api/user/signup", dataToSend);
       if (response.data.status === "success") {
         console.log("Success to save user data");
+        setSignupMessage("Successfully signed up! Redirecting to login page...");
         setRedirectUrl(response.data.redirectUrl);
       } else if (response.data.status === "fail") {
         console.log("Failed to save user data");
@@ -216,7 +217,9 @@ const Register = () => {
 
   useEffect(() => {
     if (redirectUrl) {
-      window.location.href = redirectUrl;
+      setTimeout(() => {
+        window.location.href = redirectUrl;
+      }, 3000); // redirect after 3 seconds
     }
   }, [redirectUrl]);
 
@@ -262,7 +265,8 @@ const Register = () => {
                   <input
                     type="text"
                     placeholder="First Name"
-                    onChange={(e) => {setFirstName(e.target.value);
+                    onChange={(e) => {
+                      setFirstName(e.target.value);
                       setFirstNameError(false);
                     }}
                     required
@@ -275,7 +279,8 @@ const Register = () => {
                   <input
                     type="text"
                     placeholder="Last Name"
-                    onChange={(e) => {setLastName(e.target.value);
+                    onChange={(e) => {
+                      setLastName(e.target.value);
                       setLastNameError(false);
                     }}
                     required
@@ -315,6 +320,7 @@ const Register = () => {
               <ConfirmEyeIcon onClick={toggleConfirmPasswordVisibility} className="eye-icon" />
             </div>
             {confirmPasswordError && <p className="error-text">Passwords do not match.</p>}
+            {signupMessage && <p className="success-text">{signupMessage}</p>}
             <button className="register-button" onClick={handleCompleteRegistration}>
               Complete Registration
             </button>
