@@ -339,7 +339,9 @@ const Register = () => {
                 &times;
               </span>
               <h2>Enter OTP</h2>
-              <p>We've sent a verifiaction code to your email</p>
+              <Alert severity="success" sx={{ mb: 2 }}>
+                We've sent a verifiaction code to your email
+              </Alert>
               <form onSubmit={handleOtpSubmit}>
                 <div className="input-box">
                   <FaLock className="icon" />
