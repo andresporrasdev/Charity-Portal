@@ -3,12 +3,14 @@ import { NavLink } from "react-router-dom";
 import "./LoginForm.css";
 import { FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
+import Alert from "@mui/material/Alert";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [redirectUrl, setRedirectUrl] = useState("");
+  const [loginMessage, setLoginMessage] = useState("");
   const [loginError, setLoginError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const EyeIcon = showPassword ? FaEye : FaEyeSlash;
@@ -42,6 +44,7 @@ const LoginForm = () => {
       try {
         const response = await axios.post("http://localhost:3000/api/user/login", { email, password });
         if (response.data.status === "success") {
+          setLoginMessage("You have successfully logged in!");
           setRedirectUrl(response.data.redirectUrl);
         } else if (response.data.status === "fail") {
           setLoginError(response.data.message);
@@ -55,7 +58,9 @@ const LoginForm = () => {
 
   useEffect(() => {
     if (redirectUrl) {
-      window.location.href = redirectUrl;
+      setTimeout(() => {
+        window.location.href = redirectUrl;
+      }, 3000); // redirect after 3 seconds
     }
   }, [redirectUrl]);
 
@@ -63,6 +68,11 @@ const LoginForm = () => {
     <div className="wrapper">
       <form onSubmit={handleSubmit}>
         <h1>Login</h1>
+        {loginMessage && (
+          <Alert severity="success" sx={{ mb: 2 }}>
+            {loginMessage}
+          </Alert>
+        )}
         <div className="input-box">
           <FaUser className="icon" />
           <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />

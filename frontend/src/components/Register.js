@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Register.css";
 import { FaEnvelope, FaLock, FaUser, FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
+import Alert from "@mui/material/Alert";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -139,31 +140,31 @@ const Register = () => {
   const handleCompleteRegistration = async (e) => {
     e.preventDefault();
     // Handle the completion of registration here
-    if (!firstName.trim()) {
-      setFirstNameError(true);
-    } else {
-      setFirstNameError(false);
-    }
+    // Validate input fields
+    let errors = {};
 
-    if (!lastName.trim()) {
-      setLastNameError(true);
-    } else {
-      setLastNameError(false);
+    if (!userData || !userData.data) {
+      if (!firstName.trim()) {
+        setFirstNameError(true);
+        errors.firstName = true;
+      }
+
+      if (!lastName.trim()) {
+        setLastNameError(true);
+        errors.lastName = true;
+      }
     }
 
     if (!password.trim()) {
-      setPasswordError(true);
-    } else {
-      setPasswordError(false);
+      errors.password = true;
     }
 
     if (!confirmPassword.trim()) {
-      setConfirmPasswordError(true);
-    } else {
-      setConfirmPasswordError(false);
+      errors.confirmPassword = true;
     }
 
-    if (!firstName.trim() || !lastName.trim() || !password.trim() || !confirmPassword.trim()) {
+    if (Object.keys(errors).length > 0) {
+      // Display error messages or handle validation errors
       return;
     }
 
@@ -192,8 +193,8 @@ const Register = () => {
       // if userData exists, use the user data from mockfile/api call
       dataToSend = {
         email: userData.data.email,
-        first_name: userData.data.first_name,
-        last_name: userData.data.last_name,
+        first_name: userData.data.first_name || "",
+        last_name: userData.data.last_name || "",
         created: userData.data.created,
         event_id: userData.data.event_id,
         isPaid: true,
@@ -227,6 +228,11 @@ const Register = () => {
     <div className="register-wrapper">
       <div className="register-box">
         <h2 id="register-modal-title">Register</h2>
+        {signupMessage && (
+          <Alert severity="success" sx={{ mb: 2 }}>
+            {signupMessage}
+          </Alert>
+        )}
         <div className="input-box">
           <FaEnvelope className="icon" />
           <input
@@ -320,7 +326,6 @@ const Register = () => {
               <ConfirmEyeIcon onClick={toggleConfirmPasswordVisibility} className="eye-icon" />
             </div>
             {confirmPasswordError && <p className="error-text">Passwords do not match.</p>}
-            {signupMessage && <p className="success-text">{signupMessage}</p>}
             <button className="register-button" onClick={handleCompleteRegistration}>
               Complete Registration
             </button>
