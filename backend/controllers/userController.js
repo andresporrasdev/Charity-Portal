@@ -86,7 +86,7 @@ const saveExistingMemberToDB = async ({ email, first_name, last_name, created, e
   }
 };
 
-exports.saveUser = async (req, res) => {
+exports.signup = async (req, res) => {
   const { email, first_name, last_name, created, event_id, password } = req.body;
   try {
     await saveExistingMemberToDB({ email, first_name, last_name, created, event_id, password });

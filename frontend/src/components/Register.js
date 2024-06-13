@@ -171,7 +171,7 @@ const Register = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:3000/api/user/save", dataToSend);
+      const response = await axios.post("http://localhost:3000/api/user/signup", dataToSend);
       if (response.data.status === "success") {
         console.log("Success to save user data");
         setRedirectUrl(response.data.redirectUrl);
