@@ -44,6 +44,10 @@ const LoginForm = () => {
       try {
         const response = await axios.post("http://localhost:3000/api/auth/login", { email, password });
         if (response.data.status === "success") {
+          // Get JWT from backend and save it in the localStorage
+          const token = response.data.token;
+          localStorage.setItem("token", token);
+
           setLoginMessage("You have successfully logged in!");
           setRedirectUrl(response.data.redirectUrl);
         } else if (response.data.status === "fail") {
