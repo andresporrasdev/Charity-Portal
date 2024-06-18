@@ -65,3 +65,20 @@ exports.checkMembershipUser = async (req, res) => {
     });
   }
 };
+
+exports.getUserInfo = async (req, res) => {
+  try {
+    res.status(200).json({
+      status: "success",
+      data: {
+        user: req.user,
+      },
+    });
+    console.log("user:", req.user);
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Failed to fetch user info.",
+    });
+  }
+};
