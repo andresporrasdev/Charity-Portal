@@ -56,7 +56,7 @@ function Nav({ isLoggedIn, userName, handleLogout }) {
         {isLoggedIn ? (
           // when loggined
           <div className="user-info">
-            <p>Welcome, {userName}</p>
+            <h3>Welcome, {userName}</h3>
             <button className="logout-button" onClick={handleLogout}>
               Logout
             </button>
