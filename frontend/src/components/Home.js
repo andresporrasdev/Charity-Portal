@@ -2,9 +2,9 @@
 import React, { useState } from 'react';
 import home1 from '../image/home1.jpg';
 import home2 from '../image/home2.jpg';
-import eventImage1 from '../image/event1.png';
-import eventImage2 from '../image/event2.png';
-import eventImage3 from '../image/event3.png';
+import eventImage1 from '../image/EventImage/event1.png';
+import eventImage2 from '../image/EventImage/event2.png';
+import eventImage3 from '../image/EventImage/event3.png';
 import adImage1 from '../image/sponsor.jpeg';
 import newsImage1 from '../image/news.png';
 import './Home.css';

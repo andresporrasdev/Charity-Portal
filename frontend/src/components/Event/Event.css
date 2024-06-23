@@ -1,0 +1,55 @@
+.event-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    padding: 20px;
+    position: relative;
+}
+
+.event-image {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.event-details {
+    color: #333;
+}
+
+.event-details h3{
+    color: #e88a1d;
+}
+
+.member-only-icon {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: red;
+    border-radius: 50%;
+    font-size: 24px;
+    transform: rotate(45deg);
+}
+
+.event-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.event-page {
+    position: relative;
+    padding-top: 100px;
+}
+
+.action-button {
+    margin: 0px 5px 10px auto;
+    padding: 5px 15px;
+    background-color: #e88a1d;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 20px;
+    cursor: pointer;
+    border: none;
+    height: 100%;
+}
