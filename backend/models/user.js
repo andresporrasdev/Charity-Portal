@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
@@ -22,6 +23,8 @@ const userSchema = new mongoose.Schema({
   roles: [{ type: mongoose.Schema.Types.ObjectId, ref: "Role" }],
   //verificationToken: String,
   passwordChangedAt: Date,
+  passwordResetToken: String,
+  passwordResetTokenExpire: Date,
 });
 
 userSchema.methods.comparePassword = async function (candidatePassword) {
@@ -36,6 +39,18 @@ userSchema.methods.isPasswordChanged = async function (JWTTimestamp) {
     return JWTTimestamp < pwdChangedTimestamp;
   }
   return false; //password not changed
+};
+
+userSchema.methods.createResetPasswordToken = function () {
+  //only user can access to this reset token
+  const resetToken = crypto.randomBytes(32).toString("hex");
+
+  // to encrypt this token
+  this.passwordResetToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+  this.passwordResetTokenExpire = Date.now() + 10 * 60 * 1000; // expires in 10mins
+
+  console.log("resetToken:", resetToken, this.passwordResetTokenExpire);
+  return resetToken; // user get reset token but it will be savea as encrypted in db
 };
 
 const User = mongoose.model("User", userSchema);

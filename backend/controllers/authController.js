@@ -4,6 +4,8 @@ const bcrypt = require("bcrypt"); // for hashing password
 const saltRounds = 10; // number of salt rounds
 const jwt = require("jsonwebtoken");
 const util = require("util");
+const sendEmail = require("./../utils/email");
+const crypto = require("crypto");
 
 const signToken = (email) => {
   return jwt.sign({ email }, process.env.SECRET_STR, {
@@ -204,4 +206,74 @@ exports.restrict = (...allowedRoles) => {
     }
     next();
   };
+};
+
+exports.forgetPassword = async (req, res, next) => {
+  //1. get user based on posted email
+  const user = await User.findOne({ email: req.body.email });
+
+  if (!user) {
+    return res.status(401).json({
+      status: "fail",
+      message: "The user with the given email doesn't exist.",
+    });
+  }
+  //2. create a random reset token
+  const resetToken = user.createResetPasswordToken();
+
+  await user.save({ validateBeforeSave: false });
+
+  //3. send the token back to the user email
+  const resetUrl = `${req.protocol}://${req.get("host")}/api/users/resetPassword/${resetToken}`;
+  const message = `We have received a password reset request. Please use the below link to reset password\n\n${resetUrl}\n\nThis reset password link will be valid only for 10mins.`;
+
+  try {
+    await sendEmail({
+      to: user.email,
+      subject: "Password change request recieved",
+      text: message,
+    });
+
+    return res.status(200).json({
+      status: "success",
+      message: "Password reset link send to the user email",
+    });
+  } catch (error) {
+    user.passwordResetToken = undefined;
+    user.passwordResetTokenExpire = undefined;
+    user.save({ validateFromSave: false });
+
+    return res.status(500).json({
+      status: "fail",
+      message: "There was an error sending password reset email. Please try again later.",
+    });
+  }
+};
+
+exports.resetPassword = async (req, res, next) => {
+  //1. If the user exixsts with the given token and token is not expired
+  const token = crypto.createHash("sha256").update(req.param.token).digest("hex");
+  const user = await User.findOne({ passwordResetToken: token, passwordResetTokenExpire: { $gt: Date.now() } });
+
+  if (!user) {
+    return res.status(400).json({
+      status: "fail",
+      message: "Token is invalid of has expired",
+    });
+  }
+
+  user.password = req.body.password;
+  user.confirmPassword = req.body.confirmPassword;
+  user.passwordResetToken = undefined;
+  user.passwordResetTokenExpire = undefined;
+  user.passwordChangeAt = Date.now();
+  user.save();
+
+  const loginToken = signToken(email);
+
+  return res.status(200).json({
+    status: "success",
+    token: loginToken,
+    redirectUrl: "/",
+  });
 };
