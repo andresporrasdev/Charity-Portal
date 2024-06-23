@@ -8,6 +8,10 @@
     padding: 10px 20px;
     flex-wrap: wrap;
     font-family: 'Poppins', sans-serif;
+    position: fixed;
+    top:0;
+    z-index: 1000;
+    width:98%;
 }
 
 .navbar-left {
@@ -24,13 +28,14 @@
 
 .logo {
     height: 100px;
-    margin-right: 0;
+    margin-right: 3px;
 }
 
 .header-text h1 {
-    font-size: 2.5em;
+    font-size: 2.3em;
     color: #9f100a;
     margin: 5px;
+    text-align: left;
 }
 
 

@@ -2,7 +2,7 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import './Nav.css';
-import logo from '../image/logo.jpg'; 
+import logo from '../image/logo.png'; 
 import { FaFacebook, FaInstagram } from 'react-icons/fa'; 
 
 
