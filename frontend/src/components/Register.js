@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Register.css";
 import { FaEnvelope, FaLock, FaUser, FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
+import Alert from "@mui/material/Alert";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -25,6 +26,7 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [firstNameError, setFirstNameError] = useState(false);
   const [lastNameError, setLastNameError] = useState(false);
+  const [signupMessage, setSignupMessage] = useState(false);
 
   const EyeIcon = showPassword ? FaEye : FaEyeSlash;
   const ConfirmEyeIcon = showConfirmPassword ? FaEye : FaEyeSlash;
@@ -138,35 +140,34 @@ const Register = () => {
   const handleCompleteRegistration = async (e) => {
     e.preventDefault();
     // Handle the completion of registration here
-    if (!firstName.trim()) {
-      setFirstNameError(true);
-    } else {
-      setFirstNameError(false);
-    }
+    // Validate input fields
+    let errors = {};
 
-    if (!lastName.trim()) {
-      setLastNameError(true);
-    } else {
-      setLastNameError(false);
+    if (!userData || !userData.data) {
+      if (!firstName.trim()) {
+        setFirstNameError(true);
+        errors.firstName = true;
+      }
+
+      if (!lastName.trim()) {
+        setLastNameError(true);
+        errors.lastName = true;
+      }
     }
 
     if (!password.trim()) {
-      setPasswordError(true);
-    } else {
-      setPasswordError(false);
+      errors.password = true;
     }
 
     if (!confirmPassword.trim()) {
-      setConfirmPasswordError(true);
-    } else {
-      setConfirmPasswordError(false);
+      errors.confirmPassword = true;
     }
 
-    if (!firstName.trim() || !lastName.trim() || !password.trim() || !confirmPassword.trim()) {
+    if (Object.keys(errors).length > 0) {
+      // Display error messages or handle validation errors
       return;
     }
 
-    
     if (!isValidPassword(password)) {
       console.log("Password does not meet complexity requirements");
       return;
@@ -192,8 +193,8 @@ const Register = () => {
       // if userData exists, use the user data from mockfile/api call
       dataToSend = {
         email: userData.data.email,
-        first_name: userData.data.first_name,
-        last_name: userData.data.last_name,
+        first_name: userData.data.first_name || "",
+        last_name: userData.data.last_name || "",
         created: userData.data.created,
         event_id: userData.data.event_id,
         isPaid: true,
@@ -202,9 +203,10 @@ const Register = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:3000/api/user/signup", dataToSend);
+      const response = await axios.post("http://localhost:3000/api/auth/signup", dataToSend);
       if (response.data.status === "success") {
         console.log("Success to save user data");
+        setSignupMessage("Successfully signed up! Redirecting to login page...");
         setRedirectUrl(response.data.redirectUrl);
       } else if (response.data.status === "fail") {
         console.log("Failed to save user data");
@@ -216,7 +218,9 @@ const Register = () => {
 
   useEffect(() => {
     if (redirectUrl) {
-      window.location.href = redirectUrl;
+      setTimeout(() => {
+        window.location.href = redirectUrl;
+      }, 3000); // redirect after 3 seconds
     }
   }, [redirectUrl]);
 
@@ -224,6 +228,11 @@ const Register = () => {
     <div className="register-wrapper">
       <div className="register-box">
         <h2 id="register-modal-title">Register</h2>
+        {signupMessage && (
+          <Alert severity="success" sx={{ mb: 2 }}>
+            {signupMessage}
+          </Alert>
+        )}
         <div className="input-box">
           <FaEnvelope className="icon" />
           <input
@@ -262,7 +271,8 @@ const Register = () => {
                   <input
                     type="text"
                     placeholder="First Name"
-                    onChange={(e) => {setFirstName(e.target.value);
+                    onChange={(e) => {
+                      setFirstName(e.target.value);
                       setFirstNameError(false);
                     }}
                     required
@@ -275,7 +285,8 @@ const Register = () => {
                   <input
                     type="text"
                     placeholder="Last Name"
-                    onChange={(e) => {setLastName(e.target.value);
+                    onChange={(e) => {
+                      setLastName(e.target.value);
                       setLastNameError(false);
                     }}
                     required
@@ -328,7 +339,9 @@ const Register = () => {
                 &times;
               </span>
               <h2>Enter OTP</h2>
-              <p>We've sent a verifiaction code to your email</p>
+              <Alert severity="success" sx={{ mb: 2 }}>
+                We've sent a verifiaction code to your email
+              </Alert>
               <form onSubmit={handleOtpSubmit}>
                 <div className="input-box">
                   <FaLock className="icon" />

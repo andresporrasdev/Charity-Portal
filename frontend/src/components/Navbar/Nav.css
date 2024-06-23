@@ -1,5 +1,3 @@
-/* src/components/Nav.css */
-
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -7,7 +5,6 @@
     background-color: white;
     padding: 10px 20px;
     flex-wrap: wrap;
-    font-family: 'Poppins', sans-serif;
     position: fixed;
     top:0;
     z-index: 1000;
@@ -16,29 +13,26 @@
 
 .navbar-left {
     display: flex;
-    align-items: center;
     flex: 0 0 auto;
-}
-
-.navbar-center {
-    display: flex;
-    align-items:center;
-    margin-right:auto;
+    margin-right: 20px;
 }
 
 .logo {
     height: 100px;
-    margin-right: 3px;
+}
+
+.navbar-center {
+    display: flex;
+    align-items: center;
+    margin-right: auto;
 }
 
 .header-text h1 {
-    font-size: 2.3em;
+    font-size: 2.5em;
     color: #9f100a;
-    margin: 5px;
+    margin: 0;
     text-align: left;
 }
-
-
 
 .nav-menu ul {
     display: flex;
@@ -48,14 +42,13 @@
 }
 
 .nav-menu ul li {
-    margin: 0 10px;
-    
+    margin-right:15px;  
 }
 
 .nav-menu ul li a {
     color: #e88a1d;
     text-decoration: none;
-    font-weight: 900;
+    font-weight: 700;
     font-size: 1.4em;
 }
 
@@ -71,17 +64,18 @@
 }
 
 .navbar-right {
-    margin-top:auto;
+    margin-top: auto;
 }
 
-.login-button {
+.login-button,
+.logout-button {
     margin: 0px 5px 10px auto;
     padding: 5px 15px;
     font-size: 1.2em;
     background-color: #e88a1d;
     color: white;
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 700;
     border-radius: 20px;
     cursor: pointer;
     border: none;
