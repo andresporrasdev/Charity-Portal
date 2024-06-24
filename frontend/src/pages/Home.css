@@ -4,6 +4,7 @@
     font-size: medium;
     text-align: center;
     padding: 20px;
+    margin-top: 100px;
 }
 
 .home-picture {
@@ -44,8 +45,8 @@
 }
 
 .intro p {
-    font-size: 1.2em;
-    margin: 50px auto;
+    font-size: 1.5em;
+    margin: 40px auto;
     max-width: 70%;
 }
 
@@ -182,6 +183,10 @@ footer p {
 }
 
 @media (max-width: 768px) {
+    .home-container {
+        margin-top: 0;
+    }
+
     .intro p {
         font-size: 1em;
     }

@@ -8,6 +8,7 @@ function Nav({ isLoggedIn, userName, handleLogout }) {
   const navigate = useNavigate();
 
   return (
+  <>
     <div className="navbar">
       <div className="navbar-left">
         <img src={logo} alt="Logo" className="logo" />
@@ -80,7 +81,9 @@ function Nav({ isLoggedIn, userName, handleLogout }) {
         )}
       </div>
     </div>
+  </>
   );
+  
 }
 
 export default Nav;

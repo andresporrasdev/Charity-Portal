@@ -4,45 +4,57 @@
     margin-bottom: 20px;
     padding: 20px;
     position: relative;
+    width: 300px;
 }
 
-.event-image {
+.image-container {
     width: 100%;
-    border-radius: 8px;
+    padding-bottom: calc(100% * 5 / 4);
+    position: relative;
+    overflow: hidden;
     margin-bottom: 10px;
+}
+
+.image-container img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.member-only-text {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    z-index: 1;
 }
 
 .event-details {
     color: #333;
+    margin-bottom: 40px;
 }
 
-.event-details h3{
+.event-details h3 {
     color: #e88a1d;
 }
 
-.member-only-icon {
+.event-actions {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    color: red;
-    border-radius: 50%;
-    font-size: 24px;
-    transform: rotate(45deg);
-}
-
-.event-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-}
-
-.event-page {
-    position: relative;
-    padding-top: 100px;
+    bottom: 20px;
+    left: 15px;
+    right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .action-button {
-    margin: 0px 5px 10px auto;
+    margin-right: 10px;
     padding: 5px 15px;
     background-color: #e88a1d;
     color: white;
@@ -51,5 +63,158 @@
     border-radius: 20px;
     cursor: pointer;
     border: none;
+}
+
+.add-event-button {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background-color: #e88a1d;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 20px;
+    cursor: pointer;
+    border: none;
+}
+
+.menu-container {
+    margin-left: auto;
+    position: relative;
+}
+
+.menu-icon {
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    bottom: 30px;
+    background-color: white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.menu-container:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu button {
+    width: 100%;
+    padding: 10px;
+    text-align: left;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.dropdown-menu button:hover {
+    background-color: #f2f2f2;
+}
+
+.event-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px; 
+}
+
+.event-page {
+    position: relative;
+    padding-top: 150px;
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+.event-page h2{
+    text-align: center;
+}
+
+.add-edit-event-form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px; 
+}
+
+.add-edit-event-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.add-edit-event-form label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.add-edit-event-form input,
+.add-edit-event-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.add-edit-event-form input[type="checkbox"] {
+    width: auto;
+}
+
+.add-edit-event-form .form-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.add-edit-event-form .form-actions .action-button {
+    margin: 0;
+}
+
+
+
+
+
+.modal {
+    display: flex;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
     height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+}
+
+
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }

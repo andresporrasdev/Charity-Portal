@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Nav from "./components/Navbar/Nav";
-import Home from "./components/Home";
+import Home from "./pages/Home";
 import Event from "./pages/EventPage";
+import PastEventPage from './pages/PastEventPage';
 import Membership from "./pages/Membership";
 import Volunteer from "./pages/Volunteer";
 import News from "./pages/News";
@@ -11,6 +12,7 @@ import ContactUs from "./pages/ContactUs";
 import LoginForm from "./components/LoginForm";
 import Register from "./components/Register";
 import ResetPassword from "./components/ResetPassword";
+import Footer from "./components/Footer/Footer"; 
 import axios from "axios";
 
 function App() {
@@ -61,6 +63,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/event" element={<Event />} />
+          <Route path="/past-events" element={<PastEventPage />} />
           <Route path="/membership" element={<Membership />} />
           <Route path="/volunteer" element={<Volunteer />} />
           <Route path="/news" element={<News />} />
@@ -69,6 +72,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/reset-password" element={<ResetPassword />} />
         </Routes>
+        <Footer />
       </div>
     </Router>
   );

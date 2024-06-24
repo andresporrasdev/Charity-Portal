@@ -2,14 +2,12 @@
 import React, { useState } from 'react';
 import home1 from '../image/home1.jpg';
 import home2 from '../image/home2.jpg';
-import eventImage1 from '../image/EventImage/event1.png';
-import eventImage2 from '../image/EventImage/event2.png';
-import eventImage3 from '../image/EventImage/event3.png';
+import EventCard from '../components/Event/EventCard.jsx';
 import adImage1 from '../image/sponsor.jpeg';
 import newsImage1 from '../image/news.png';
 import './Home.css';
 
-function Home() {
+function Home({ upcomingEvents }) {
     const [currentHome, setCurrentHome] = useState(1); // State to track the current home picture
 
     const prevHome = () => {
@@ -45,18 +43,11 @@ function Home() {
             <div className="events">
                 <h2>Events</h2>
                 <div className="event-buttons">
-                    <div>
-                        <img src={eventImage1} alt="Event 1" />
-                        <button className="event-button">Purchase Ticket</button>
-                    </div>
-                    <div>
-                        <img src={eventImage2} alt="Event 2" />
-                        <button className="event-button">Registration Closed</button>
-                    </div>
-                    <div>
-                        <img src={eventImage3} alt="Event 3" />
-                        <button className="event-button">Event Ended</button>
-                    </div>
+                    {upcomingEvents && Array.isArray(upcomingEvents) && upcomingEvents.slice(0, 3).map(event => (
+                        <div key={event.id}>
+                            <EventCard event={event} />
+                        </div>
+                    ))}
                 </div>
             </div>
             
@@ -97,10 +88,6 @@ function Home() {
                     </div>
                 </div>
             </div>
-            
-            <footer>
-                <p>&copy; 2024 Ottawa Tamil Sangam Community. All rights reserved.</p>
-            </footer>
 
         </div>
     );
