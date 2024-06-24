@@ -13,6 +13,7 @@ const signToken = (email) => {
     expiresIn: process.env.LOGIN_EXPIRE,
   });
 };
+
 const saveMemberToDB = async ({ email, first_name, last_name, created, event_id, isPaid, password }) => {
   try {
     const role = await Role.findOne({ name: "Member" });
@@ -224,12 +225,15 @@ exports.forgetPassword = async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   //3. send the token back to the user email
-  const resetUrl = `${req.protocol}://${req.get("host")}/api/users/resetPassword/${resetToken}`;
+  const frontendPort = process.env.CLIENT_PORT;
+  const resetUrl = `http://localhost:${frontendPort}/reset-password/${resetToken}`; // currently we use this url for testing purpose
+  //const resetUrl = `${req.protocol}://${req.get("host")}/api/auth/resetPassword/${resetToken}`;
+
   const message = `We have received a password reset request. Please use the below link to reset password\n\n${resetUrl}\n\nThis reset password link will be valid only for 10mins.`;
 
   try {
     await sendEmail({
-      to: user.email,
+      email: user.email,
       subject: "Password change request recieved",
       text: message,
     });
@@ -243,6 +247,8 @@ exports.forgetPassword = async (req, res, next) => {
     user.passwordResetTokenExpire = undefined;
     user.save({ validateFromSave: false });
 
+    console.error("Error sending email:", error);
+
     return res.status(500).json({
       status: "fail",
       message: "There was an error sending password reset email. Please try again later.",
@@ -252,7 +258,7 @@ exports.forgetPassword = async (req, res, next) => {
 
 exports.resetPassword = async (req, res, next) => {
   //1. If the user exixsts with the given token and token is not expired
-  const token = crypto.createHash("sha256").update(req.param.token).digest("hex");
+  const token = crypto.createHash("sha256").update(req.params.token).digest("hex");
   const user = await User.findOne({ passwordResetToken: token, passwordResetTokenExpire: { $gt: Date.now() } });
 
   if (!user) {
@@ -262,8 +268,10 @@ exports.resetPassword = async (req, res, next) => {
     });
   }
 
-  user.password = req.body.password;
-  user.confirmPassword = req.body.confirmPassword;
+  const email = user.email;
+  const encryptedPassword = await encryptPassword(req.body.password);
+
+  user.password = encryptedPassword;
   user.passwordResetToken = undefined;
   user.passwordResetTokenExpire = undefined;
   user.passwordChangeAt = Date.now();
@@ -274,6 +282,6 @@ exports.resetPassword = async (req, res, next) => {
   return res.status(200).json({
     status: "success",
     token: loginToken,
-    redirectUrl: "/",
+    redirectUrl: "/login",
   });
 };
