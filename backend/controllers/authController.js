@@ -8,7 +8,7 @@ const sendEmail = require("./../utils/email");
 const crypto = require("crypto");
 
 const signToken = (email) => {
-  return jwt.sign({ email }, process.env.SECRET_STR, {
+  return jwt.sign({ email, iat: Math.floor(Date.now() / 1000) }, process.env.SECRET_STR, {
     // payload, secret string
     expiresIn: process.env.LOGIN_EXPIRE,
   });
@@ -134,6 +134,7 @@ exports.protect = async (req, res, next) => {
       message: "The token doesn't exist.",
     });
   }
+
   try {
     //2. validate the token
     const decodedToken = await util.promisify(jwt.verify)(token, process.env.SECRET_STR);
@@ -151,6 +152,7 @@ exports.protect = async (req, res, next) => {
     }
 
     const isPasswordChanged = await user.isPasswordChanged(decodedToken.iat);
+
     //4. If the user changed password after the token was issued
     if (isPasswordChanged) {
       return res.status(401).json({
@@ -268,19 +270,20 @@ exports.resetPassword = async (req, res, next) => {
     });
   }
 
-  const email = user.email;
   const encryptedPassword = await encryptPassword(req.body.password);
 
   user.password = encryptedPassword;
   user.passwordResetToken = undefined;
   user.passwordResetTokenExpire = undefined;
-  user.passwordChangeAt = Date.now();
-  user.save();
+  user.passwordChangedAt = Date.now();
+  await user.save();
 
+  const email = user.email;
   const loginToken = signToken(email);
 
   return res.status(200).json({
     status: "success",
+    message: "Your password changed successfully!",
     token: loginToken,
     redirectUrl: "/login",
   });
