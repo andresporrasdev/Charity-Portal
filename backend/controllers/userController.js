@@ -1,5 +1,6 @@
-// const User = require("../models/user");
-// const Role = require("../models/role");
+const User = require("../models/user");
+const Role = require("../models/role");
+const { encryptPassword } = require("../utils/encryption");
 
 // const getUserDataFromEventBrite = async (eventId, email) => {
 //   try {
@@ -19,6 +20,36 @@
 //     return null;
 //   }
 // };
+
+exports.saveMemberToDB = async (userData) => {
+  try {
+    const role = await Role.findOne({ name: "Member" });
+
+    if (!role) {
+      throw new Error("Role not found");
+    }
+    const encryptedPassword = await encryptPassword(userData.password);
+
+    const user = new User({
+      ...userData,
+      password: encryptedPassword,
+      roles: [role._id], // _id is Pk
+    });
+    await user.save();
+    console.log("user data saved in saveUserToDB method");
+  } catch (error) {
+    console.error("Error saving user to DB:", error);
+    throw error;
+  }
+};
+
+const filterObj = (obj, ...allowedFields) => {
+  const newObj = {};
+  Object.keys(obj).forEach((prop) => {
+    if (allowedFields.includes(prop)) newObj[prop] = obj[prop];
+  });
+  return newObj;
+};
 
 const getUserDataFromMockFile = async (email) => {
   try {
@@ -81,4 +112,24 @@ exports.getUserInfo = async (req, res) => {
       message: "Failed to fetch user info.",
     });
   }
+};
+
+exports.updateUser = async (req, res, next) => {
+  // check if request data contain password
+  if (req.body.password) {
+    res.status(400).json({
+      status: "fail",
+      message: "You can't update password using this endpoint.",
+    });
+  }
+
+  //update user detail
+  const filterObj = filterObj(req.body, "first_name", "last_name", "roles"); // set only fields allowed to update
+  const updateUser = await User.findByIdAndUpdate(req.user._id, filterObj, { runValidators: true, new: true });
+  res.status(200).json({
+    status: "Success",
+    data: {
+      user: updateUser,
+    },
+  });
 };

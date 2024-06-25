@@ -1,11 +1,11 @@
 const User = require("../models/user");
 const Role = require("../models/role");
-const bcrypt = require("bcrypt"); // for hashing password
-const saltRounds = 10; // number of salt rounds
 const jwt = require("jsonwebtoken");
 const util = require("util");
 const sendEmail = require("./../utils/email");
 const crypto = require("crypto");
+const { saveMemberToDB } = require("./userController");
+const { encryptPassword } = require("../utils/encryption");
 
 const signToken = (email) => {
   return jwt.sign({ email, iat: Math.floor(Date.now() / 1000) }, process.env.SECRET_STR, {
@@ -14,54 +14,11 @@ const signToken = (email) => {
   });
 };
 
-const saveMemberToDB = async ({ email, first_name, last_name, created, event_id, isPaid, password }) => {
-  try {
-    const role = await Role.findOne({ name: "Member" });
-
-    if (!role) {
-      throw new Error("Role not found");
-    }
-
-    const encryptedPassword = await encryptPassword(password);
-
-    const user = new User({
-      email,
-      first_name,
-      last_name,
-      created,
-      password,
-      isEmailVerified: true,
-      isPaid,
-      password: encryptedPassword, //encrypted password is added to the user object
-      event_id,
-      roles: [role._id], // _id is Pk
-    });
-    await user.save();
-    console.log("user data saved in saveUserToDB method");
-  } catch (error) {
-    console.error("Error saving user to DB:", error);
-    throw error;
-  }
-};
-
-// this method is used to encrypt the password
-const encryptPassword = async (password) => {
-  try {
-    const salt = await bcrypt.genSalt(saltRounds);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    return hashedPassword;
-  } catch (error) {
-    console.error("Error encrypting password:", error);
-    return null;
-  }
-};
-
 exports.signup = async (req, res) => {
-  const { email, first_name, last_name, created, event_id, password } = req.body;
+  const { email, first_name, last_name, created, event_id, isPaid, password } = req.body;
   try {
-    await saveMemberToDB({ email, first_name, last_name, created, event_id, password });
-
-    const userData = { email, first_name, last_name, created, event_id };
+    const userData = { email, first_name, last_name, created, event_id, isPaid, password };
+    await saveMemberToDB(userData);
 
     return res.status(200).json({
       status: "success",
