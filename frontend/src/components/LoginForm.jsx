@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
-import "./LoginForm.css";
-import { FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import Alert from "@mui/material/Alert";
+import "./LoginForm.css";
+import { FaEnvelope, FaLock, FaUser, FaEye, FaEyeSlash } from "react-icons/fa";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
+  const [modalEmail, setModalEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [redirectUrl, setRedirectUrl] = useState("");
-  const [loginMessage, setLoginMessage] = useState("");
+  const [loginSuccessMessage, setLoginSuccessMessage] = useState("");
   const [loginError, setLoginError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showForgetPwdModal, setShowForgetPwdModal] = useState(false);
+  const [failMessage, setFailMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [modalEmailError, setModalEmailError] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
+
   const EyeIcon = showPassword ? FaEye : FaEyeSlash;
 
   const togglePasswordVisibility = () => {
@@ -24,7 +30,26 @@ const LoginForm = () => {
     return emailRegex.test(email);
   };
 
-  const validate = () => {
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    // setModalEmailError("Please enter a valid email address.");
+    if (!isValidEmail(modalEmail)) {
+      setModalEmailError("Please enter a valid email address.");
+    } else {
+      setModalEmailError("");
+    }
+  };
+
+  const handleEmailChange = (e) => {
+    const email = e.target.value;
+    setModalEmail(email);
+  };
+
+  const validate = (email) => {
     let isValid = true;
     if (!isValidEmail(email)) {
       setEmailError("Please enter a valid email address.");
@@ -32,15 +57,23 @@ const LoginForm = () => {
     } else {
       setEmailError("");
     }
+    return isValid;
+  };
 
+  const modalEmailValidate = (modalEmail) => {
+    let isValid = true;
+    if (!isValidEmail(modalEmail)) {
+      setModalEmailError("Please enter a valid email address.");
+      isValid = false;
+    } else {
+      setModalEmailError("");
+    }
     return isValid;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validate()) {
-      console.log("Email:", email);
-
+    if (validate(email)) {
       try {
         const response = await axios.post("http://localhost:3000/api/auth/login", { email, password });
         if (response.data.status === "success") {
@@ -48,7 +81,8 @@ const LoginForm = () => {
           const token = response.data.token;
           localStorage.setItem("token", token);
 
-          setLoginMessage("You have successfully logged in!");
+          setLoginError("");
+          setLoginSuccessMessage("You have successfully logged in!");
           setRedirectUrl(response.data.redirectUrl);
         } else if (response.data.status === "fail") {
           setLoginError(response.data.message);
@@ -58,6 +92,37 @@ const LoginForm = () => {
         console.error(error);
       }
     }
+  };
+
+  const handleEmailSubmit = async (e) => {
+    e.preventDefault();
+    if (modalEmailValidate(modalEmail)) {
+      try {
+        const response = await axios.post("http://localhost:3000/api/auth/forgetPassword", { email: modalEmail });
+        if (response.data.status === "success") {
+          setFailMessage("");
+          setSuccessMessage(response.data.message);
+        } else {
+          setSuccessMessage("");
+          setFailMessage("Failed to send password reset email.");
+        }
+      } catch (error) {
+        if (error.response && error.response.data && error.response.data.message) {
+          setFailMessage(error.response.data.message);
+        } else {
+          console.error("Error sending reset email:", error);
+          setFailMessage("An error occurred. Please try again later.");
+        }
+      }
+    }
+  };
+
+  const handleForgotPasswordClick = () => {
+    setShowForgetPwdModal(true);
+  };
+
+  const closeForgetPasswordModal = () => {
+    setShowForgetPwdModal(false);
   };
 
   useEffect(() => {
@@ -72,9 +137,14 @@ const LoginForm = () => {
     <div className="wrapper">
       <form onSubmit={handleSubmit}>
         <h1>Login</h1>
-        {loginMessage && (
+        {loginSuccessMessage && (
           <Alert severity="success" sx={{ mb: 2 }}>
-            {loginMessage}
+            {loginSuccessMessage}
+          </Alert>
+        )}
+        {loginError && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {loginError}
           </Alert>
         )}
         <div className="input-box">
@@ -82,7 +152,6 @@ const LoginForm = () => {
           <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </div>
         {emailError && <p className="error">{emailError}</p>}
-
         <div className="input-box">
           <FaLock className="icon" />
           <input
@@ -95,13 +164,12 @@ const LoginForm = () => {
           />
           <EyeIcon onClick={togglePasswordVisibility} className="eye-icon" />
         </div>
-        {loginError && <p className="error">{loginError}</p>}
         <div className="remember-forgot">
           <label>
             <input type="checkbox" />
             Remember me
           </label>
-          <a href="/reset-password">Forgot password?</a>
+          <a onClick={handleForgotPasswordClick}>Forgot password?</a>
         </div>
 
         <button type="submit">Login</button>
@@ -112,6 +180,50 @@ const LoginForm = () => {
           </p>
         </div>
       </form>
+
+      {showForgetPwdModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={closeForgetPasswordModal}>
+              &times;
+            </span>
+            <h2>Reset Password</h2>
+            <Alert severity="info" sx={{ mb: 2 }}>
+              Enter your email to reset your password.
+            </Alert>
+            <form onSubmit={handleEmailSubmit}>
+              <div className="input-box">
+                <FaEnvelope className="icon" />
+                <input
+                  type="text"
+                  placeholder="Email"
+                  value={modalEmail}
+                  onChange={handleEmailChange}
+                  onFocus={handleFocus}
+                  onBlur={handleBlur}
+                  className={modalEmailError && !isFocused ? "error-input" : ""}
+                  required
+                />
+              </div>
+              {/* {modalEmailError && !isFocused && <p className="error-text">{modalEmailError}</p>} */}
+              {modalEmailError && <p className="error-text">{modalEmailError}</p>}
+              {successMessage && (
+                <Alert severity="success" sx={{ mb: 2 }}>
+                  {successMessage}
+                </Alert>
+              )}
+              {failMessage && (
+                <Alert severity="error" sx={{ mb: 2 }}>
+                  {failMessage}
+                </Alert>
+              )}
+              <button className="register-button" type="submit">
+                Send Link
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

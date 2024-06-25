@@ -11,7 +11,7 @@ import News from "./components/News";
 import ContactUs from "./components/ContactUs";
 import LoginForm from "./components/LoginForm";
 import Register from "./components/Register";
-import ResetPassword from "./components/ResetPassword";
+import ResetPasswordPage from "./components/ResetPasswordPage";
 import axios from "axios";
 
 function App() {
@@ -68,7 +68,7 @@ function App() {
           <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
         </Routes>
       </div>
     </Router>
