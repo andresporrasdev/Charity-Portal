@@ -148,15 +148,13 @@ exports.protect = async (req, res, next) => {
 // };
 
 exports.restrict = (...allowedRoles) => {
-  return (req, res, next) => {
-    // if (role.includes(req.user.roles)) {
-    //   return res.status(403).json({
-    //     status: "fail",
-    //     message: "You don't have permission to perform this action",
-    //   });
-    // }
-    const userRoles = req.user.roles; // user.roles is array of objectId
-    const hasPermission = userRoles.some((role) => allowedRoles.includes(role.toString()));
+  return async (req, res, next) => {
+    const user = await User.findById(req.user._id).populate("roles", "name");
+    const roleNames = user.roles.map((role) => role.name);
+
+    console.log("roleNames:", roleNames);
+
+    const hasPermission = allowedRoles.some((role) => roleNames.includes(role));
 
     if (!hasPermission) {
       return res.status(403).json({
