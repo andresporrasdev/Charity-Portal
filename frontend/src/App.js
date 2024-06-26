@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
@@ -11,12 +10,14 @@ import News from "./components/News";
 import ContactUs from "./components/ContactUs";
 import LoginForm from "./components/LoginForm";
 import Register from "./components/Register";
+import MemberManageTable from "./components/MemberManageTable";
 import ResetPasswordPage from "./components/ResetPasswordPage";
 import axios from "axios";
+import UserContext from "./UserContext";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userName, setUserName] = useState("");
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -34,7 +35,7 @@ function App() {
       });
       if (response.data.status === "success") {
         const userData = response.data.data.user;
-        setUserName(userData.first_name);
+        setUser(userData);
         setIsLoggedIn(true);
         console.log("fetchUserInfo:success");
       } else {
@@ -52,26 +53,29 @@ function App() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
-    setUserName("");
+    setUser(null);
   };
 
   return (
-    <Router>
-      <div className="App">
-        <Nav isLoggedIn={isLoggedIn} userName={userName} handleLogout={handleLogout} />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/event" element={<Event />} />
-          <Route path="/membership" element={<Membership />} />
-          <Route path="/volunteer" element={<Volunteer />} />
-          <Route path="/news" element={<News />} />
-          <Route path="/contact-us" element={<ContactUs />} />
-          <Route path="/login" element={<LoginForm />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-        </Routes>
-      </div>
-    </Router>
+    <UserContext.Provider value={user}>
+      <Router>
+        <div className="App">
+          <Nav isLoggedIn={isLoggedIn} userName={user?.first_name} handleLogout={handleLogout} />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/event" element={<Event />} />
+            <Route path="/membership" element={<Membership />} />
+            <Route path="/volunteer" element={<Volunteer />} />
+            <Route path="/news" element={<News />} />
+            <Route path="/contact-us" element={<ContactUs />} />
+            <Route path="/login" element={<LoginForm />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+            <Route path="/member-manage" element={<MemberManageTable />} />
+          </Routes>
+        </div>
+      </Router>
+    </UserContext.Provider>
   );
 }
 
