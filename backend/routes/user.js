@@ -8,7 +8,27 @@ router.post("/check", userController.checkMembershipUser);
 // To protect router, will use authController.protect as middleware
 router.get("/userinfo", authController.protect, userController.getUserInfo);
 
+// Admin-protected routes for User CRUD
 // To restrict router for the certain role, will use authController.restrict as middleware
-//router.delete("/delete", (authController.protect, authController.restrict("admin"), userController.deleteUser));
+router.get(
+  "/getAllUsers",
+  authController.protect,
+  authController.restrict("Administrator"),
+  userController.getAllUsers
+);
+
+router.patch(
+  "/updateUser/:id",
+  authController.protect,
+  authController.restrict("Administrator"),
+  userController.updateUser
+);
+
+router.delete(
+  "/deleteUser/:id",
+  authController.protect,
+  authController.restrict("Administrator"),
+  userController.deleteUser
+);
 
 module.exports = router;

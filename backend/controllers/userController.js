@@ -114,6 +114,29 @@ exports.getUserInfo = async (req, res) => {
   }
 };
 
+exports.getAllUsers = async (req, res) => {
+  try {
+    //Populate the roles field to fetch role names
+    const users = await User.find().populate("roles", "name");
+
+    const usersWithRoleNames = users.map((user) => ({
+      ...user.toObject(),
+      roles: user.roles.map((role) => role.name),
+    }));
+
+    res.status(200).json({
+      status: "success",
+      results: usersWithRoleNames.length,
+      data: { users: usersWithRoleNames },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Failed to fetch users.",
+    });
+  }
+};
+
 exports.updateUser = async (req, res, next) => {
   // check if request data contain password
   if (req.body.password) {
@@ -122,14 +145,37 @@ exports.updateUser = async (req, res, next) => {
       message: "You can't update password using this endpoint.",
     });
   }
-
   //update user detail
-  const filterObj = filterObj(req.body, "first_name", "last_name", "roles"); // set only fields allowed to update
-  const updateUser = await User.findByIdAndUpdate(req.user._id, filterObj, { runValidators: true, new: true });
-  res.status(200).json({
-    status: "Success",
-    data: {
-      user: updateUser,
-    },
-  });
+  try {
+    const filterObj = filterObj(req.body, "first_name", "last_name", "roles"); // set only fields allowed to update
+    const updateUser = await User.findByIdAndUpdate(req.user.id, filterObj, { runValidators: true, new: true });
+    //const updatedUser = await User.findByIdAndUpdate(req.params.id, filteredBody, { new: true, runValidators: true });
+    res.status(200).json({
+      status: "Success",
+      data: {
+        user: updateUser,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Failed to update user.",
+    });
+  }
+};
+
+exports.deleteUser = async (req, res, next) => {
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res.status(204).json({
+      status: "success",
+      data: null,
+      message: "User deleted successfully.",
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Failed to delete user.",
+    });
+  }
 };
