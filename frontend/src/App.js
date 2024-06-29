@@ -14,6 +14,7 @@ import Register from "./components/Register";
 import ResetPassword from "./components/ResetPassword";
 import Footer from "./components/Footer/Footer"; 
 import axios from "axios";
+import { UserProvider } from "./UserContext";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -58,22 +59,24 @@ function App() {
 
   return (
     <Router>
-      <div className="App">
-        <Nav isLoggedIn={isLoggedIn} userName={userName} handleLogout={handleLogout} />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/event" element={<Event />} />
-          <Route path="/past-events" element={<PastEventPage />} />
-          <Route path="/membership" element={<Membership />} />
-          <Route path="/volunteer" element={<Volunteer />} />
-          <Route path="/news" element={<News />} />
-          <Route path="/contact-us" element={<ContactUs />} />
-          <Route path="/login" element={<LoginForm />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-        </Routes>
-        <Footer />
-      </div>
+      <UserProvider> 
+        <div className="App">
+          <Nav isLoggedIn={isLoggedIn} userName={userName} handleLogout={handleLogout} />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/event" element={<Event />} />
+            <Route path="/past-events" element={<PastEventPage />} />
+            <Route path="/membership" element={<Membership />} />
+            <Route path="/volunteer" element={<Volunteer />} />
+            <Route path="/news" element={<News />} />
+            <Route path="/contact-us" element={<ContactUs />} />
+            <Route path="/login" element={<LoginForm />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+          </Routes>
+          <Footer />
+        </div>
+      </UserProvider>
     </Router>
   );
 }

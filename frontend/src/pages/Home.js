@@ -18,6 +18,14 @@ function Home({ upcomingEvents }) {
         setCurrentHome(2);
     };
     
+    const eventCards = upcomingEvents && upcomingEvents.length > 0
+        ? upcomingEvents.map(event => (
+            <div key={event.id}>
+                <EventCard event={event} />
+            </div>
+        ))
+        : null;
+
     return (
         <div className="home-container">
             
@@ -43,12 +51,9 @@ function Home({ upcomingEvents }) {
             <div className="events">
                 <h2>Events</h2>
                 <div className="event-buttons">
-                    {upcomingEvents && Array.isArray(upcomingEvents) && upcomingEvents.slice(0, 3).map(event => (
-                        <div key={event.id}>
-                            <EventCard event={event} />
-                        </div>
-                    ))}
+                    {eventCards}
                 </div>
+                
             </div>
             
             <div className="ads">

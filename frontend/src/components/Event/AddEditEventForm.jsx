@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './Event.css'; 
+import axios from "axios";
 
 const AddEditEventForm = ({ event, onSave, onCancel }) => {
     const [formData, setFormData] = useState({
+        id: '',
         name: '',
         description: '',
         time: '',
@@ -27,14 +29,29 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        onSave(formData);
+        try {
+            if (formData.id) {
+                const response = await axios.post('http://localhost:3000/api/event/updateEvent', formData);
+                console.log('Event updated:', response.data);
+            } else {
+                const response = await axios.post('http://localhost:3000/api/event/addEvent', formData);
+                console.log('Event added:', response.data);
+            }
+            onSave(formData);
+        } catch (error) {
+            console.error('Error saving event:', error);
+        }
     };
 
     return (
         <form className="add-edit-event-form" onSubmit={handleSubmit}>
             <h2>{event ? 'Edit Event' : 'Add Event'}</h2>
+            <label>
+                ID:
+                <input type="text" name="id" value={formData.id} onChange={handleChange} disabled={!!event} required />
+            </label>
             <label>
                 Name:
                 <input type="text" name="name" value={formData.name} onChange={handleChange} required />

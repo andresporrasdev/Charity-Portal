@@ -50,7 +50,7 @@
     right: 15px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 
 .action-button {
@@ -173,10 +173,6 @@
 .add-edit-event-form .form-actions .action-button {
     margin: 0;
 }
-
-
-
-
 
 .modal {
     display: flex;

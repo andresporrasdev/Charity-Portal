@@ -1,84 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import EventList from '../components/Event/EventList';
 import AddEditEventForm from '../components/Event/AddEditEventForm';
 import EventDetailModal from '../components/Event/EventDetailModal';
 import '../components/Event/Event.css';
 import { Link } from 'react-router-dom';
-
+import axios from "axios";
+import { UserContext } from '../UserContext';
 
 const EventPage = () => {
-    const [events, setEvents] = useState([
-        {
-            id: 1,
-            name: "Summer Gathering",
-            description: "Join us for a day of fun in the sun!",
-            time: "2024-07-15 10:00 AM",
-            place: "Central Park",
-            pricePublic: "$20/Family, $15/Couple",
-            priceMember: "$15",
-            isMemberOnly: false,
-            imageUrl: "/image/EventImage/event1.png"
-        },
-        {
-            id: 2,
-            name: "Annual Members Gala",
-            description: "An exclusive evening for our esteemed members. An exclusive evening for our esteemed members. An exclusive evening for our esteemed members.",
-            time: "2024-08-20 07:00 PM",
-            place: "Grand Hotel",
-            pricePublic: "$50",
-            priceMember: "$40",
-            isMemberOnly: true,
-            imageUrl: "/image/EventImage/event2.jpg"
-        },
-        {
-            id: 3,
-            name: "Members Meeting",
-            description: "An exclusive evening for our esteemed members.",
-            time: "2024-07-20 07:00 PM",
-            place: "Grand Hotel",
-            pricePublic: "$50",
-            priceMember: "$40",
-            isMemberOnly: true,
-            imageUrl: "/image/EventImage/event2.jpg"
-        },
-        {
-            id: 4,
-            name: "Members Meeting",
-            description: "An exclusive evening for our esteemed members.",
-            time: "2024-07-20 07:00 PM",
-            place: "Grand Hotel",
-            pricePublic: "$50",
-            priceMember: "$40",
-            isMemberOnly: true,
-            imageUrl: "/image/EventImage/event2.jpg"
-        },
-        {
-            id: 5,
-            name: "Members Meeting",
-            description: "An exclusive evening for our esteemed members.",
-            time: "2023-07-20 07:00 PM",
-            place: "Grand Hotel",
-            pricePublic: "$50",
-            priceMember: "$40",
-            isMemberOnly: true,
-            imageUrl: "/image/EventImage/event2.jpg"
-        } ,
-        {
-            id: 6,
-            name: "Members Meeting",
-            description: "An exclusive evening for our esteemed members.",
-            time: "2023-08-20 07:00 PM",
-            place: "Grand Hotel",
-            pricePublic: "$50",
-            priceMember: "$40",
-            isMemberOnly: true,
-            imageUrl: "/image/EventImage/event2.jpg"
-        }
-    ]);
-
+    const [events, setEvents] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [showDetailsModal, setShowDetailsModal] = useState(false);
     const [currentEvent, setCurrentEvent] = useState(null);
+    const { user } = useContext(UserContext);
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const response = await axios.get("http://localhost:3000/api/event/readEvent");
+                console.log("events",response.data)
+                setEvents(response.data);
+            } catch (error) {
+                console.error("Error fetching events:", error);
+            }
+        };
+
+        fetchEvents();
+    }, []);
 
     const handleAddEvent = () => {
         setCurrentEvent(null);
@@ -96,13 +44,28 @@ const EventPage = () => {
         setCurrentEvent(null);
     };
 
-    const handleSaveEvent = (event) => {
-        if (currentEvent) {
-            setEvents(events.map(e => e.id === event.id ? event : e));
-        } else {
-            setEvents([...events, { ...event, id: events.length + 1 }]);
+    const handleSaveEvent = async (event) => {
+        try {
+            if (currentEvent) {
+                await axios.post("http://localhost:3000/api/event/updateEvent", event);
+                setEvents(events.map(e => e.id === event.id ? event : e));
+            } else {
+                await axios.post("http://localhost:3000/api/event/addEvent", event);
+                setEvents([...events, { ...event, id: events.length + 1 }]);
+            }
+            handleCloseModal();
+        } catch (error) {
+            console.error("Error saving event:", error);
         }
-        handleCloseModal();
+    };
+
+    const handleDeleteEvent = async (id) => {
+        try {
+            await axios.post(`http://localhost:3000/api/event/deleteEvent/${id}`);
+            setEvents(events.filter((e) => e.id !== id));
+        } catch (error) {
+            console.error('Error deleting event:', error);
+        }
     };
 
     const handleViewDetails = (event) => {
@@ -118,14 +81,25 @@ const EventPage = () => {
 
     return (
         <div className="event-page">
+            {/* {user?.role === 'Administrator' && ( */}
             <button className="add-event-button" onClick={handleAddEvent}>Add Event</button>
+            {/* )} */}
             <section>
                 <h2>Upcoming Events</h2>
-                <EventList events={upcomingEvents.map(event => ({ ...event, time: event.time.toString() }))} onEdit={handleEditEvent} onViewDetails={handleViewDetails} />
+                <EventList
+                    events={upcomingEvents.map(event => ({ ...event, time: event.time.toString() }))}
+                    onEdit={handleEditEvent}
+                    onViewDetails={handleViewDetails}
+                />
+                {/*onEdit={user?.role === 'Administrator' ? handleEditEvent : null} */}
             </section>
             <section className="past-events-section">
                 <h2>Past Events</h2>
-                <EventList events={pastEvents.map(event => ({ ...event, time: event.time.toString() }))} onEdit={handleEditEvent} onViewDetails={handleViewDetails} />
+                <EventList
+                    events={pastEvents.map(event => ({ ...event, time: event.time.toString() }))}
+                    onEdit={user?.role === 'Administrator' ? handleEditEvent : null}
+                    onViewDetails={handleViewDetails}
+                />
                 <Link to="/past-events" className="more-link">
                     More
                 </Link>

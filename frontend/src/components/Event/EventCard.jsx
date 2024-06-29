@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './Event.css';
 import { useNavigate } from 'react-router-dom';
 import { FaEllipsisV } from 'react-icons/fa';
+import { UserContext } from '../../UserContext.jsx';
 
 const EventCard = ({ event, onEdit, onDelete, onViewDetails }) => {
     const [showMenu, setShowMenu] = useState(false);
-    const { name, description, time, place, pricePublic, priceMember, isMemberOnly, imageUrl } = event;
+    const { user } = useContext(UserContext);
+    const { name, time, place, pricePublic, priceMember, isMemberOnly, imageUrl } = event;
     const navigate = useNavigate();
 
     const handleMenuToggle = () => {
@@ -60,6 +62,7 @@ const EventCard = ({ event, onEdit, onDelete, onViewDetails }) => {
             <div className="event-actions">
                 <button className="action-button" >Purchase Ticket</button>
                 <button className="action-button" onClick={() => navigate("/volunteer")}>Volunteer</button>
+                {/* {user?.role === 'Administrator' && ( */}
                 <div className="menu-container">
                     <FaEllipsisV onClick={handleMenuToggle} className="menu-icon" />
                     {showMenu && (
@@ -69,6 +72,7 @@ const EventCard = ({ event, onEdit, onDelete, onViewDetails }) => {
                         </div>
                     )}
                 </div>
+                {/* )} */}
             </div>
         </div>
     );
