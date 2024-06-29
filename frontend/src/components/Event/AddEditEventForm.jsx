@@ -32,12 +32,15 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            if (formData.id) {
-                const response = await axios.post('http://localhost:3000/api/event/updateEvent', formData);
-                console.log('Event updated:', response.data);
+            const formattedDateTime = formData.time.replace('T', ' ');
+            const response = await axios.get(`http://localhost:3000/api/event/getEventById/${formData.id}`);
+
+            if (response.data) {
+                await axios.post('http://localhost:3000/api/event/updateEvent', formData);
+                console.log('Event updated:', formData);            
             } else {
-                const response = await axios.post('http://localhost:3000/api/event/addEvent', formData);
-                console.log('Event added:', response.data);
+                await axios.post('http://localhost:3000/api/event/addEvent', formData);
+                console.log('Event added:', formData);
             }
             onSave(formData);
         } catch (error) {

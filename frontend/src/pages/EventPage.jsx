@@ -45,23 +45,25 @@ const EventPage = () => {
     };
 
     const handleSaveEvent = async (event) => {
-        try {
-            if (currentEvent) {
-                await axios.post("http://localhost:3000/api/event/updateEvent", event);
-                setEvents(events.map(e => e.id === event.id ? event : e));
-            } else {
-                await axios.post("http://localhost:3000/api/event/addEvent", event);
-                setEvents([...events, { ...event, id: events.length + 1 }]);
-            }
-            handleCloseModal();
-        } catch (error) {
-            console.error("Error saving event:", error);
+    try {
+        const response = await axios.get(`http://localhost:3000/api/event/getEventById/${event.id}`);
+        if (response.data) {
+            await axios.post("http://localhost:3000/api/event/updateEvent", event);
+            setEvents(events.map(e => e.id === event.id ? event : e));
+        } else {
+            await axios.post("http://localhost:3000/api/event/addEvent", event);
+            setEvents([...events, event]);
         }
-    };
+        handleCloseModal();
+    } catch (error) {
+        console.error("Error saving event:", error);
+    }};
+
 
     const handleDeleteEvent = async (id) => {
+        console.log("Deleting event with id:", id);
         try {
-            await axios.post(`http://localhost:3000/api/event/deleteEvent/${id}`);
+            axios.delete(`http://localhost:3000/api/event/deleteEvent/${id}`);
             setEvents(events.filter((e) => e.id !== id));
         } catch (error) {
             console.error('Error deleting event:', error);
@@ -89,6 +91,7 @@ const EventPage = () => {
                 <EventList
                     events={upcomingEvents.map(event => ({ ...event, time: event.time.toString() }))}
                     onEdit={handleEditEvent}
+                    onDelete={handleDeleteEvent}
                     onViewDetails={handleViewDetails}
                 />
                 {/*onEdit={user?.role === 'Administrator' ? handleEditEvent : null} */}
@@ -97,7 +100,8 @@ const EventPage = () => {
                 <h2>Past Events</h2>
                 <EventList
                     events={pastEvents.map(event => ({ ...event, time: event.time.toString() }))}
-                    onEdit={user?.role === 'Administrator' ? handleEditEvent : null}
+                    onEdit={handleEditEvent}
+                    onDelete={handleDeleteEvent}
                     onViewDetails={handleViewDetails}
                 />
                 <Link to="/past-events" className="more-link">
