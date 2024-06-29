@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './Event.css'; 
-import axios from "axios";
 
 const AddEditEventForm = ({ event, onSave, onCancel }) => {
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState( event || {
         id: '',
         name: '',
         description: '',
@@ -15,12 +14,6 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
         imageUrl: ''
     });
 
-    useEffect(() => {
-        if (event) {
-            setFormData(event);
-        }
-    }, [event]);
-
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setFormData({
@@ -29,23 +22,9 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
         });
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        try {
-            const formattedDateTime = formData.time.replace('T', ' ');
-            const response = await axios.get(`http://localhost:3000/api/event/getEventById/${formData.id}`);
-
-            if (response.data) {
-                await axios.post('http://localhost:3000/api/event/updateEvent', formData);
-                console.log('Event updated:', formData);            
-            } else {
-                await axios.post('http://localhost:3000/api/event/addEvent', formData);
-                console.log('Event added:', formData);
-            }
-            onSave(formData);
-        } catch (error) {
-            console.error('Error saving event:', error);
-        }
+        onSave(formData);
     };
 
     return (

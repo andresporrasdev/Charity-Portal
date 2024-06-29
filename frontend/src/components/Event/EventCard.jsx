@@ -10,18 +10,19 @@ const EventCard = ({ event, onEdit, onDelete, onViewDetails }) => {
     const { name, time, place, pricePublic, priceMember, isMemberOnly, imageUrl } = event;
     const navigate = useNavigate();
 
-    const handleMenuToggle = () => {
+    const handleMenuToggle = (e) => {
+        e.stopPropagation();
         setShowMenu(!showMenu);
     };
 
     const handleEdit = () => {
-        setShowMenu(false);
         onEdit(event);
+        setShowMenu(false);
     };
 
     const handleDelete = () => {
-        setShowMenu(false);
         onDelete(event.id);
+        setShowMenu(false);
     };
 
     const handleViewDetails = () => {
@@ -63,8 +64,8 @@ const EventCard = ({ event, onEdit, onDelete, onViewDetails }) => {
                 <button className="action-button" >Purchase Ticket</button>
                 <button className="action-button" onClick={() => navigate("/volunteer")}>Volunteer</button>
                 {/* {user?.role === 'Administrator' && ( */}
-                <div className="menu-container">
-                    <FaEllipsisV onClick={handleMenuToggle} className="menu-icon" />
+                <div className="menu-container" onClick={handleMenuToggle}>
+                    <FaEllipsisV className="menu-icon" />
                     {showMenu && (
                         <div className="dropdown-menu">
                             <button onClick={handleEdit}>Edit</button>

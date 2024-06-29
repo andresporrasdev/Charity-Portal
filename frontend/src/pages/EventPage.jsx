@@ -45,25 +45,23 @@ const EventPage = () => {
     };
 
     const handleSaveEvent = async (event) => {
-    try {
-        const response = await axios.get(`http://localhost:3000/api/event/getEventById/${event.id}`);
-        if (response.data) {
-            await axios.post("http://localhost:3000/api/event/updateEvent", event);
-            setEvents(events.map(e => e.id === event.id ? event : e));
-        } else {
-            await axios.post("http://localhost:3000/api/event/addEvent", event);
-            setEvents([...events, event]);
+        try {
+            if (currentEvent) {
+                await axios.post("http://localhost:3000/api/event/updateEvent", event);
+                setEvents(events.map(e => e.id === event.id ? event : e));
+            } else {
+                await axios.post("http://localhost:3000/api/event/addEvent", event);
+                setEvents([...events, event]);
+            }
+            handleCloseModal();
+        } catch (error) {
+            console.error("Error saving event:", error);
         }
-        handleCloseModal();
-    } catch (error) {
-        console.error("Error saving event:", error);
-    }};
-
+    };
 
     const handleDeleteEvent = async (id) => {
-        console.log("Deleting event with id:", id);
         try {
-            axios.delete(`http://localhost:3000/api/event/deleteEvent/${id}`);
+            await axios.get(`http://localhost:3000/api/event/deleteEvent/${id}`);
             setEvents(events.filter((e) => e.id !== id));
         } catch (error) {
             console.error('Error deleting event:', error);
