@@ -35,24 +35,28 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
         setSelectedFile(e.target.files[0]);
     };
 
-    // Function to upload the file to the server
+    // // Function to upload the file to the server
     const uploadFile = async () => {
         if (!selectedFile) return;
     
-        const uploadFormData = new FormData(); // Changed variable name to avoid confusion
+        const uploadFormData = new FormData();
         uploadFormData.append('file', selectedFile);
     
         try {
-            const response = await fetch('/api/event/upload', {
+            const response = await fetch('http://localhost:3000/api/event/upload', { // Adjusted URL
                 method: 'POST',
                 body: uploadFormData,
+                // No headers for 'Content-Type': 'multipart/form-data' needed, as Fetch will set it correctly with the boundary
             });
+    
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
     
             const data = await response.json();
     
-            // Assuming the server returns the URL of the uploaded image
             if (data.imageUrl) {
-                setFormData({ ...formData, imageUrl: data.imageUrl }); // Correctly updates the state
+                setFormData({ ...formData, imageUrl: data.imageUrl });
             }
         } catch (error) {
             console.error('Error uploading file:', error);
