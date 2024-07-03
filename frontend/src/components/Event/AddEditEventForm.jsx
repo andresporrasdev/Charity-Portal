@@ -27,6 +27,38 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
         onSave(formData);
     };
 
+    // Step 1: Add a new state for the file
+    const [selectedFile, setSelectedFile] = useState(null);
+
+    // Function to handle file selection
+    const handleFileChange = (e) => {
+        setSelectedFile(e.target.files[0]);
+    };
+
+    // Function to upload the file to the server
+    const uploadFile = async () => {
+        if (!selectedFile) return;
+    
+        const uploadFormData = new FormData(); // Changed variable name to avoid confusion
+        uploadFormData.append('file', selectedFile);
+    
+        try {
+            const response = await fetch('/api/event/upload', {
+                method: 'POST',
+                body: uploadFormData,
+            });
+    
+            const data = await response.json();
+    
+            // Assuming the server returns the URL of the uploaded image
+            if (data.imageUrl) {
+                setFormData({ ...formData, imageUrl: data.imageUrl }); // Correctly updates the state
+            }
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        }
+    };
+
     return (
         <form className="add-edit-event-form" onSubmit={handleSubmit}>
             <h2>{event ? 'Edit Event' : 'Add Event'}</h2>
@@ -65,6 +97,11 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
             <label>
                 Image URL:
                 <input type="text" name="imageUrl" value={formData.imageUrl} onChange={handleChange} required />
+            </label>
+            <label>
+                Upload Image:
+                <input type="file" onChange={handleFileChange} />
+                <button type="button" onClick={uploadFile}>Upload</button>
             </label>
             <div className="form-actions">
                 <button type="submit" className="action-button">{event ? 'Save Changes' : 'Add Event'}</button>

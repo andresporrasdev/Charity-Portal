@@ -2,7 +2,11 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Event = require("../models/event");
+const multer = require('multer'); // For file upload
+const fs = require('fs'); //For directory creation
+const path = require('path'); //For directory creation
 
+//CRUD methods for event
 
 //Insert an event
 exports.addEvent = async (req, res) => {
@@ -63,6 +67,7 @@ exports.deleteEvent = async (req, res) => {
         res.status(500).json({ message: "An error occurred while deleting the event." });
     }
 };
+
 //Get event by id
 exports.getEventById = async (req, res) => {
     const eventId = req.params.id;
@@ -80,3 +85,56 @@ exports.getEventById = async (req, res) => {
     }
 };
 
+//Upload images for events
+
+// Directory where files will be uploaded
+const uploadDir = path.join(__dirname, 'uploads');
+
+// Check if the directory exists, if not, create it
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// Set up storage for uploaded files
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, uploadDir); // Use the uploads directory
+    },
+    filename: function(req, file, cb) {
+        cb(null, new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname);
+    }
+});
+
+const fileFilter = (req, file, cb) => {
+    // Accept images only
+    if (file.mimetype.startsWith('image')) {
+        cb(null, true);
+    } else {
+        cb(new Error('Not an image! Please upload only images.'), false);
+    }
+};
+
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 1024 * 1024 * 5 // 5MB max file size
+    },
+    fileFilter: fileFilter
+});
+
+// Route to handle file upload
+async function handleFileUpload(req, res) {
+    try {
+        // Here, you can also save file information to your database
+        // For example, req.file.path can be saved as the imageUrl for an event
+        res.status(200).json({
+            message: 'File uploaded successfully',
+            imageUrl: req.file.path // Assuming you want to return the path of the uploaded file
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+// At the end of eventController.js
+// exports.upload = upload;
