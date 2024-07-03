@@ -89,11 +89,9 @@ exports.getEventById = async (req, res) => {
 
 // Directory where files will be uploaded
 const uploadDir = path.join(__dirname, 'uploads');
-console.log("4 step uploadDir", uploadDir);
 
 // Check if the directory exists, if not, create it
 if (!fs.existsSync(uploadDir)) {
-    console.log("5 step uploadDir", uploadDir);
     fs.mkdirSync(uploadDir, { recursive: true });
 }
 
@@ -101,7 +99,6 @@ if (!fs.existsSync(uploadDir)) {
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
         cb(null, uploadDir); // Use the uploads directory
-        console.log("file", file);
     },
     filename: function(req, file, cb) {
         cb(null, new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname);
@@ -111,7 +108,6 @@ const storage = multer.diskStorage({
 const fileFilter = (req, file, cb) => {
     // Accept images only
     if (file.mimetype.startsWith('image')) {
-        console.log("6 step fileFilter", file);
         cb(null, true);
     } else {
         cb(new Error('Not an image! Please upload only images.'), false);
@@ -128,13 +124,10 @@ const upload = multer({
 
 // Route to handle file upload
 async function handleFileUpload(req, res) {
-    console.log("3 step req.file", req.file);
     try {
-        // Here, you can also save file information to your database
-        // For example, req.file.path can be saved as the imageUrl for an event
         res.status(200).json({
             message: 'File uploaded successfully',
-            imageUrl: req.file.path // Assuming you want to return the path of the uploaded file
+            imageUrl: req.file.path
         });
         console.log("Image uploaded successfully");
     } catch (error) {
@@ -143,6 +136,5 @@ async function handleFileUpload(req, res) {
     }
 }
 
-// At the end of eventController.js
 exports.handleFileUpload = handleFileUpload;
 exports.upload = upload;
