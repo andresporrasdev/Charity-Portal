@@ -1,3 +1,4 @@
+// src/components/Nav.js
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./Nav.css";
@@ -14,7 +15,7 @@ function Nav({ isLoggedIn, userName, handleLogout }) {
       </div>
       <div className="navbar-center">
         <div className="header-text">
-          <h1>Ottawa Tamil Sangam</h1>
+          <h1>Ottawa Tamil Sangam Community</h1>
           <nav className="nav-menu">
             <ul>
               <li>
@@ -53,6 +54,7 @@ function Nav({ isLoggedIn, userName, handleLogout }) {
       </div>
       <div className="navbar-right">
         {isLoggedIn ? (
+          // when loggined
           <div className="user-info">
             <h3>Welcome, {userName}</h3>
             <button className="logout-button" onClick={handleLogout}>
