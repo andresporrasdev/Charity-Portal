@@ -88,7 +88,7 @@ exports.getEventById = async (req, res) => {
 //Upload images for events
 
 // Directory where files will be uploaded
-const uploadDir = path.join(__dirname, 'uploads');
+const uploadDir = 'public/images'; // Adjusted to use the public directory
 
 // Check if the directory exists, if not, create it
 if (!fs.existsSync(uploadDir)) {
@@ -129,7 +129,7 @@ async function handleFileUpload(req, res) {
         const filename = path.basename(req.file.path);
 
         // Construct the new URL
-        const imageUrl = `http://localhost:3000/api/event/uploads/${filename}`;
+        const imageUrl = `http://localhost:3000/images/${filename}`;
 
         // Use the new imageUrl in the response
         res.status(200).json({
