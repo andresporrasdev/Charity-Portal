@@ -14,6 +14,11 @@ import MemberManageTable from "./components/MemberManageTable";
 import ResetPasswordPage from "./components/ResetPasswordPage";
 import axios from "axios";
 import UserContext from "./UserContext";
+import AdminDashboard from './components/AdminDashboard';
+import MemberManagement from './components/MemberManagement';
+import EventManagement from './components/EventManagement';
+import MemberDashboard from './components/MemberDashboard';
+import MemberEventPage from './components/MemberEventPage';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -72,6 +77,11 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
             <Route path="/member-manage" element={<MemberManageTable />} />
+                    <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      <Route path="/admin/members" element={<MemberManagement />} />
+      <Route path="/admin/events" element={<EventManagement />} />
+      <Route path="/member/dashboard" element={<MemberDashboard />} />
+      <Route path="/member/events" element={<MemberEventPage />} />
           </Routes>
         </div>
       </Router>
