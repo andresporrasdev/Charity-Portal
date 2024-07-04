@@ -129,7 +129,7 @@ async function handleFileUpload(req, res) {
         const filename = path.basename(req.file.path);
 
         // Construct the new URL
-        const imageUrl = `http://localhost:3000/api/events/uploads/${filename}`;
+        const imageUrl = `http://localhost:3000/api/event/uploads/${filename}`;
 
         // Use the new imageUrl in the response
         res.status(200).json({
