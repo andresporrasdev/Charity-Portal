@@ -4,7 +4,6 @@ import BaseURL from "../config.js";
 import { MaterialReactTable, useMaterialReactTable, MRT_ActionMenuItem } from "material-react-table";
 import { Edit, Delete } from "@mui/icons-material";
 import { Box, Container } from "@mui/material";
-import NotesIcon from "@mui/icons-material/Notes";
 import ConfirmModal from "./ConfirmModal.js";
 import UserContext from "../UserContext";
 
@@ -106,13 +105,6 @@ const MemberManageTable = () => {
           setSelectedUserId(row.original.id);
           openModal();
         }}
-      />,
-      <MRT_ActionMenuItem
-        icon={<NotesIcon />}
-        key="review"
-        label="Review"
-        onClick={() => console.info("review")}
-        table={table}
       />,
     ],
     muiTableBodyProps: {
