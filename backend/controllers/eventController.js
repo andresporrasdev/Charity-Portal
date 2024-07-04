@@ -125,9 +125,16 @@ const upload = multer({
 // Route to handle file upload
 async function handleFileUpload(req, res) {
     try {
+        // Extract filename from the uploaded file path
+        const filename = path.basename(req.file.path);
+
+        // Construct the new URL
+        const imageUrl = `http://localhost:3000/api/events/uploads/${filename}`;
+
+        // Use the new imageUrl in the response
         res.status(200).json({
             message: 'File uploaded successfully',
-            imageUrl: req.file.path
+            imageUrl: imageUrl // Updated to use the new URL
         });
         console.log("Image uploaded successfully");
     } catch (error) {
