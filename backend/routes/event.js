@@ -1,6 +1,5 @@
 const express = require("express");
 const eventController = require("../controllers/eventController");
-// const { upload } = require("../controllers/eventController");
 const router = express.Router();
 
 router.get("/readEvent", eventController.getAllEvents);

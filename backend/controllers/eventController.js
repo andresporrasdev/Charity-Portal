@@ -101,7 +101,7 @@ const storage = multer.diskStorage({
         cb(null, uploadDir); // Use the uploads directory
     },
     filename: function(req, file, cb) {
-        cb(null, new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname);
+        cb(null, new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname); //Create a unique filename
     }
 });
 
@@ -114,6 +114,7 @@ const fileFilter = (req, file, cb) => {
     }
 };
 
+// Set up the multer object for filtering file size
 const upload = multer({
     storage: storage,
     limits: {
@@ -143,5 +144,6 @@ async function handleFileUpload(req, res) {
     }
 }
 
+// Export the functions to be used in the routes
 exports.handleFileUpload = handleFileUpload;
 exports.upload = upload;
