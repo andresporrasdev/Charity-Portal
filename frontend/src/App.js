@@ -2,18 +2,38 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Nav from "./components/Nav";
-import Home from "./components/Home";
-import Event from "./components/Event";
-import Membership from "./components/Membership";
-import Volunteer from "./components/Volunteer";
-import News from "./components/News";
-import ContactUs from "./components/ContactUs";
+import Home from "./pages/Home";
+import Event from "./pages/EventPage";
+import PastEventPage from "./pages/PastEventPage";
+import Membership from "./pages/Membership";
+import Volunteer from "./pages/Volunteer";
+import News from "./pages/News";
+import ContactUs from "./pages/ContactUs";
 import LoginForm from "./components/LoginForm";
 import Register from "./components/Register";
 import MemberManageTable from "./components/MemberManageTable";
 import ResetPasswordPage from "./components/ResetPasswordPage";
+import Footer from "./components/Footer/Footer";
 import axios from "axios";
 import UserContext from "./UserContext";
+import { UserProvider } from "./UserContext";
+
+// import React, { useState, useEffect } from "react";
+// import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+// import Nav from "./components/Navbar/Nav";
+// import Home from "./pages/Home";
+// import Event from "./pages/EventPage";
+// import PastEventPage from './pages/PastEventPage';
+// import Membership from "./pages/Membership";
+// import Volunteer from "./pages/Volunteer";
+// import News from "./pages/News";
+// import ContactUs from "./pages/ContactUs";
+// import LoginForm from "./components/LoginForm";
+// import Register from "./components/Register";
+// import ResetPassword from "./components/ResetPassword";
+// import Footer from "./components/Footer/Footer";
+// import axios from "axios";
+// import { UserProvider } from "./UserContext";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -36,6 +56,7 @@ function App() {
       if (response.data.status === "success") {
         const userData = response.data.data.user;
         setUser(userData);
+
         setIsLoggedIn(true);
         console.log("fetchUserInfo:success");
       } else {
@@ -59,11 +80,13 @@ function App() {
   return (
     <UserContext.Provider value={user}>
       <Router>
+        {/* <UserProvider>  */}
         <div className="App">
           <Nav isLoggedIn={isLoggedIn} userName={user?.first_name} handleLogout={handleLogout} />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/event" element={<Event />} />
+            <Route path="/past-events" element={<PastEventPage />} />
             <Route path="/membership" element={<Membership />} />
             <Route path="/volunteer" element={<Volunteer />} />
             <Route path="/news" element={<News />} />
@@ -73,6 +96,7 @@ function App() {
             <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
             <Route path="/member-manage" element={<MemberManageTable />} />
           </Routes>
+          <Footer />
         </div>
       </Router>
     </UserContext.Provider>
