@@ -5,7 +5,8 @@ import { MaterialReactTable, useMaterialReactTable, MRT_ActionMenuItem } from "m
 import { Edit, Delete } from "@mui/icons-material";
 import { Box, Container } from "@mui/material";
 import ConfirmModal from "./ConfirmModal.js";
-import UserContext from "../UserContext";
+// import UserContext from "../UserContext";
+import { UserContext } from "../UserContext";
 
 const MemberManageTable = () => {
   const [columns, setColumns] = useState([]);
@@ -13,7 +14,8 @@ const MemberManageTable = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const apiUrl = `${BaseURL}/api/user/getAllUsers`;
-  const user = useContext(UserContext);
+  //const user = useContext(UserContext);
+  const { user, login, logout } = useContext(UserContext);
 
   useEffect(() => {
     const fetchData = async () => {
