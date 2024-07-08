@@ -2,7 +2,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 // import VolunteerSignUpForm from '../components/Volunteer/VolunteerSignUpForm';
-import VolunteerSignUpForm from './VolunteerSignUpForm';
+import VolunteerSignUpForm from '../components/VolunteerSignUpForm';
 
 const Volunteer = () => {
     const location = useLocation();
