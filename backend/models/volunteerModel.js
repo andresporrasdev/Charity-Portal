@@ -30,6 +30,11 @@ const volunteerSchema = new mongoose.Schema({
 	required: true,
 	trim: true,
   },
+  parentName: {
+	type: String,
+	required: true,
+	trim: true,
+  },
   agreePolicies: {
 	type: Boolean,
 	required: true,

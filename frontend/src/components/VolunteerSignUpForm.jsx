@@ -10,6 +10,7 @@ const VolunteerSignUpForm = () => {
     contactNumber: '',
     preferredRoles: '',
     event: '',
+    parentName: '',
     agreePolicies: false,
     understandUnpaid: false,
   });
@@ -112,9 +113,9 @@ const VolunteerSignUpForm = () => {
       contactNumber: '',
       preferredRoles: '',
       event: '',
+      parentName: '',
       agreePolicies: false,
       understandUnpaid: false,
-      parentName: '',
     });
     setErrors({});
   };
@@ -185,7 +186,7 @@ const VolunteerSignUpForm = () => {
           <input
             type="text"
             name="parentName"
-            value={formData.ParentName}
+            value={formData.parentName}
             onChange={handleChange}
             placeholder="Name the parent who is the member of OTS"
             required
