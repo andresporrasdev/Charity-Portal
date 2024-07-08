@@ -108,7 +108,7 @@ const EventPage = () => {
             </section>
 
             {showModal && (
-                <div className="modal" onClick={handleCloseModal}>
+                <div className="add_edit_event_modal" onClick={handleCloseModal}>
                     <div className="modal-content" onClick={e => e.stopPropagation()}>
                         <span className="close" onClick={handleCloseModal}>&times;</span>
                         <AddEditEventForm event={currentEvent} onSave={handleSaveEvent} onCancel={handleCloseModal} />

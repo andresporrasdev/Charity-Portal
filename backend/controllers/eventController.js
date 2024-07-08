@@ -39,7 +39,7 @@ exports.updateEvent = async (req, res) => {
         const deletedEvent = await Event.findOneAndDelete({ id: eventId });
         
         if (!deletedEvent) {
-            return res.status(404).json({ message: "Event not found to delete." });
+            return res.status(404).json({ messagecd: "Event not found to delete." });
         }
 
         // insert new event
