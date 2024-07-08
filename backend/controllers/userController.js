@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const Role = require("../models/role");
 const { encryptPassword } = require("../utils/encryption");
+const mongoose = require("mongoose");
 
 // const getUserDataFromEventBrite = async (eventId, email) => {
 //   try {
@@ -41,14 +42,6 @@ exports.saveMemberToDB = async (userData) => {
     console.error("Error saving user to DB:", error);
     throw error;
   }
-};
-
-const filterObj = (obj, ...allowedFields) => {
-  const newObj = {};
-  Object.keys(obj).forEach((prop) => {
-    if (allowedFields.includes(prop)) newObj[prop] = obj[prop];
-  });
-  return newObj;
 };
 
 const getUserDataFromMockFile = async (email) => {
@@ -137,7 +130,7 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-exports.updateUser = async (req, res, next) => {
+exports.updateUser = async (req, res) => {
   // check if request data contain password
   if (req.body.password) {
     res.status(400).json({
@@ -145,11 +138,41 @@ exports.updateUser = async (req, res, next) => {
       message: "You can't update password using this endpoint.",
     });
   }
+
   //update user detail
   try {
-    const filterObj = filterObj(req.body, "first_name", "last_name", "roles"); // set only fields allowed to update
-    const updateUser = await User.findByIdAndUpdate(req.user.id, filterObj, { runValidators: true, new: true });
-    //const updatedUser = await User.findByIdAndUpdate(req.params.id, filteredBody, { new: true, runValidators: true });
+    const filterObj = (obj, ...allowedFields) => {
+      const newObj = {};
+      Object.keys(obj).forEach((key) => {
+        if (allowedFields.includes(key)) {
+          newObj[key] = obj[key];
+        }
+      });
+      return newObj;
+    };
+
+    const filteredBody = filterObj(req.body, "roles");
+
+    //Convert Roles to ObjectIds
+    if (filteredBody.roles && Array.isArray(filteredBody.roles)) {
+      filteredBody.roles = filteredBody.roles.map((role) => {
+        if (mongoose.Types.ObjectId.isValid(role)) {
+          return mongoose.Types.ObjectId(role);
+        } else {
+          throw new Error(`Invalid ObjectId: ${role}`);
+        }
+      });
+    }
+
+    const updateUser = await User.findByIdAndUpdate(req.params.id, filteredBody, { runValidators: true, new: true });
+
+    if (!updateUser) {
+      return res.status(404).json({
+        status: "fail",
+        message: "No user found with that ID.",
+      });
+    }
+
     res.status(200).json({
       status: "Success",
       data: {
@@ -157,6 +180,7 @@ exports.updateUser = async (req, res, next) => {
       },
     });
   } catch (error) {
+    console.error("Error updating user:", error);
     res.status(500).json({
       status: "error",
       message: "Failed to update user.",
