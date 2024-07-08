@@ -1,26 +1,24 @@
-import { useEffect, useMemo, useState, useContext } from "react";
+import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import BaseURL from "../config.js";
 import { MaterialReactTable, useMaterialReactTable, MRT_ActionMenuItem } from "material-react-table";
 import { Edit, Delete } from "@mui/icons-material";
 import { Box, Container } from "@mui/material";
-import ConfirmModal from "./ConfirmModal.js";
-// import UserContext from "../UserContext";
-import { UserContext } from "../UserContext";
+import ConfirmModal from "./ConfirmModal.jsx";
+import EditUserForm from "./EditUserForm.jsx";
 
 const MemberManageTable = () => {
   const [columns, setColumns] = useState([]);
   const [userData, setUserData] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEditUserModal, setShowEditUserModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
+  const [roleOptions, setRoleOptions] = useState([]);
   const apiUrl = `${BaseURL}/api/user/getAllUsers`;
-  //const user = useContext(UserContext);
-  const { user, login, logout } = useContext(UserContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        //"http://localhost:3000/api/user/getAllUsers"
         const response = await axios.get(apiUrl, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`, // Add authorization header
@@ -54,14 +52,65 @@ const MemberManageTable = () => {
     fetchData();
   }, [apiUrl]);
 
-  const handleClose = () => {
-    console.log("Cancel Confirmation");
+  useEffect(() => {
+    fetchRoles();
+  }, []);
+
+  const fetchRoles = async () => {
+    try {
+      const response = await axios.get(`${BaseURL}/api/role/getAllRoles`);
+      setRoleOptions(response.data.data.roles);
+    } catch (error) {
+      console.error("Error fetching roles:", error);
+    }
+  };
+
+  const handleDeleteModalClose = () => {
     setShowDeleteModal(false);
   };
 
-  const openModal = () => {
-    console.log("Delete Confirmation");
+  const handleEditUserModalClose = () => {
+    setShowEditUserModal(false);
+  };
+
+  const openDeleteModal = () => {
     setShowDeleteModal(true);
+  };
+
+  const openEditUserModal = () => {
+    setShowEditUserModal(true);
+  };
+
+  const handleUpdateUser = async (editedUser) => {
+    try {
+      const editUrl = `${BaseURL}/api/user/updateUser/${editedUser.id}`;
+      const response = await axios.patch(editUrl, editedUser, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      if (response.status === 200) {
+        // 'roles'converted from role IDs to role names to display role names on the table
+        const updatedUserData = {
+          ...editedUser,
+          roles: editedUser.roles
+            .map((roleId) => {
+              const role = roleOptions.find((role) => role._id === roleId);
+              return role ? role.name : roleId;
+            })
+            .join(", "),
+        };
+
+        setUserData((prevUserData) => prevUserData.map((user) => (user.id === editedUser.id ? updatedUserData : user)));
+      } else {
+        throw new Error("Failed to edit user");
+      }
+    } catch (error) {
+      console.error("Error editing user:", error);
+    } finally {
+      setShowEditUserModal(false);
+    }
   };
 
   const handleDeleteConfirm = async () => {
@@ -75,6 +124,7 @@ const MemberManageTable = () => {
 
       if (response.status === 204) {
         setUserData((prevUserData) => prevUserData.filter((user) => user.id !== selectedUserId));
+        window.location.reload();
       } else {
         throw new Error("Failed to delete user");
       }
@@ -96,7 +146,16 @@ const MemberManageTable = () => {
       },
     },
     renderRowActionMenuItems: ({ row, table }) => [
-      <MRT_ActionMenuItem icon={<Edit />} key="edit" label="Edit" onClick={() => console.info("Edit")} table={table} />,
+      <MRT_ActionMenuItem
+        icon={<Edit />}
+        key="edit"
+        label="Edit"
+        onClick={() => {
+          setSelectedUserId(row.original.id);
+          openEditUserModal();
+        }}
+        table={table}
+      />,
       <MRT_ActionMenuItem
         icon={<Delete />}
         key="delete"
@@ -105,7 +164,7 @@ const MemberManageTable = () => {
         sx={{ border: 0 }}
         onClick={() => {
           setSelectedUserId(row.original.id);
-          openModal();
+          openDeleteModal();
         }}
       />,
     ],
@@ -131,7 +190,20 @@ const MemberManageTable = () => {
           text="Do you really want to delete this user?"
           open={showDeleteModal}
           onConfirm={handleDeleteConfirm}
-          onClose={handleClose}
+          onClose={handleDeleteModalClose}
+        />
+      )}
+
+      {showEditUserModal && (
+        <EditUserForm
+          user={{
+            ...userData.find((user) => user.id === selectedUserId),
+            //split the roles string into an array before passing to ensure the form receives the roles in the array format
+            roles: userData.find((user) => user.id === selectedUserId).roles.split(", "),
+          }}
+          roleOptions={roleOptions}
+          onUpdateUser={handleUpdateUser}
+          onClose={handleEditUserModalClose}
         />
       )}
     </>
