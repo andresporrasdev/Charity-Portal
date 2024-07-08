@@ -22,7 +22,7 @@ const VolunteerSignUpForm = () => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const response = await axios.post('http://localhost:3000/api/volunteer/getUserInfo');
+        const response = await axios.get('http://localhost:3000/api/user/userinfo');
         setFormData((prevFormData) => ({
           ...prevFormData,
           name: response.data.name,
