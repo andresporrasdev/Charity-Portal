@@ -35,7 +35,8 @@ const VolunteerSignUpForm = () => {
 
     const fetchEvents = async () => {
       try {
-        const response = await axios.post('http://localhost:3000/api/volunteer/getEvents');
+        const response = await axios.get('http://localhost:3000/api/event/readEvent');
+        console.log("events",response.data)
         setEvents(response.data);
 
         if (location.state && location.state.eventName) {
