@@ -22,7 +22,7 @@ const VolunteerSignUpForm = () => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/volunteer/getUserInfo');
+        const response = await axios.post('http://localhost:3000/api/volunteer/getUserInfo');
         setFormData((prevFormData) => ({
           ...prevFormData,
           name: response.data.name,
@@ -35,7 +35,7 @@ const VolunteerSignUpForm = () => {
 
     const fetchEvents = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/volunteer/getEvents');
+        const response = await axios.post('http://localhost:3000/api/volunteer/getEvents');
         setEvents(response.data);
 
         if (location.state && location.state.eventName) {
@@ -91,7 +91,7 @@ const VolunteerSignUpForm = () => {
     e.preventDefault();
     if (validateForm()) {
       try {
-        await axios.post('http://localhost:5000/api/volunteer/volunteerSignUp', formData);
+        await axios.post('http://localhost:3000/api/volunteer/volunteerSignUp', formData);
         alert('Volunteer signed up successfully!');
         setSubmissionStatus('success');
       } catch (error) {
