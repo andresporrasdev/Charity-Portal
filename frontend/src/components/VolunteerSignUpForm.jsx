@@ -82,7 +82,8 @@ const VolunteerSignUpForm = () => {
     if (!formData.preferredRoles) newErrors.preferredRoles = 'Preferred Roles is required';
     if (!formData.event) newErrors.event = 'Event is required';
     if (!formData.agreePolicies) newErrors.agreePolicies = 'You must agree to the policies';
-    if (!formData.understandUnpaid) newErrors.understandUnpaid = 'You must understand the volunteer position is unpaid'; 
+    if (!formData.understandUnpaid) newErrors.understandUnpaid = 'You must understand the volunteer position is unpaid';
+    if (!formData.parentName) newErrors.parentName = 'Parent Name is required';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -113,6 +114,7 @@ const VolunteerSignUpForm = () => {
       event: '',
       agreePolicies: false,
       understandUnpaid: false,
+      parentName: '',
     });
     setErrors({});
   };
@@ -178,6 +180,17 @@ const VolunteerSignUpForm = () => {
             ))}
           </select>
           {errors.event && <p className="error">{errors.event}</p>}
+        </div>
+        <div className="input-box">
+          <input
+            type="text"
+            name="parentName"
+            value={formData.ParentName}
+            onChange={handleChange}
+            placeholder="Name the parent who is the member of OTS"
+            required
+          />
+          {errors.parentName && <p className="error">{errors.parentName}</p>}
         </div>
         <div className="volunteer-agreement">
           <label>
