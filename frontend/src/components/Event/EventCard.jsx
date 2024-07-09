@@ -64,7 +64,7 @@ const EventCard = ({ event, onEdit, onDelete, onViewDetails }) => {
             <div className="event-actions">
                 <button className="action-button" >Purchase Ticket</button>
                 <button className="action-button" onClick={() => navigate("/volunteer")}>Volunteer</button>
-                {/* {user?.role === 'Administrator' && ( */}
+                {user?.role === 'Administrator' && ( 
                 <div className="menu-container" onClick={handleMenuToggle}>
                     <FaEllipsisV className="menu-icon" />
                     {showMenu && (
@@ -74,7 +74,7 @@ const EventCard = ({ event, onEdit, onDelete, onViewDetails }) => {
                         </div>
                     )}
                 </div>
-                {/* )} */}
+                )} 
             </div>
         </div>
     );

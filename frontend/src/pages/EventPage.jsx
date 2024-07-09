@@ -79,9 +79,9 @@ const EventPage = () => {
 
     return (
         <div className="event-page">
-            {/* {user?.role === 'Administrator' && ( */}
+            {user?.role === 'Administrator' && ( 
             <button className="add-event-button" onClick={handleAddEvent}>Add Event</button>
-            {/* )} */}
+            )} 
             <section>
                 <h2>Upcoming Events</h2>
                 <EventList
@@ -90,7 +90,7 @@ const EventPage = () => {
                     onDelete={handleDeleteEvent}
                     onViewDetails={handleViewDetails}
                 />
-                {/*onEdit={user?.role === 'Administrator' ? handleEditEvent : null} */}
+                onEdit={user?.role === 'Administrator' ? handleEditEvent : null} 
             </section>
             <section className="past-events-section">
                 <h2>Past Events</h2>
