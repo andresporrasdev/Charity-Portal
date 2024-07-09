@@ -145,7 +145,7 @@ const MemberManageTable = () => {
         size: 30,
       },
     },
-    renderRowActionMenuItems: ({ row, table }) => [
+    renderRowActionMenuItems: ({ closeMenu, row, table }) => [
       <MRT_ActionMenuItem
         icon={<Edit />}
         key="edit"
@@ -153,6 +153,7 @@ const MemberManageTable = () => {
         onClick={() => {
           setSelectedUserId(row.original.id);
           openEditUserModal();
+          closeMenu();
         }}
         table={table}
       />,
@@ -165,6 +166,7 @@ const MemberManageTable = () => {
         onClick={() => {
           setSelectedUserId(row.original.id);
           openDeleteModal();
+          closeMenu();
         }}
       />,
     ],
