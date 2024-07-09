@@ -20,19 +20,36 @@ const VolunteerSignUpForm = () => {
   const [events, setEvents] = useState([]);
   const location = useLocation();
 
+  const fetchUserInfo = async (token) => {
+    try {
+      // const response = await axios.get('http://localhost:3000/api/user/userinfo');
+      
+      const response = await axios.get("http://localhost:3000/api/user/userinfo", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      // console.log("response",response)
+
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        name: `${response.data.data.user.first_name} ${response.data.data.user.last_name}`, 
+        email: response.data.data.user.email,
+      }));
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const response = await axios.get('http://localhost:3000/api/user/userinfo');
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          name: response.data.name,
-          email: response.data.email,
-        }));
-      } catch (error) {
-        console.error('Error fetching user info:', error);
-      }
-    };
+
+    const token = localStorage.getItem("token");
+    if (token) {
+      fetchUserInfo(token);
+    } else {
+      console.log("No token found, user not logged in")
+    }
+
 
     const fetchEvents = async () => {
       try {
@@ -51,7 +68,7 @@ const VolunteerSignUpForm = () => {
       }
     };
 
-    fetchUserInfo();
+    // fetchUserInfo();
     fetchEvents();
   }, [location.state]);
 
@@ -195,7 +212,7 @@ const VolunteerSignUpForm = () => {
             value={formData.parentName}
             onChange={handleChange}
             placeholder="Name the parent who is the member of OTS"
-            required
+            // required
           />
           {errors.parentName && <p className="error">{errors.parentName}</p>}
         </div>
