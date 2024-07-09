@@ -158,14 +158,20 @@ const VolunteerSignUpForm = () => {
           {errors.contactNumber && <p className="error">{errors.contactNumber}</p>}
         </div>
         <div className="input-box">
-          <input
-            type="text"
+          <select
             name="preferredRoles"
             value={formData.preferredRoles}
             onChange={handleChange}
-            placeholder="Enter your preferred roles"
             required
-          />
+          >
+            <option value="">Select your preferred role</option>
+            <option value="Tea area">Tea area: Guide guests at the Tea station: make sure snack tray is refilled: Tea cups/ sugar refilled etc.</option>
+            <option value="Reception table">Reception table: Greet the members, ask them if they have the band, offer them the candy/flowers etc.</option>
+            <option value="Door Greeter">Door Greeter: Check the wrist band at the Auditorium entrance and Dinner hall entrance and allow ppl inside</option>
+            <option value="Back Stage">Back Stage: Help in organizing the performers in the green room: help certificate distribution: stage</option>
+            <option value="Comms">Comms: Audio video coordination</option>
+            <option value="Dinner">Dinner</option>
+          </select>
           {errors.preferredRoles && <p className="error">{errors.preferredRoles}</p>}
         </div>
         <div className="input-box">
