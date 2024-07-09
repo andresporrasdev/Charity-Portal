@@ -15,12 +15,17 @@
     margin-bottom: 10px;
 }
 
-.image-container img {
+.image-container .event-image {    
     position: absolute;
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 10px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: bottom;
 }
 
 .member-only-text {
@@ -35,6 +40,7 @@
 }
 
 .event-details {
+    text-align: left;
     color: #333;
     margin-bottom: 40px;
 }
@@ -173,7 +179,8 @@
     margin: 0;
 }
 
-.modal {
+.event_detail_modal,
+.add_edit_event_modal {
     display: flex;
     position: fixed;
     z-index: 1000;
@@ -188,6 +195,7 @@
 }
 
 .modal-content {
+    text-align: left;
     background-color: #fefefe;
     margin: auto;
     padding: 20px;

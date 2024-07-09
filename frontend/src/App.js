@@ -11,7 +11,7 @@ import News from "./pages/News";
 import ContactUs from "./pages/ContactUs";
 import LoginForm from "./components/LoginForm";
 import Register from "./components/Register";
-import MemberManageTable from "./components/MemberManageTable";
+import MemberManagePage from "./pages/MemberManagePage";
 import ResetPasswordPage from "./components/ResetPasswordPage";
 import Footer from "./components/Footer/Footer";
 import axios from "axios";
@@ -76,7 +76,7 @@ function App() {
             <Route path="/login" element={<LoginForm />} />
             <Route path="/register" element={<Register />} />
             <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-            <Route path="/member-manage" element={<MemberManageTable />} />
+            <Route path="/member-manage" element={<MemberManagePage />} />
           </Routes>
           <Footer />
         </div>

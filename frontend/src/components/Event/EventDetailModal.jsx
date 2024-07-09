@@ -1,5 +1,4 @@
 import React from 'react';
-import AddEditEventForm from './AddEditEventForm'; 
 import './Event.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,7 +7,7 @@ const EventDetailsModal = ({ event, onClose }) => {
     const navigate = useNavigate();
     
     return (
-        <div className="modal" onClick={onClose}>
+        <div className="event_detail_modal" onClick={onClose}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <span className="close" onClick={onClose}>&times;</span>
                 <div className="event-details-modal">

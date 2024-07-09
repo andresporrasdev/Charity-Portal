@@ -5,6 +5,7 @@ const authRouter = require("./routes/auth");
 const otpRouter = require("./routes/otp");
 const eventRouter = require("./routes/event");
 const volunteerRouter = require("./routes/volunteer");
+const roleRouter = require("./routes/role");
 const cors = require("cors");
 
 let app = express();
@@ -22,5 +23,6 @@ app.use("/api/otp", otpRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/event", eventRouter);
 app.use("/api/volunteer", volunteerRouter);
+app.use("/api/role", roleRouter);
 
 module.exports = app;
