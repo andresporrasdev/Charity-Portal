@@ -1,0 +1,69 @@
+/* VolunteerSignUpForm.css */
+.volunteer-signup-form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+  }
+  
+  .volunteer-signup-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .volunteer-signup-form .input-box {
+    margin-bottom: 15px;
+    text-align: left;
+  }
+  
+  .volunteer-signup-form .input-box input,
+  .volunteer-signup-form .input-box select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+  
+  .volunteer-signup-form .input-box input:focus,
+  .volunteer-signup-form .input-box select:focus {
+    outline: none;
+    border-color: #e88a1d;
+  }
+  
+  .volunteer-signup-form .input-box .error {
+    color: #ff0000;
+    font-size: 14px;
+    margin-top: 5px;
+    text-align: left;
+  }
+  
+  .volunteer-signup-form .volunteer-agreement {
+    text-align: left;
+    margin-bottom: 15px;
+  }
+  
+  .volunteer-signup-form .volunteer-agreement label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .volunteer-signup-form button {
+    background-color: #e88a1d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 10px;
+    transition: background-color 0.3s;
+  }
+  
+  .volunteer-signup-form button:hover {
+    background-color: #d37f1a;
+  }
+  
