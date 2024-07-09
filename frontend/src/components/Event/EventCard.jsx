@@ -8,6 +8,7 @@ const EventCard = ({ event, onEdit, onDelete, onViewDetails }) => {
     const [showMenu, setShowMenu] = useState(false);
     const { user } = useContext(UserContext);
     const { name, time, place, pricePublic, priceMember, isMemberOnly, imageUrl } = event;
+    const formattedTime = time.replace('T', ' ');
     const navigate = useNavigate();
 
     const handleMenuToggle = (e) => {
@@ -55,7 +56,7 @@ const EventCard = ({ event, onEdit, onDelete, onViewDetails }) => {
             </div>
             <div className="event-details">
                 <h3>{name}</h3>
-                <p><strong>Time:</strong> {time}</p>
+                <p><strong>Time:</strong> {formattedTime}</p>
                 <p><strong>Place:</strong> {place}</p>
                 {renderPrice()}
             </div>

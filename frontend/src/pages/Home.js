@@ -1,14 +1,16 @@
 // src/components/Home.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import home1 from '../image/home1.jpg';
 import home2 from '../image/home2.jpg';
-import EventCard from '../components/Event/EventCard.jsx';
+import { fetchEvents } from '../components/Event/FetchEvent';
+import EventList from '../components/Event/EventList';
 import adImage1 from '../image/sponsor.jpeg';
 import newsImage1 from '../image/news.png';
 import './Home.css';
 
-function Home({ upcomingEvents }) {
+function Home() {
     const [currentHome, setCurrentHome] = useState(1); // State to track the current home picture
+    const [upcomingEvents, setUpcomingEvents] = useState([]);
 
     const prevHome = () => {
         setCurrentHome(1);
@@ -18,13 +20,17 @@ function Home({ upcomingEvents }) {
         setCurrentHome(2);
     };
     
-    const eventCards = upcomingEvents && upcomingEvents.length > 0
-        ? upcomingEvents.map(event => (
-            <div key={event.id}>
-                <EventCard event={event} />
-            </div>
-        ))
-        : null;
+    useEffect(() => {
+        const fetchAndSetEvents = async () => {
+            const eventsData = await fetchEvents();
+            const currentDate = new Date();
+            const filteredEvents = eventsData.filter(event => new Date(event.time) > currentDate)
+                                             .sort((a, b) => new Date(a.time) - new Date(b.time));
+            setUpcomingEvents(filteredEvents.slice(0, 3));
+        };
+
+        fetchAndSetEvents();
+    }, []);
 
     return (
         <div className="home-container">
@@ -50,10 +56,10 @@ function Home({ upcomingEvents }) {
             
             <div className="events">
                 <h2>Events</h2>
-                <div className="event-buttons">
-                    {eventCards}
-                </div>
-                
+                <EventList
+                    events={upcomingEvents.map(event => ({ ...event, time: event.time.toString() }))}
+                    onViewDetails={(event) => console.log('View details for event:', event)}
+                />             
             </div>
             
             <div className="ads">

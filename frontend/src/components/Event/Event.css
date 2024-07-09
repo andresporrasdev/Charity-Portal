@@ -126,11 +126,12 @@
     gap: 20px; 
 }
 
-.event-page {
+.event-page,
+.past-event-page {
     position: relative;
-    padding-top: 150px;
     padding-left: 10%;
     padding-right: 10%;
+    max-width: 1400px;
 }
 
 .event-page h2{
@@ -206,8 +207,6 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
 }
 
-
-
 .close {
     color: #aaa;
     float: right;
@@ -221,3 +220,40 @@
     text-decoration: none;
     cursor: pointer;
 }
+
+.more-link {
+    display: block;
+    margin-top: 10px;
+    text-decoration: none;
+    color: #e88a1d;
+    font-size: 16px;
+    margin-bottom: 40px;
+}
+
+.more-link:hover {
+    text-decoration: underline;
+}
+
+.filter-section {
+    margin-bottom: 40px;
+}
+
+.date-filter {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.date-filter label {
+    font-size: 16px;
+}
+
+.date-filter input[type="date"] {
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: none;
+    outline: none;
+}
+
+
