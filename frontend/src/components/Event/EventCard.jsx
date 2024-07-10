@@ -46,6 +46,11 @@ const EventCard = ({ event, onEdit, onDelete, onViewDetails, hideActions, user }
         }
     };
 
+    // Function to handle volunteer click
+    const handleVolunteerClick = () => {
+        navigate("/volunteer", { state: { eventName: name } });
+    };
+
     return (
         <div className="event-card">
             {isMemberOnly && <div className="member-only-text">Member Only</div>}
@@ -58,11 +63,11 @@ const EventCard = ({ event, onEdit, onDelete, onViewDetails, hideActions, user }
                 <p><strong>Place:</strong> {place}</p>
                 {renderPrice()}
             </div>
-            
+
             {!hideActions && (
                 <div className="event-actions">
                     <button className="action-button">Purchase Ticket</button>
-                    <button className="action-button" onClick={() => navigate("/volunteer")}>Volunteer</button>
+                    <button className="action-button" onClick={handleVolunteerClick}>Volunteer</button>
                 </div>
             )}
             {user?.roles.includes('66678417525bc55cbcd28a96') && ( 
