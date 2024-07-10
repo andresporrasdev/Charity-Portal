@@ -54,8 +54,11 @@ const VolunteerSignUpForm = () => {
     const fetchEvents = async () => {
       try {
         const response = await axios.get('http://localhost:3000/api/event/readEvent');
-        console.log("events",response.data)
-        setEvents(response.data);
+        // console.log("events",response.data)
+        const futureEvents = response.data.filter(event => new Date(event.time) >= new Date())
+                .sort((a, b) => new Date(b.time) - new Date(a.time));
+        // console.log("futureEvents",futureEvents)
+                setEvents(futureEvents);
 
         if (location.state && location.state.eventName) {
           setFormData((prevFormData) => ({
@@ -68,7 +71,6 @@ const VolunteerSignUpForm = () => {
       }
     };
 
-    // fetchUserInfo();
     fetchEvents();
   }, [location.state]);
 
