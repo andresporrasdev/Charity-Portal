@@ -122,7 +122,7 @@ const VolunteerSignUpForm = () => {
     if (!formData.event) newErrors.event = 'Event is required';
     if (!formData.agreePolicies) newErrors.agreePolicies = 'You must agree to the policies';
     if (!formData.understandUnpaid) newErrors.understandUnpaid = 'You must understand the volunteer position is unpaid';
-    if (!formData.parentName) newErrors.parentName = 'Parent Name is required';
+    // if (!formData.parentName) newErrors.parentName = 'Parent Name is required';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;

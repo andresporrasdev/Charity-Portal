@@ -11,7 +11,7 @@ const volunteerSchema = new mongoose.Schema({
 	required: true,
 	trim: true,
 	lowercase: true,
-	unique: true,
+	unique: false,
 	match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   },
   contactNumber: {
@@ -32,7 +32,7 @@ const volunteerSchema = new mongoose.Schema({
   },
   parentName: {
 	type: String,
-	required: true,
+	required: false,
 	trim: true,
   },
   agreePolicies: {
