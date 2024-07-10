@@ -22,6 +22,8 @@ const VolunteerSignUpForm = () => {
   const [submissionStatus, setSubmissionStatus] = useState('');
   const [events, setEvents] = useState([]);
   const location = useLocation();
+  const [roles, setRoles] = useState([]); //Handle volunteer roles
+
 
   const fetchUserInfo = async (token) => {
     try {    
@@ -51,6 +53,22 @@ const VolunteerSignUpForm = () => {
       console.log("No token found, user not logged in")
     }
 
+    // Fetch voluntter Roles from the backend
+
+    const fetchVolunteerRoles = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/api/volunteerRole/getAllVolunteerRoles');
+        // console.log("volunteerRoles",response.data.data.roles)
+        setRoles(response.data.data.roles); // Assuming the API response structure is { data: { roles: [...] } }
+        // ...prevFormData,
+        //   preferredRoles: `${response.data.data.name}`,
+        // }));
+      } catch (error) {
+        console.error('Error fetching volunteer roles:', error);
+      }
+    };
+
+    fetchVolunteerRoles();
 
     const fetchEvents = async () => {
       try {
@@ -184,13 +202,10 @@ const VolunteerSignUpForm = () => {
             onChange={handleChange}
             required
           >
-            <option value="">Select your preferred role</option>
-            <option value="Tea area">Tea area: Guide guests at the Tea station: make sure snack tray is refilled: Tea cups/ sugar refilled etc.</option>
-            <option value="Reception table">Reception table: Greet the members, ask them if they have the band, offer them the candy/flowers etc.</option>
-            <option value="Door Greeter">Door Greeter: Check the wrist band at the Auditorium entrance and Dinner hall entrance and allow ppl inside</option>
-            <option value="Back Stage">Back Stage: Help in organizing the performers in the green room: help certificate distribution: stage</option>
-            <option value="Comms">Comms: Audio video coordination</option>
-            <option value="Dinner">Dinner</option>
+            <option value="">Select your preferred Role</option>
+            {roles.map(role => (
+              <option key={role._id} value={role.name}>{role.name}: {role.description}</option>
+            ))}
           </select>
           {errors.preferredRoles && <p className="error">{errors.preferredRoles}</p>}
         </div>
