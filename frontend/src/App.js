@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Nav from "./components/Navbar/Nav";
 import Home from "./pages/Home";
-import Event from "./pages/EventPage";
+import EventPage from "./pages/EventPage";
 import PastEventPage from "./pages/PastEventPage";
 import Membership from "./pages/Membership";
 import Volunteer from "./pages/Volunteer";
@@ -67,7 +67,7 @@ function App() {
           <Nav isLoggedIn={isLoggedIn} userName={user?.first_name} handleLogout={handleLogout} />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/event" element={<Event />} />
+            <Route path="/event" element={<EventPage user={user} />}  />
             <Route path="/past-events" element={<PastEventPage />} />
             <Route path="/membership" element={<Membership />} />
             <Route path="/volunteer" element={<Volunteer />} />

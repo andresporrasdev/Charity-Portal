@@ -2,11 +2,9 @@ import React, { useState, useContext } from 'react';
 import './Event.css';
 import { useNavigate } from 'react-router-dom';
 import { FaEllipsisV } from 'react-icons/fa';
-import { UserContext } from '../../UserContext.jsx';
 
-const EventCard = ({ event, onEdit, onDelete, onViewDetails }) => {
+const EventCard = ({ event, onEdit, onDelete, onViewDetails, hideActions, user }) => {
     const [showMenu, setShowMenu] = useState(false);
-    const { user } = useContext(UserContext);
     const { name, time, place, pricePublic, priceMember, isMemberOnly, imageUrl } = event;
     const formattedTime = time.replace('T', ' ');
     const navigate = useNavigate();
@@ -61,21 +59,24 @@ const EventCard = ({ event, onEdit, onDelete, onViewDetails }) => {
                 {renderPrice()}
             </div>
             
-            <div className="event-actions">
-                <button className="action-button" >Purchase Ticket</button>
-                <button className="action-button" onClick={() => navigate("/volunteer")}>Volunteer</button>
-                {user?.role === 'Administrator' && ( 
-                <div className="menu-container" onClick={handleMenuToggle}>
-                    <FaEllipsisV className="menu-icon" />
-                    {showMenu && (
-                        <div className="dropdown-menu">
-                            <button onClick={handleEdit}>Edit</button>
-                            <button onClick={handleDelete}>Delete</button>
-                        </div>
-                    )}
+            {!hideActions && (
+                <div className="event-actions">
+                    <button className="action-button">Purchase Ticket</button>
+                    <button className="action-button" onClick={() => navigate("/volunteer")}>Volunteer</button>
                 </div>
-                )} 
-            </div>
+            )}
+            {user?.roles.includes('66678417525bc55cbcd28a96') && ( 
+                <div className="menu-container" onClick={handleMenuToggle}>
+                        <FaEllipsisV className="menu-icon" />
+                        {showMenu && (
+                            <div className="dropdown-menu">
+                                <button onClick={handleEdit}>Edit</button>
+                                <button onClick={handleDelete}>Delete</button>
+                            </div>
+                        )}
+                </div>
+            )}
+
         </div>
     );
 };
