@@ -27,7 +27,8 @@ preferredRoles: {
 	trim: true,
   },
   event: {
-	type: String,
+	type: mongoose.Schema.Types.ObjectId,
+	ref: "events",
 	required: true,
 	trim: true,
   },

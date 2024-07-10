@@ -218,7 +218,7 @@ const VolunteerSignUpForm = () => {
           >
             <option value="">Select an event</option>
             {events.map(event => (
-              <option key={event.id} value={event.name}>{event.name}</option>
+              <option key={event.id} value={event._id}>{event.name}</option>
             ))}
           </select>
           {errors.event && <p className="error">{errors.event}</p>}
