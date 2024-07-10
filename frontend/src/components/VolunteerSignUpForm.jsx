@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './VolunteerSignUpForm.css';
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Step 1
 
 const VolunteerSignUpForm = () => {
+  const navigate = useNavigate(); // Step 2
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -114,8 +117,8 @@ const VolunteerSignUpForm = () => {
     if (validateForm()) {
       try {
         await axios.post('http://localhost:3000/api/volunteer/volunteerSignUp', formData);
-        alert('Volunteer signed up successfully!');
-        setSubmissionStatus('success');
+        alert('Volunteer signed up successfully! \nPress OK to return to the events page');        setSubmissionStatus('success');
+        navigate('/event'); // Step 3: Adjust the path as needed
       } catch (error) {
         console.error('Error signing up volunteer:', error);
         setSubmissionStatus('fail');
