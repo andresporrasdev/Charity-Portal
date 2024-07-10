@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './VolunteerSignUpForm.css';
 import { useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom'; // Step 1
+import { useNavigate } from 'react-router-dom'; //Use navigate to redirect to another page
 
 const VolunteerSignUpForm = () => {
-  const navigate = useNavigate(); // Step 2
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -24,9 +24,7 @@ const VolunteerSignUpForm = () => {
   const location = useLocation();
 
   const fetchUserInfo = async (token) => {
-    try {
-      // const response = await axios.get('http://localhost:3000/api/user/userinfo');
-      
+    try {    
       const response = await axios.get("http://localhost:3000/api/user/userinfo", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -118,7 +116,7 @@ const VolunteerSignUpForm = () => {
       try {
         await axios.post('http://localhost:3000/api/volunteer/volunteerSignUp', formData);
         alert('Volunteer signed up successfully! \nPress OK to return to the events page');        setSubmissionStatus('success');
-        navigate('/event'); // Step 3: Adjust the path as needed
+        navigate('/event');
       } catch (error) {
         console.error('Error signing up volunteer:', error);
         setSubmissionStatus('fail');
