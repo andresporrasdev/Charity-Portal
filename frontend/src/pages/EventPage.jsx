@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import EventList from '../components/Event/EventList';
 import AddEditEventForm from '../components/Event/AddEditEventForm';
 import EventDetailModal from '../components/Event/EventDetailModal';
+import { fetchEvents } from '../components/Event/FetchEvent';
 import '../components/Event/Event.css';
 import { Link } from 'react-router-dom';
 import axios from "axios";
@@ -15,17 +16,12 @@ const EventPage = () => {
     const { user } = useContext(UserContext);
 
     useEffect(() => {
-        const fetchEvents = async () => {
-            try {
-                const response = await axios.get("http://localhost:3000/api/event/readEvent");
-                console.log("events",response.data)
-                setEvents(response.data);
-            } catch (error) {
-                console.error("Error fetching events:", error);
-            }
+        const fetchAndSetEvents = async () => {
+            const eventsData = await fetchEvents();
+            setEvents(eventsData);
         };
 
-        fetchEvents();
+        fetchAndSetEvents();
     }, []);
 
     const handleAddEvent = () => {
@@ -77,13 +73,15 @@ const EventPage = () => {
     const upcomingEvents = events.filter(event => new Date(event.time) > currentDate)
                                  .sort((a, b) => new Date(a.time) - new Date(b.time));
     const pastEvents = events.filter(event => new Date(event.time) <= currentDate)
-                                 .sort((a, b) => new Date(b.time) - new Date(a.time));;
+                                .sort((a, b) => new Date(b.time) - new Date(a.time))
+                                .slice(0, 3);
+    
 
     return (
         <div className="event-page">
-            {/* {user?.role === 'Administrator' && ( */}
+            {user?.role === 'Administrator' && ( 
             <button className="add-event-button" onClick={handleAddEvent}>Add Event</button>
-            {/* )} */}
+            )} 
             <section>
                 <h2>Upcoming Events</h2>
                 <EventList
@@ -92,7 +90,7 @@ const EventPage = () => {
                     onDelete={handleDeleteEvent}
                     onViewDetails={handleViewDetails}
                 />
-                {/*onEdit={user?.role === 'Administrator' ? handleEditEvent : null} */}
+                onEdit={user?.role === 'Administrator' ? handleEditEvent : null} 
             </section>
             <section className="past-events-section">
                 <h2>Past Events</h2>
@@ -103,7 +101,7 @@ const EventPage = () => {
                     onViewDetails={handleViewDetails}
                 />
                 <Link to="/past-events" className="more-link">
-                    More
+                    See All Past Events
                 </Link>
             </section>
 

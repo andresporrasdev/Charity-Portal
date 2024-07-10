@@ -1,25 +1,24 @@
+// src/App.js
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import "./App.css";
 import Nav from "./components/Navbar/Nav";
 import Home from "./pages/Home";
 import Event from "./pages/EventPage";
-import PastEventPage from "./pages/PastEventPage";
+import PastEventPage from './pages/PastEventPage';
 import Membership from "./pages/Membership";
 import Volunteer from "./pages/Volunteer";
 import News from "./pages/News";
 import ContactUs from "./pages/ContactUs";
 import LoginForm from "./components/LoginForm";
 import Register from "./components/Register";
-import MemberManagePage from "./pages/MemberManagePage";
-import ResetPasswordPage from "./components/ResetPasswordPage";
-import Footer from "./components/Footer/Footer";
+import ResetPassword from "./components/ResetPassword";
+import Footer from "./components/Footer/Footer"; 
 import axios from "axios";
 import { UserProvider } from "./UserContext";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
+  const [userName, setUserName] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -37,8 +36,7 @@ function App() {
       });
       if (response.data.status === "success") {
         const userData = response.data.data.user;
-        setUser(userData);
-
+        setUserName(userData.first_name);
         setIsLoggedIn(true);
         console.log("fetchUserInfo:success");
       } else {
@@ -56,15 +54,14 @@ function App() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
-    setUser(null);
+    setUserName("");
   };
 
   return (
-    // <UserContext.Provider value={user}>
     <Router>
-      <UserProvider>
+      <UserProvider> 
         <div className="App">
-          <Nav isLoggedIn={isLoggedIn} userName={user?.first_name} handleLogout={handleLogout} />
+          <Nav isLoggedIn={isLoggedIn} userName={userName} handleLogout={handleLogout} />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/event" element={<Event />} />
@@ -75,8 +72,7 @@ function App() {
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-            <Route path="/member-manage" element={<MemberManagePage />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
           </Routes>
           <Footer />
         </div>
