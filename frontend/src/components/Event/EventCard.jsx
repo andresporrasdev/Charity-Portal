@@ -48,6 +48,11 @@ const EventCard = ({ event, onEdit, onDelete, onViewDetails }) => {
         }
     };
 
+    // Function to handle volunteer click
+    const handleVolunteerClick = () => {
+        navigate("/volunteer", { state: { eventName: name } });
+    };
+
     return (
         <div className="event-card">
             {isMemberOnly && <div className="member-only-text">Member Only</div>}
@@ -63,7 +68,7 @@ const EventCard = ({ event, onEdit, onDelete, onViewDetails }) => {
             
             <div className="event-actions">
                 <button className="action-button" >Purchase Ticket</button>
-                <button className="action-button" onClick={() => navigate("/volunteer")}>Volunteer</button>
+                <button className="action-button" onClick={handleVolunteerClick}>Volunteer</button>
                 {user?.role === 'Administrator' && ( 
                 <div className="menu-container" onClick={handleMenuToggle}>
                     <FaEllipsisV className="menu-icon" />
