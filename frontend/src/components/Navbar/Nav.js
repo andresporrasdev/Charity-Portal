@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./Nav.css";
 import logo from "./logo.png";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
+import { UserContext } from "../../UserContext";
 
-function Nav({ isLoggedIn, userName, handleLogout }) {
+function Nav() {
   const navigate = useNavigate();
+  const { user, logout } = useContext(UserContext);
 
   return (
     <>
@@ -53,11 +55,10 @@ function Nav({ isLoggedIn, userName, handleLogout }) {
           </div>
         </div>
         <div className="navbar-right">
-          {isLoggedIn ? (
-            // when loggined
+          {user ? (
             <div className="user-info">
-              <h3>Welcome, {userName}</h3>
-              <button className="logout-button" onClick={handleLogout}>
+              <h3>Welcome, {user.first_name}</h3>
+              <button className="logout-button" onClick={logout}>
                 Logout
               </button>
             </div>

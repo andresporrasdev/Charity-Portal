@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Nav from "./components/Navbar/Nav";
@@ -14,60 +14,17 @@ import Register from "./components/Register";
 import MemberManagePage from "./pages/MemberManagePage";
 import ResetPasswordPage from "./components/ResetPasswordPage";
 import Footer from "./components/Footer/Footer";
-import axios from "axios";
 import { UserProvider } from "./UserContext";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      fetchUserInfo(token);
-    }
-  }, []);
-
-  const fetchUserInfo = async (token) => {
-    try {
-      const response = await axios.get("http://localhost:3000/api/user/userinfo", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.data.status === "success") {
-        const userData = response.data.data.user;
-        setUser(userData);
-
-        setIsLoggedIn(true);
-        console.log("fetchUserInfo:success");
-      } else {
-        console.error("Failed to fetch user info:", response.data.message);
-        handleLogout();
-      }
-    } catch (error) {
-      console.error("Error fetching user info:", error);
-      if (error.response && error.response.data.message === "Token expired. Please login again.") {
-        handleLogout();
-      }
-    }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
-    setUser(null);
-  };
-
   return (
-    // <UserContext.Provider value={user}>
-    <Router>
-      <UserProvider>
+    <UserProvider>
+      <Router>
         <div className="App">
-          <Nav isLoggedIn={isLoggedIn} userName={user?.first_name} handleLogout={handleLogout} />
+          <Nav />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/event" element={<EventPage user={user} />}  />
+            <Route path="/event" element={<EventPage />} />
             <Route path="/past-events" element={<PastEventPage />} />
             <Route path="/membership" element={<Membership />} />
             <Route path="/volunteer" element={<Volunteer />} />
@@ -80,8 +37,8 @@ function App() {
           </Routes>
           <Footer />
         </div>
-      </UserProvider>
-    </Router>
+      </Router>
+    </UserProvider>
   );
 }
 
