@@ -6,14 +6,12 @@ import { fetchEvents } from '../components/Event/FetchEvent';
 import '../components/Event/Event.css';
 import { Link } from 'react-router-dom';
 import axios from "axios";
-import { UserContext } from '../UserContext';
 
-const EventPage = () => {
+const EventPage = ({ user }) => {
     const [events, setEvents] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [showDetailsModal, setShowDetailsModal] = useState(false);
     const [currentEvent, setCurrentEvent] = useState(null);
-    const { user } = useContext(UserContext);
 
     useEffect(() => {
         const fetchAndSetEvents = async () => {
@@ -79,8 +77,8 @@ const EventPage = () => {
 
     return (
         <div className="event-page">
-            {user?.role === 'Administrator' && ( 
-            <button className="add-event-button" onClick={handleAddEvent}>Add Event</button>
+            {user?.roles.includes('66678417525bc55cbcd28a96') && ( 
+                <button className="add-event-button" onClick={handleAddEvent}>Add Event</button>
             )} 
             <section>
                 <h2>Upcoming Events</h2>
@@ -89,8 +87,8 @@ const EventPage = () => {
                     onEdit={handleEditEvent}
                     onDelete={handleDeleteEvent}
                     onViewDetails={handleViewDetails}
+                    user={user}
                 />
-                onEdit={user?.role === 'Administrator' ? handleEditEvent : null} 
             </section>
             <section className="past-events-section">
                 <h2>Past Events</h2>
@@ -99,6 +97,8 @@ const EventPage = () => {
                     onEdit={handleEditEvent}
                     onDelete={handleDeleteEvent}
                     onViewDetails={handleViewDetails}
+                    hideActions={true}
+                    user={user}
                 />
                 <Link to="/past-events" className="more-link">
                     See All Past Events

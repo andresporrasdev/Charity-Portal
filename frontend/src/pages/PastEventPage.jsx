@@ -69,6 +69,7 @@ const PastEventPage = () => {
             <EventList
                 events={filteredEvents.map(event => ({ ...event, time: event.time.toString() }))}
                 onViewDetails={(event) => console.log('View details for event:', event)}
+                hideActions={true}
             />
         </div>
     );
