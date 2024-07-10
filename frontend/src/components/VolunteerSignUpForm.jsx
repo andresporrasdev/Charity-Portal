@@ -204,7 +204,7 @@ const VolunteerSignUpForm = () => {
           >
             <option value="">Select your preferred Role</option>
             {roles.map(role => (
-              <option key={role._id} value={role.name}>{role.name}: {role.description}</option>
+              <option key={role._id} value={role._id}>{role.name}: {role.description}</option>
             ))}
           </select>
           {errors.preferredRoles && <p className="error">{errors.preferredRoles}</p>}

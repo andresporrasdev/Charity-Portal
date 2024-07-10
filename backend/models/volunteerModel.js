@@ -20,8 +20,9 @@ const volunteerSchema = new mongoose.Schema({
 	trim: true,
 	match: /^[0-9]{10}$/,
   },
-  preferredRoles: {
-	type: String,
+preferredRoles: {
+	type: mongoose.Schema.Types.ObjectId,
+	ref: "VolunteerRole",
 	required: true,
 	trim: true,
   },
