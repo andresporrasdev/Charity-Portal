@@ -79,10 +79,10 @@ const VolunteerSignUpForm = () => {
         // console.log("futureEvents",futureEvents)
                 setEvents(futureEvents);
 
-        if (location.state && location.state.eventName) {
+        if (location.state && location.state.eventId) {
           setFormData((prevFormData) => ({
             ...prevFormData,
-            event: location.state.eventName,
+            event: location.state.eventId,
           }));
         }
       } catch (error) {

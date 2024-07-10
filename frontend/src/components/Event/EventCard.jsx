@@ -56,7 +56,7 @@ const EventCard = ({ event, onEdit, onDelete, onViewDetails, hideActions, user }
 
   // Function to handle volunteer click
   const handleVolunteerClick = () => {
-    navigate("/volunteer", { state: { eventName: name } });
+    navigate("/volunteer", { state: { eventId:  event._id } });
   };
 
   useEffect(() => {
