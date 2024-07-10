@@ -71,6 +71,15 @@
     border: none;
 }
 
+.event-card.no-actions {
+    margin-bottom: 20px;
+}
+
+.event-card.no-actions .event-actions button {
+    background-color: #ccc;
+    pointer-events: none;
+}
+
 .add-event-button {
     display: inline-block;
     margin-bottom: 20px;
@@ -85,8 +94,9 @@
 }
 
 .menu-container {
-    margin-left: auto;
-    position: relative;
+    position: absolute;
+    bottom: 17px;
+    right: 15px;
 }
 
 .menu-icon {
