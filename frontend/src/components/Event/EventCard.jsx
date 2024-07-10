@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useContext } from "react";
 import "./Event.css";
 import { useNavigate } from "react-router-dom";
 import { FaEllipsisV } from "react-icons/fa";
+import { ROLES } from "../../UserContext";
 
 const EventCard = ({ event, onEdit, onDelete, onViewDetails, hideActions, user }) => {
   const [showMenu, setShowMenu] = useState(false);
@@ -97,7 +98,7 @@ const EventCard = ({ event, onEdit, onDelete, onViewDetails, hideActions, user }
           </button>
         </div>
       )}
-      {user?.roles.includes("66678417525bc55cbcd28a96") && (
+      {user?.roles.includes(ROLES.ADMIN) && (
         <div className="menu-container" onClick={handleMenuToggle} ref={menuRef}>
           <FaEllipsisV className="menu-icon" />
           {showMenu && (

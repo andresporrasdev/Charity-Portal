@@ -50,3 +50,8 @@ export const UserProvider = ({ children }) => {
 
   return <UserContext.Provider value={{ user, login, logout }}>{children}</UserContext.Provider>;
 };
+
+export const ROLES = {
+  ADMIN: "66678417525bc55cbcd28a96",
+  MEMBER: "66678416525bc55cbcd28a93",
+};
