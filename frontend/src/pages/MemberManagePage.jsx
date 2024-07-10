@@ -1,5 +1,4 @@
 import MemberManageTable from "../components/MemberManageTable";
-import "./MemberManage.css";
 
 const MemberManagePage = () => {
   return (
