@@ -15,7 +15,7 @@ const volunteerSignUp = async (req, res) => {
     try {
         // Create a new volunteer document using the Volunteer model
         const newVolunteer = new Volunteer(req.body);
-        // console.log(`New volunteer signed up: ${newVolunteer}`)
+        console.log(`New volunteer signed up: ${newVolunteer}`)
         // Save the new volunteer document to the database
         await newVolunteer.save();
 

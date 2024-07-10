@@ -122,7 +122,7 @@ const VolunteerSignUpForm = () => {
     if (!formData.event) newErrors.event = 'Event is required';
     if (!formData.agreePolicies) newErrors.agreePolicies = 'You must agree to the policies';
     if (!formData.understandUnpaid) newErrors.understandUnpaid = 'You must understand the volunteer position is unpaid';
-    if (!formData.parentName) newErrors.parentName = 'Parent Name is required';
+    // if (!formData.parentName) newErrors.parentName = 'Parent Name is required';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -204,7 +204,7 @@ const VolunteerSignUpForm = () => {
           >
             <option value="">Select your preferred Role</option>
             {roles.map(role => (
-              <option key={role._id} value={role.name}>{role.name}: {role.description}</option>
+              <option key={role._id} value={role._id}>{role.name}: {role.description}</option>
             ))}
           </select>
           {errors.preferredRoles && <p className="error">{errors.preferredRoles}</p>}
@@ -218,7 +218,7 @@ const VolunteerSignUpForm = () => {
           >
             <option value="">Select an event</option>
             {events.map(event => (
-              <option key={event.id} value={event.name}>{event.name}</option>
+              <option key={event.id} value={event._id}>{event.name}</option>
             ))}
           </select>
           {errors.event && <p className="error">{errors.event}</p>}

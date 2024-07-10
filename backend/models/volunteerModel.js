@@ -11,7 +11,7 @@ const volunteerSchema = new mongoose.Schema({
 	required: true,
 	trim: true,
 	lowercase: true,
-	unique: true,
+	unique: false,
 	match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   },
   contactNumber: {
@@ -20,19 +20,21 @@ const volunteerSchema = new mongoose.Schema({
 	trim: true,
 	match: /^[0-9]{10}$/,
   },
-  preferredRoles: {
-	type: String,
+preferredRoles: {
+	type: mongoose.Schema.Types.ObjectId,
+	ref: "VolunteerRole",
 	required: true,
 	trim: true,
   },
   event: {
-	type: String,
+	type: mongoose.Schema.Types.ObjectId,
+	ref: "events",
 	required: true,
 	trim: true,
   },
   parentName: {
 	type: String,
-	required: true,
+	required: false,
 	trim: true,
   },
   agreePolicies: {
