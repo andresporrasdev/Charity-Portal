@@ -12,6 +12,7 @@ const VolunteerSignUpForm = () => {
   const [otp, setOtp] = useState("");
   const [otpError, setOtpError] = useState("");
   const [verifyError, setVerifyError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -174,6 +175,9 @@ const VolunteerSignUpForm = () => {
   const handleVerify = async (e) => {
     e.preventDefault();
 
+    setLoading(true);
+    setVerifyError("");
+
     try {
       console.log("Sending OTP request to server...");
       const response = await axios.post("http://localhost:3000/api/otp/send-otp", { email: formData.email });
@@ -188,6 +192,8 @@ const VolunteerSignUpForm = () => {
     } catch (error) {
       setVerifyError(error.response.data.message);
       console.error("Error sending OTP:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -253,6 +259,7 @@ const VolunteerSignUpForm = () => {
           {errors.email && <p className="error">{errors.email}</p>}
         </div>
         {verifyError && <div className="custom-error">{verifyError}</div>}
+        {loading && <p className="loading-spinner">Loading...</p>}
         <div className="input-box">
           <input
             type="text"
