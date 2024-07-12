@@ -1,70 +1,74 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './VolunteerSignUpForm.css';
-import { useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom'; //Use navigate to redirect to another page
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./VolunteerSignUpForm.css";
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; //Use navigate to redirect to another page
+import OtpModal from "./OtpModal";
 
 const VolunteerSignUpForm = () => {
   const navigate = useNavigate();
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [otpError, setOtpError] = useState("");
+  const [verifyError, setVerifyError] = useState("");
 
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    contactNumber: '',
-    preferredRoles: '',
-    event: '',
-    parentName: '',
+    name: "",
+    email: "",
+    contactNumber: "",
+    preferredRoles: "",
+    event: "",
+    parentName: "",
     agreePolicies: false,
     understandUnpaid: false,
   });
 
   const [errors, setErrors] = useState({});
-  const [submissionStatus, setSubmissionStatus] = useState('');
+  const [submissionStatus, setSubmissionStatus] = useState("");
   const [events, setEvents] = useState([]);
   const location = useLocation();
   const [roles, setRoles] = useState([]); //Handle volunteer roles
 
-
   const fetchUserInfo = async (token) => {
-    try {    
+    try {
       const response = await axios.get("http://localhost:3000/api/user/userinfo", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
+      });
       // console.log("response",response)
 
       setFormData((prevFormData) => ({
         ...prevFormData,
-        name: `${response.data.data.user.first_name} ${response.data.data.user.last_name}`, 
+        name: `${response.data.data.user.first_name} ${response.data.data.user.last_name}`,
         email: response.data.data.user.email,
       }));
     } catch (error) {
-      console.error('Error fetching user info:', error);
+      console.error("Error fetching user info:", error);
     }
   };
 
   useEffect(() => {
-
     const token = localStorage.getItem("token");
     if (token) {
       fetchUserInfo(token);
     } else {
-      console.log("No token found, user not logged in")
+      console.log("No token found, user not logged in");
     }
 
     // Fetch voluntter Roles from the backend
 
     const fetchVolunteerRoles = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/volunteerRole/getAllVolunteerRoles');
+        const response = await axios.get("http://localhost:3000/api/volunteerRole/getAllVolunteerRoles");
         // console.log("volunteerRoles",response.data.data.roles)
         setRoles(response.data.data.roles); // Assuming the API response structure is { data: { roles: [...] } }
         // ...prevFormData,
         //   preferredRoles: `${response.data.data.name}`,
         // }));
       } catch (error) {
-        console.error('Error fetching volunteer roles:', error);
+        console.error("Error fetching volunteer roles:", error);
       }
     };
 
@@ -72,12 +76,13 @@ const VolunteerSignUpForm = () => {
 
     const fetchEvents = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/event/readEvent');
+        const response = await axios.get("http://localhost:3000/api/event/readEvent");
         // console.log("events",response.data)
-        const futureEvents = response.data.filter(event => new Date(event.time) >= new Date())
-                .sort((a, b) => new Date(b.time) - new Date(a.time));
+        const futureEvents = response.data
+          .filter((event) => new Date(event.time) >= new Date())
+          .sort((a, b) => new Date(b.time) - new Date(a.time));
         // console.log("futureEvents",futureEvents)
-                setEvents(futureEvents);
+        setEvents(futureEvents);
 
         if (location.state && location.state.eventId) {
           setFormData((prevFormData) => ({
@@ -86,7 +91,7 @@ const VolunteerSignUpForm = () => {
           }));
         }
       } catch (error) {
-        console.error('Error fetching events:', error);
+        console.error("Error fetching events:", error);
       }
     };
 
@@ -97,31 +102,32 @@ const VolunteerSignUpForm = () => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
+  const newErrors = {};
+
   const validateForm = () => {
-    const newErrors = {};
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phonePattern = /^[0-9]{10}$/;
 
-    if (!formData.name) newErrors.name = 'Name is required';
+    if (!formData.name) newErrors.name = "Name is required";
     if (!formData.email) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!emailPattern.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
+      newErrors.email = "Please enter a valid email address";
     }
-    
+
     if (!formData.contactNumber) {
-      newErrors.contactNumber = 'Contact Number is required';
+      newErrors.contactNumber = "Contact Number is required";
     } else if (!phonePattern.test(formData.contactNumber)) {
-      newErrors.contactNumber = 'Contact number must be 10 digits';
+      newErrors.contactNumber = "Contact number must be 10 digits";
     }
-    if (!formData.preferredRoles) newErrors.preferredRoles = 'Preferred Roles is required';
-    if (!formData.event) newErrors.event = 'Event is required';
-    if (!formData.agreePolicies) newErrors.agreePolicies = 'You must agree to the policies';
-    if (!formData.understandUnpaid) newErrors.understandUnpaid = 'You must understand the volunteer position is unpaid';
+    if (!formData.preferredRoles) newErrors.preferredRoles = "Preferred Roles is required";
+    if (!formData.event) newErrors.event = "Event is required";
+    if (!formData.agreePolicies) newErrors.agreePolicies = "You must agree to the policies";
+    if (!formData.understandUnpaid) newErrors.understandUnpaid = "You must understand the volunteer position is unpaid";
     // if (!formData.parentName) newErrors.parentName = 'Parent Name is required';
 
     setErrors(newErrors);
@@ -132,12 +138,13 @@ const VolunteerSignUpForm = () => {
     e.preventDefault();
     if (validateForm()) {
       try {
-        await axios.post('http://localhost:3000/api/volunteer/volunteerSignUp', formData);
-        alert('Volunteer signed up successfully! \nPress OK to return to the events page');        setSubmissionStatus('success');
-        navigate('/event');
+        await axios.post("http://localhost:3000/api/volunteer/volunteerSignUp", formData);
+        alert("Volunteer signed up successfully! \nPress OK to return to the events page");
+        setSubmissionStatus("success");
+        navigate("/event");
       } catch (error) {
-        console.error('Error signing up volunteer:', error);
-        setSubmissionStatus('fail');
+        console.error("Error signing up volunteer:", error);
+        setSubmissionStatus("fail");
       }
     } else {
       console.log("Form validation failed", errors);
@@ -146,16 +153,59 @@ const VolunteerSignUpForm = () => {
 
   const handleClearForm = () => {
     setFormData({
-      name: '',
-      email: '',
-      contactNumber: '',
-      preferredRoles: '',
-      event: '',
-      parentName: '',
+      name: "",
+      email: "",
+      contactNumber: "",
+      preferredRoles: "",
+      event: "",
+      parentName: "",
       agreePolicies: false,
       understandUnpaid: false,
     });
     setErrors({});
+  };
+
+  const handleVerify = async (e) => {
+    e.preventDefault();
+
+    try {
+      console.log("Sending OTP request to server...");
+      const response = await axios.post("http://localhost:3000/api/otp/send-otp", { email: formData.email });
+      console.log("OTP response received:", response.data);
+
+      if (response.data.status === "success") {
+        setShowOtpModal(true);
+      } else if (response.data.status === "fail") {
+        setVerifyError(response.data.message);
+        console.error("Failed to send OTP:", response.data.message);
+      }
+    } catch (error) {
+      setVerifyError(error.response.data.message);
+      console.error("Error sending OTP:", error);
+    }
+  };
+
+  const handleOtpSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      console.log("Submitting OTP to server...");
+      const response = await axios.post("http://localhost:3000/api/otp/verify-otp", { email: formData.email, otp });
+      console.log("OTP verification response:", response.data);
+
+      if (response.data.status === "success") {
+        setIsEmailVerified(true);
+        setShowOtpModal(false);
+        setOtpError("");
+        alert("OTP verified successfully!");
+      } else if (response.data.status === "fail") {
+        setOtpError(response.data.message);
+        console.error("Failed to verify OTP:", response.data.message);
+      }
+    } catch (error) {
+      setOtpError(error.response.data.status);
+      console.error("Error submitting OTP:", error);
+    }
   };
 
   return (
@@ -173,7 +223,7 @@ const VolunteerSignUpForm = () => {
           />
           {errors.name && <p className="error">{errors.name}</p>}
         </div>
-        <div className="input-box">
+        <div className="input-box email-verify-container">
           <input
             type="email"
             name="email"
@@ -181,9 +231,22 @@ const VolunteerSignUpForm = () => {
             onChange={handleChange}
             placeholder="Enter your email"
             required
+            disabled={isEmailVerified}
           />
+
+          {!isEmailVerified && (
+            <button className="verify-button" onClick={handleVerify}>
+              Verify
+            </button>
+          )}
+          {isEmailVerified && (
+            <button className="verify-button verified" disabled>
+              Verified!
+            </button>
+          )}
           {errors.email && <p className="error">{errors.email}</p>}
         </div>
+        {verifyError && <div className="custom-error">{verifyError}</div>}
         <div className="input-box">
           <input
             type="text"
@@ -196,29 +259,23 @@ const VolunteerSignUpForm = () => {
           {errors.contactNumber && <p className="error">{errors.contactNumber}</p>}
         </div>
         <div className="input-box">
-          <select
-            name="preferredRoles"
-            value={formData.preferredRoles}
-            onChange={handleChange}
-            required
-          >
+          <select name="preferredRoles" value={formData.preferredRoles} onChange={handleChange} required>
             <option value="">Select your preferred Role</option>
-            {roles.map(role => (
-              <option key={role._id} value={role._id}>{role.name}: {role.description}</option>
+            {roles.map((role) => (
+              <option key={role._id} value={role._id}>
+                {role.name}: {role.description}
+              </option>
             ))}
           </select>
           {errors.preferredRoles && <p className="error">{errors.preferredRoles}</p>}
         </div>
         <div className="input-box">
-          <select
-            name="event"
-            value={formData.event}
-            onChange={handleChange}
-            required
-          >
+          <select name="event" value={formData.event} onChange={handleChange} required>
             <option value="">Select an event</option>
-            {events.map(event => (
-              <option key={event.id} value={event._id}>{event.name}</option>
+            {events.map((event) => (
+              <option key={event.id} value={event._id}>
+                {event.name}
+              </option>
             ))}
           </select>
           {errors.event && <p className="error">{errors.event}</p>}
@@ -259,10 +316,22 @@ const VolunteerSignUpForm = () => {
           {errors.understandUnpaid && <p className="error">{errors.understandUnpaid}</p>}
         </div>
         <button type="submit">Submit</button>
-        <button type="button" onClick={handleClearForm} className="clear-form">Clear form</button>
+        <button type="button" onClick={handleClearForm} className="clear-form">
+          Clear form
+        </button>
       </form>
-      {submissionStatus === 'success' && <p>Thank you for signing up as a volunteer!</p>}
-      {submissionStatus === 'fail' && <p>There was an error submitting the form. Please try again.</p>}
+      {submissionStatus === "success" && <p>Thank you for signing up as a volunteer!</p>}
+      {submissionStatus === "fail" && <p>There was an error submitting the form. Please try again.</p>}
+
+      {showOtpModal && (
+        <OtpModal
+          otp={otp}
+          setOtp={setOtp}
+          otpError={otpError}
+          handleOtpSubmit={handleOtpSubmit}
+          setShowOtpModal={setShowOtpModal}
+        />
+      )}
     </div>
   );
 };
