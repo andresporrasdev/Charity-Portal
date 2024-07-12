@@ -93,7 +93,7 @@ exports.verifyOtp = async (req, res) => {
     if (!otpRecord) {
       return res.status(200).json({
         status: "fail",
-        message: "Invalid OTP",
+        message: "Invalid OTP. Please try again",
       });
     }
     return res.status(200).json({
