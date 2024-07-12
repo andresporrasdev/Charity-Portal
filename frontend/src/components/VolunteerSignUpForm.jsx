@@ -136,6 +136,12 @@ const VolunteerSignUpForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!isEmailVerified) {
+      setVerifyError("Please verify your email before submitting.");
+      return;
+    }
+
     if (validateForm()) {
       try {
         await axios.post("http://localhost:3000/api/volunteer/volunteerSignUp", formData);
