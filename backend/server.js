@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const app = require("./app");
 const Role = require("./models/role");
 const VolunteerRole = require("./models/volunteerRole");
+const Event = require("./models/event");
 
 console.log(process.env);
 
@@ -16,10 +17,25 @@ mongoose
     console.log("DB Connection Successful");
     initializeRoles();
     initializeVolunteerRoles();
+    initializeDatabase(); // Call a function to initialize your database
   })
   .catch((error) => {
     console.log("Some error has occured");
   });
+
+  async function initializeDatabase() {
+    try {
+      // Example: Check if any events exist, if not, create a default one
+      const eventCount = await Event.countDocuments();
+      if (eventCount === 0) {
+        console.log("No events found, creating a default event...");
+        await createDummyEvent(); //saves a dummy event to the database
+      }
+    } catch (error) {
+      console.error("Error initializing database:", error);
+    }
+  }
+  
 
 // Initializes predefined roles in the MongoDB database
 async function initializeRoles() {
@@ -76,6 +92,28 @@ async function initializeVolunteerRoles() {
   console.log("Volunteer Roles created successfully!");
 }
 
+//Creating model schemaif not exist
+
+async function createDummyEvent() {
+  // const eventCount = await Event.countDocuments();
+  // if (eventCount === 0) {
+    const dummyEvent = new Event({
+      name: 'Sample Event',
+      description: 'This is a sample event.',
+      time: '2024-06-05T16:46',
+      place: 'Main Hall',
+      pricePublic: '10',
+      priceMember: '5',
+      isMemberOnly: false,
+      imageUrl: '/image/EventImage/event1.png'
+    });
+    await dummyEvent.save();
+    console.log('Dummy event created successfully!');
+  }
+// }
+
+
+// Start the server
 const port = process.env.PORT || 3001;
 
 app.listen(port, () => {
