@@ -3,7 +3,6 @@ const router = express.Router();
 const mongoose = require('mongoose');
 // Define Schema
 const eventSchema = new mongoose.Schema({
-    id: { type: String, unique: true },
     name: String,
     description: String,
     time: String,

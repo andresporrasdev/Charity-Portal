@@ -7,7 +7,6 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
   const [failMessage, setFailMessage] = useState("");
   const [formData, setFormData] = useState(
     event || {
-      // id: '',
       name: "",
       description: "",
       time: "",
@@ -73,10 +72,6 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
   return (
     <form className="add-edit-event-form" onSubmit={handleSubmit}>
       <h2>{event ? "Edit Event" : "Add Event"}</h2>
-      <label>
-        ID:
-        <input type="text" name="id" value={formData.id} onChange={handleChange} disabled={!!event} required />
-      </label>
       <label>
         Name:
         <input type="text" name="name" value={formData.name} onChange={handleChange} required />
