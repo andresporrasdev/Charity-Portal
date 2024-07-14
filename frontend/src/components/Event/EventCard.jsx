@@ -22,7 +22,7 @@ const EventCard = ({ event, onEdit, onDelete, onViewDetails, hideActions, user }
   };
 
   const handleDelete = () => {
-    onDelete(event.id);
+    onDelete(event._id);
     setShowMenu(false);
   };
 
