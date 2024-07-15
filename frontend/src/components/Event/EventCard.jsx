@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { FaEllipsisV } from "react-icons/fa";
 import { ROLES } from "../../UserContext";
 
-const EventCard = ({ event, onEdit, onDelete, onViewDetails, hideActions, user,}) => {
+const EventCard = ({ event, onEdit, onDelete, onViewDetails, hideActions, user }) => {
   const [showMenu, setShowMenu] = useState(false);
   const { name, time, place, pricePublic, priceMember, isMemberOnly, imageUrl } = event;
   const formattedTime = time.replace("T", " ");
@@ -32,7 +32,7 @@ const EventCard = ({ event, onEdit, onDelete, onViewDetails, hideActions, user,}
 
   const handlePurchaseTicket = () => {
     // console.log("purchaseURL in EventCard", event.purchaseURL);
-    window.location.href = event.purchaseURL;
+    window.open(event.purchaseURL, "_blank");
   };
 
   const renderPrice = () => {
@@ -61,7 +61,7 @@ const EventCard = ({ event, onEdit, onDelete, onViewDetails, hideActions, user,}
 
   // Function to handle volunteer click
   const handleVolunteerClick = () => {
-    navigate("/volunteer", { state: { eventId:  event._id } });
+    navigate("/volunteer", { state: { eventId: event._id } });
   };
 
   useEffect(() => {
@@ -97,7 +97,9 @@ const EventCard = ({ event, onEdit, onDelete, onViewDetails, hideActions, user,}
 
       {!hideActions && (
         <div className="event-actions">
-          <button className="action-button" onClick={handlePurchaseTicket}>Purchase Ticket</button>
+          <button className="action-button" onClick={handlePurchaseTicket}>
+            Purchase Ticket
+          </button>
           <button className="action-button" onClick={handleVolunteerClick}>
             Volunteer
           </button>
