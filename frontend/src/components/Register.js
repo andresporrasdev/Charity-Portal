@@ -339,7 +339,7 @@ const Register = () => {
             setOtp={setOtp}
             otpError={otpError}
             handleOtpSubmit={handleOtpSubmit}
-            setShowOtpModal={setShowOtpModal}
+            setShowOtpModal={setShowOtpModal}         
           />
         )}
       </div>
