@@ -27,10 +27,26 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
     });
   };
 
+  const validateURL = (url) => {
+    if (!/^https?:\/\//i.test(url)) {
+      return `http://${url}`;
+    }
+    return url;
+  };
+
   const handleSubmit = (e) => {
     console.log("Saving Data in AddEditEventForm", formData);
     e.preventDefault();
-    onSave(formData);
+
+    // Validate and update purchaseURL
+    const updatedPurchaseURL = validateURL(formData.purchaseURL);
+
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      purchaseURL: updatedPurchaseURL,
+    }));
+
+    onSave({ ...formData, purchaseURL: updatedPurchaseURL });
   };
 
   // Step 1: Add a new state for the file
@@ -120,7 +136,7 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
       </label>
       <label>
         Purchase URL:
-        <input type="text" name="purchaseURL" value={formData.purchaseURL} onChange={handleChange} />
+        <input type="text" name="purchaseURL" value={formData.purchaseURL} onChange={handleChange} required />
       </label>
       <div className="form-actions">
         <button type="submit" className="action-button">
