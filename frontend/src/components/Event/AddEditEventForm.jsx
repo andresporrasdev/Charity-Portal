@@ -15,6 +15,7 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
       priceMember: "",
       isMemberOnly: false,
       imageUrl: "",
+      purchaseURL: "",
     }
   );
 
@@ -27,6 +28,7 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
   };
 
   const handleSubmit = (e) => {
+    console.log("Saving Data in AddEditEventForm", formData);
     e.preventDefault();
     onSave(formData);
   };
@@ -115,6 +117,10 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
         <button type="button" onClick={uploadFile}>
           Upload
         </button>
+      </label>
+      <label>
+        Purchase URL:
+        <input type="text" name="purchaseURL" value={formData.purchaseURL} onChange={handleChange} />
       </label>
       <div className="form-actions">
         <button type="submit" className="action-button">

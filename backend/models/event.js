@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const { purge } = require('../app');
 // Define Schema
 const eventSchema = new mongoose.Schema({
     name: String,
@@ -10,7 +11,8 @@ const eventSchema = new mongoose.Schema({
     pricePublic: String,
     priceMember: String,
     isMemberOnly: Boolean,
-    imageUrl: String
+    imageUrl: String,
+    purchaseURL: String,
 });
 
 // create event

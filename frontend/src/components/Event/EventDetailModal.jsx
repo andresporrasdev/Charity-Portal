@@ -2,9 +2,13 @@ import React from 'react';
 import './Event.css';
 import { useNavigate } from 'react-router-dom';
 
-const EventDetailsModal = ({ event, onClose }) => {
+const EventDetailsModal = ({ event, onClose,}) => {
 
     const navigate = useNavigate();
+
+    const handlePurchaseTicket = () => {
+        window.location.href = event.purchaseURL;
+    };
     
     return (
         <div className="event_detail_modal" onClick={onClose}>
@@ -19,7 +23,7 @@ const EventDetailsModal = ({ event, onClose }) => {
                     {!event.isMemberOnly && (
                         <p><strong>Price (Public):</strong> {event.pricePublic}</p>
                     )}
-                    <button className="action-button">Purchase Ticket</button>
+                    <button className="action-button" onClick={handlePurchaseTicket}>Purchase Ticket</button>
                     <button className="action-button" onClick={() => navigate("/volunteer")}>Volunteer</button>
                 </div>
             </div>

@@ -42,7 +42,7 @@ const EventPage = () => {
 
   const handleSaveEvent = async (event) => {
     console.log("Event in save event:", event);
-    console.log("Current event in save event:", currentEvent);
+    // console.log("Current event in save event:", currentEvent);
     try {
       if (currentEvent && currentEvent._id) {
         // Editing an existing event
@@ -125,7 +125,6 @@ const EventPage = () => {
           </div>
         </div>
       )}
-
       {showDetailsModal && <EventDetailModal event={currentEvent} onClose={handleCloseModal} />}
     </div>
   );

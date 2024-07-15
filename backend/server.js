@@ -105,7 +105,8 @@ async function createDummyEvent() {
       pricePublic: '10',
       priceMember: '5',
       isMemberOnly: false,
-      imageUrl: '/image/EventImage/event1.png'
+      imageUrl: '/image/EventImage/event1.png',
+      purchaseURL: 'https://www.ottawatamilsangam.com/',
     });
     await dummyEvent.save();
     console.log('Dummy event created successfully!');
