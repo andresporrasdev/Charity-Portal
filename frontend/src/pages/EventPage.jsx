@@ -41,11 +41,16 @@ const EventPage = () => {
   };
 
   const handleSaveEvent = async (event) => {
+    console.log("Event in save event:", event);
+    // console.log("Current event in save event:", currentEvent);
     try {
-      if (currentEvent) {
-        await axios.post("http://localhost:3000/api/event/updateEvent", event);
-        setEvents(events.map((e) => (e.id === event.id ? event : e)));
+      if (currentEvent && currentEvent._id) {
+        // Editing an existing event
+        const updateUrl = `http://localhost:3000/api/event/updateEvent/${currentEvent._id}`;
+        await axios.patch(updateUrl, event);
+        setEvents(events.map((e) => (e._id === event._id ? event : e)));
       } else {
+        // Adding a new event
         await axios.post("http://localhost:3000/api/event/addEvent", event);
         setEvents([...events, event]);
       }
@@ -57,8 +62,8 @@ const EventPage = () => {
 
   const handleDeleteEvent = async (id) => {
     try {
-      await axios.get(`http://localhost:3000/api/event/deleteEvent/${id}`);
-      setEvents(events.filter((e) => e.id !== id));
+      await axios.delete(`http://localhost:3000/api/event/deleteEvent/${id}`);
+      setEvents(events.filter((e) => e._id !== id));
     } catch (error) {
       console.error("Error deleting event:", error);
     }
@@ -120,7 +125,6 @@ const EventPage = () => {
           </div>
         </div>
       )}
-
       {showDetailsModal && <EventDetailModal event={currentEvent} onClose={handleCloseModal} />}
     </div>
   );

@@ -138,7 +138,6 @@ exports.updateUser = async (req, res) => {
       message: "You can't update password using this endpoint.",
     });
   }
-
   //update user detail
   try {
     const filterObj = (obj, ...allowedFields) => {
@@ -170,6 +169,13 @@ exports.updateUser = async (req, res) => {
       return res.status(404).json({
         status: "fail",
         message: "No user found with that ID.",
+      });
+    }
+
+    if (!updateUser.roles || updateUser.roles.length === 0) {
+      return res.status(400).json({
+        status: "role-fail",
+        message: "User must have at least one role.",
       });
     }
 

@@ -221,7 +221,7 @@ exports.resetPassword = async (req, res, next) => {
   if (!user) {
     return res.status(400).json({
       status: "fail",
-      message: "Token is invalid of has expired",
+      message: "Token is invalid or has expired",
     });
   }
 

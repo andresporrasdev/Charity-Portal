@@ -22,12 +22,17 @@ const EventCard = ({ event, onEdit, onDelete, onViewDetails, hideActions, user }
   };
 
   const handleDelete = () => {
-    onDelete(event.id);
+    onDelete(event._id);
     setShowMenu(false);
   };
 
   const handleViewDetails = () => {
     onViewDetails(event);
+  };
+
+  const handlePurchaseTicket = () => {
+    // console.log("purchaseURL in EventCard", event.purchaseURL);
+    window.open(event.purchaseURL, "_blank");
   };
 
   const renderPrice = () => {
@@ -56,7 +61,7 @@ const EventCard = ({ event, onEdit, onDelete, onViewDetails, hideActions, user }
 
   // Function to handle volunteer click
   const handleVolunteerClick = () => {
-    navigate("/volunteer", { state: { eventId:  event._id } });
+    navigate("/volunteer", { state: { eventId: event._id } });
   };
 
   useEffect(() => {
@@ -92,7 +97,9 @@ const EventCard = ({ event, onEdit, onDelete, onViewDetails, hideActions, user }
 
       {!hideActions && (
         <div className="event-actions">
-          <button className="action-button">Purchase Ticket</button>
+          <button className="action-button" onClick={handlePurchaseTicket}>
+            Purchase Ticket
+          </button>
           <button className="action-button" onClick={handleVolunteerClick}>
             Volunteer
           </button>

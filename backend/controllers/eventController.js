@@ -10,9 +10,11 @@ const path = require("path"); //For directory creation
 
 //Insert an event
 exports.addEvent = async (req, res) => {
+  console.log("Request body in AddEvent", req.body);
   const event = new Event(req.body);
   try {
     const savedEvent = await event.save();
+    console.log("Event saved successfully", savedEvent);
     res.status(200).json(savedEvent);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -28,43 +30,68 @@ exports.getAllEvents = async (req, res) => {
     res.status(500).json({ message: "An error occurred while fetching events." });
   }
 };
-//update an event
+//update an event old version with delete and add a new event
+// exports.updateEvent = async (req, res) => {
+//   console.log("Request body in UpdateEvent", req.body);
+//   const eventId = req.body.id;
+//   const newEventData = req.body;
+
+//   try {
+//     // delete old event
+//     const deletedEvent = await Event.findOneAndDelete({ _id: eventId });
+
+//     if (!deletedEvent) {
+//       return res.status(404).json({ messagecd: "Event not found to delete." });
+//     }
+
+//     // insert new event
+//     const newEvent = new Event(newEventData);
+//     const savedEvent = await newEvent.save();
+
+//     res.status(200).json(savedEvent);
+//   } catch (error) {
+//     res.status(500).json({ message: "An error occurred while updating the event." });
+//   }
+// };
+
+//update event with new version using patch
 exports.updateEvent = async (req, res) => {
-  const eventId = req.body.id;
-  const newEventData = req.body;
+  const eventId = req.params.id; // Use params to get the event ID from the URL
+  const updateData = req.body; // Data to update
 
   try {
-    // delete old event
-    const deletedEvent = await Event.findOneAndDelete({ id: eventId });
+    // Find the event by ID and update it with the new data
+    // { new: true } option returns the document after update was applied
+    const updatedEvent = await Event.findByIdAndUpdate(eventId, updateData, { new: true });
 
-    if (!deletedEvent) {
-      return res.status(404).json({ messagecd: "Event not found to delete." });
+    if (!updatedEvent) {
+      return res.status(404).json({ message: "Event not found." });
     }
 
-    // insert new event
-    const newEvent = new Event(newEventData);
-    const savedEvent = await newEvent.save();
-
-    res.status(200).json(savedEvent);
+    res.status(200).json(updatedEvent);
   } catch (error) {
-    res.status(500).json({ message: "An error occurred while updating the event." });
+    res.status(500).json({ message: "An error occurred while updating the event.", error: error.message });
   }
 };
-//delte event
+
+//Delete event
 exports.deleteEvent = async (req, res) => {
-  const eventId = req.params.id;
 
-  try {
-    const deletedEvent = await Event.findOneAndRemove({ id: eventId });
+const eventId = req.params.id;
+  
+    try {
+      const deletedEvent = await Event.findOneAndDelete
+      ({ _id: eventId });
 
-    //if (!deletedEvent) {
-    //    return res.status(404).json({ message: "Event not found." });
-    //}
+      if (!deletedEvent) {
+        return res.status(404).json({ message: "Event not found." });
+      }
 
-    res.status(200).json({ message: "Event deleted successfully." });
-  } catch (error) {
-    res.status(500).json({ message: "An error occurred while deleting the event." });
-  }
+      res.status(200).json({ message: "Event deleted successfully." });
+    }
+    catch (error) {
+      res.status(500).json({ message: "An error occurred while deleting the event." });
+    }
 };
 
 //Get event by id
@@ -72,7 +99,7 @@ exports.getEventById = async (req, res) => {
   const eventId = req.params.id;
 
   try {
-    const event = await Event.findOne({ id: eventId });
+    const event = await Event.findOne({ _id: eventId });
 
     if (!event) {
       return res.status(404).json({ message: "Event not found." });

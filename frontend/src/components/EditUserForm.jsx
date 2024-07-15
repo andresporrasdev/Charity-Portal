@@ -11,6 +11,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Alert,
 } from "@mui/material";
 
 const ITEM_HEIGHT = 48;
@@ -27,6 +28,7 @@ const MenuProps = {
 const EditUserForm = ({ user, roleOptions, onUpdateUser, onClose }) => {
   const [editedUser, setEditedUser] = useState(user);
   const [roleName, setRoleName] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     setEditedUser(user);
@@ -62,8 +64,11 @@ const EditUserForm = ({ user, roleOptions, onUpdateUser, onClose }) => {
   };
 
   const handleUpdate = async () => {
-    onUpdateUser(editedUser);
-    onClose();
+    if (editedUser.roles.length === 0) {
+      setErrorMessage("User must have at least one role.");
+    } else {
+      onUpdateUser(editedUser);
+    }
   };
 
   return (
@@ -71,6 +76,11 @@ const EditUserForm = ({ user, roleOptions, onUpdateUser, onClose }) => {
       <DialogTitle>Edit User </DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
+          {errorMessage && (
+            <Grid item xs={12}>
+              <Alert color="error">{errorMessage}</Alert>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <TextField label="Email" value={editedUser.email} fullWidth disabled sx={{ mt: 1 }} />
           </Grid>
