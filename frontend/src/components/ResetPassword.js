@@ -84,11 +84,11 @@ const ResetPassword = ({ token }) => {
           setRedirectUrl(response.data.redirectUrl);
         } else if (response.data.status === "fail") {
           setSuccessMessage("");
-          setErrorMessage("Failed to reset password.");
+          setErrorMessage(response.data.message);
         }
         console.log("Password reset successful:", response.data);
       } catch (err) {
-        setErrorMessage("Failed to reset password.");
+        setErrorMessage(err.response.data.message);
         console.error("Password reset error:", err);
       }
     }
