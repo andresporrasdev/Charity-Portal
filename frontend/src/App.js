@@ -18,8 +18,8 @@ import { UserProvider } from "./UserContext";
 
 function App() {
   return (
-    <UserProvider>
-      <Router>
+    <Router>
+      <UserProvider>
         <div className="App">
           <Nav />
           <Routes>
@@ -37,8 +37,8 @@ function App() {
           </Routes>
           <Footer />
         </div>
-      </Router>
-    </UserProvider>
+      </UserProvider>
+    </Router>
   );
 }
 
