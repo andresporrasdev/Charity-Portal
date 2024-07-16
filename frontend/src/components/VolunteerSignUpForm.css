@@ -109,10 +109,21 @@
   line-height: normal;
 }
 
+.volunteer-signup-form .email-verify-container .verify-button:disabled {
+  cursor: not-allowed;
+}
+
 .volunteer-signup-form .custom-error {
   color: #ff0000;
   padding-left: 5px;
   font-size: 14px;
   padding-bottom: 10px;
+  text-align: left;
+}
+
+.volunteer-signup-form .email-error {
+  color: #ff0000;
+  padding-left: 5px;
+  font-size: 14px;
   text-align: left;
 }

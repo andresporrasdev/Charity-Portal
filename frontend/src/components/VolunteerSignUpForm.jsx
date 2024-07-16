@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import "./VolunteerSignUpForm.css";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom"; //Use navigate to redirect to another page
 import OtpModal from "./OtpModal";
+import { UserContext } from "../UserContext";
 
 const VolunteerSignUpForm = () => {
   const navigate = useNavigate();
@@ -13,6 +14,8 @@ const VolunteerSignUpForm = () => {
   const [otpError, setOtpError] = useState("");
   const [verifyError, setVerifyError] = useState("");
   const [loading, setLoading] = useState(false);
+  const { user } = useContext(UserContext);
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const [formData, setFormData] = useState({
     name: "",
@@ -97,7 +100,11 @@ const VolunteerSignUpForm = () => {
     };
 
     fetchEvents();
-  }, [location.state]);
+
+    if (user) {
+      setIsEmailVerified(true);
+    }
+  }, [location.state, user]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -105,12 +112,30 @@ const VolunteerSignUpForm = () => {
       ...formData,
       [name]: type === "checkbox" ? checked : value,
     });
+
+    if (name === "email") {
+      if (!value) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          email: "Email is required",
+        }));
+      } else if (!emailPattern.test(value)) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          email: "Please enter a valid email address",
+        }));
+      } else {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          email: "",
+        }));
+      }
+    }
   };
 
   const newErrors = {};
 
   const validateForm = () => {
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phonePattern = /^[0-9]{10}$/;
 
     if (!formData.name) newErrors.name = "Name is required";
@@ -247,7 +272,11 @@ const VolunteerSignUpForm = () => {
           />
 
           {!isEmailVerified && (
-            <button className="verify-button" onClick={handleVerify}>
+            <button
+              className="verify-button"
+              onClick={handleVerify}
+              disabled={!formData.email || !emailPattern.test(formData.email)}
+            >
               Verify
             </button>
           )}
@@ -256,8 +285,8 @@ const VolunteerSignUpForm = () => {
               Verified!
             </button>
           )}
-          {errors.email && <p className="error">{errors.email}</p>}
         </div>
+        {errors.email && <p className="email-error">{errors.email}</p>}
         {verifyError && <div className="custom-error">{verifyError}</div>}
         {loading && <p className="loading-spinner">Loading...</p>}
         <div className="input-box">
