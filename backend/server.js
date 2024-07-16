@@ -18,6 +18,7 @@ mongoose
     initializeRoles();
     initializeVolunteerRoles();
     initializeDatabase(); // Call a function to initialize your database
+    createDummyPost(); // Call a function to create a dummy post
   })
   .catch((error) => {
     console.log("Some error has occured");
@@ -112,6 +113,17 @@ async function createDummyEvent() {
     console.log('Dummy event created successfully!');
   }
 // }
+
+// Create a dummy post
+async function createDummyPost() {
+  const post = new Post({
+    title: "Hello, World!",
+    content: "This is a sample post.",
+  });
+  await post.save();
+  console.log("Dummy post created successfully!");
+}
+
 
 
 // Start the server

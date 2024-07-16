@@ -7,6 +7,7 @@ const eventRouter = require("./routes/event");
 const volunteerRouter = require("./routes/volunteer");
 const roleRouter = require("./routes/role");
 const volunteerRolesRouter = require("./routes/volunteerRoleRouter");
+const postRouter = require("./routes/postRouter");
 const cors = require("cors");
 
 let app = express();
@@ -26,5 +27,6 @@ app.use("/api/event", eventRouter);
 app.use("/api/volunteer", volunteerRouter);
 app.use("/api/role", roleRouter);
 app.use("/api/volunteerRole", volunteerRolesRouter);
+app.use("/api/post", postRouter);
 
 module.exports = app;
