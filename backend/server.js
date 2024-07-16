@@ -6,6 +6,7 @@ const app = require("./app");
 const Role = require("./models/role");
 const VolunteerRole = require("./models/volunteerRole");
 const Event = require("./models/event");
+const Post = require("./models/postModel");
 
 console.log(process.env);
 
