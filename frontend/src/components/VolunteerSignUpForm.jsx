@@ -47,6 +47,7 @@ const VolunteerSignUpForm = () => {
         ...prevFormData,
         name: `${response.data.data.user.first_name} ${response.data.data.user.last_name}`,
         email: response.data.data.user.email,
+        userId: user._id,
       }));
     } catch (error) {
       console.error("Error fetching user info:", error);
