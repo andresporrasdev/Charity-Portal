@@ -3,6 +3,7 @@ import "./Register.css";
 import { FaEnvelope, FaLock, FaUser, FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import Alert from "@mui/material/Alert";
+import OtpModal from "./OtpModal";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -333,27 +334,13 @@ const Register = () => {
         )}
 
         {showOtpModal && (
-          <div className="otp-modal">
-            <div className="otp-modal-content">
-              <span className="close" onClick={() => setShowOtpModal(false)}>
-                &times;
-              </span>
-              <h2>Enter OTP</h2>
-              <Alert severity="success" sx={{ mb: 2 }}>
-                We've sent a verifiaction code to your email
-              </Alert>
-              <form onSubmit={handleOtpSubmit}>
-                <div className="input-box">
-                  <FaLock className="icon" />
-                  <input type="text" value={otp} onChange={(e) => setOtp(e.target.value)} required />
-                </div>
-                {otpError && <p className="error-text">{otpError}</p>}
-                <button className="register-button" type="submit">
-                  Verify
-                </button>
-              </form>
-            </div>
-          </div>
+          <OtpModal
+            otp={otp}
+            setOtp={setOtp}
+            otpError={otpError}
+            handleOtpSubmit={handleOtpSubmit}
+            setShowOtpModal={setShowOtpModal}         
+          />
         )}
       </div>
     </div>

@@ -1,0 +1,86 @@
+.otp-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.otp-modal-content {
+  background: #fff;
+  padding: 20px 30px;
+  border-radius: 10px;
+  width: 400px;
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.modal-input-box {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.modal-input-box input {
+  flex: 1;
+  height: 20px;
+  background: transparent;
+  border: none;
+  outline: none;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-radius: 40px;
+  font-size: 16px;
+  color: #333;
+  padding: 20px 20px 20px 50px;
+  position: relative;
+}
+
+.modal-input-box input::placeholder {
+  color: #494747;
+}
+
+.modal-input-box .icon {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+  font-size: 25px;
+  color: #494747;
+}
+
+.otp-modal .error-text {
+  color: red;
+  font-size: 16px;
+  text-align: left;
+  position: relative;
+  top: 0px;
+}
+
+.otp-modal .modal-button {
+  width: 100%;
+  height: 50px;
+  background: #e88a1d;
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 18px;
+  color: white;
+  font-weight: 700;
+  padding-left: 0;
+  padding-right: 0;
+  margin: 0;
+}
