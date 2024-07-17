@@ -12,6 +12,7 @@ import ContactUs from "./pages/ContactUs";
 import LoginForm from "./components/LoginForm";
 import Register from "./components/Register";
 import MemberManagePage from "./pages/MemberManagePage";
+import VolunteerManagePage from "./pages/VolunteerManagePage";
 import ResetPasswordPage from "./components/ResetPasswordPage";
 import Footer from "./components/Footer/Footer";
 import { UserProvider } from "./UserContext";
@@ -34,6 +35,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
             <Route path="/member-manage" element={<MemberManagePage />} />
+            <Route path="/volunteer-manage" element={<VolunteerManagePage />} />
           </Routes>
           <Footer />
         </div>

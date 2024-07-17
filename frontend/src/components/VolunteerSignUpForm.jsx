@@ -21,7 +21,7 @@ const VolunteerSignUpForm = () => {
     name: "",
     email: "",
     contactNumber: "",
-    preferredRoles: "",
+    preferredRole: "",
     event: "",
     parentName: "",
     agreePolicies: false,
@@ -70,7 +70,7 @@ const VolunteerSignUpForm = () => {
         // console.log("volunteerRoles",response.data.data.roles)
         setRoles(response.data.data.roles); // Assuming the API response structure is { data: { roles: [...] } }
         // ...prevFormData,
-        //   preferredRoles: `${response.data.data.name}`,
+        //   preferredRole: `${response.data.data.name}`,
         // }));
       } catch (error) {
         console.error("Error fetching volunteer roles:", error);
@@ -151,7 +151,7 @@ const VolunteerSignUpForm = () => {
     } else if (!phonePattern.test(formData.contactNumber)) {
       newErrors.contactNumber = "Contact number must be 10 digits";
     }
-    if (!formData.preferredRoles) newErrors.preferredRoles = "Preferred Roles is required";
+    if (!formData.preferredRole) newErrors.preferredRole = "Preferred Roles is required";
     if (!formData.event) newErrors.event = "Event is required";
     if (!formData.agreePolicies) newErrors.agreePolicies = "You must agree to the policies";
     if (!formData.understandUnpaid) newErrors.understandUnpaid = "You must understand the volunteer position is unpaid";
@@ -189,7 +189,7 @@ const VolunteerSignUpForm = () => {
       name: "",
       email: "",
       contactNumber: "",
-      preferredRoles: "",
+      preferredRole: "",
       event: "",
       parentName: "",
       agreePolicies: false,
@@ -302,7 +302,7 @@ const VolunteerSignUpForm = () => {
           {errors.contactNumber && <p className="error">{errors.contactNumber}</p>}
         </div>
         <div className="input-box">
-          <select name="preferredRoles" value={formData.preferredRoles} onChange={handleChange} required>
+          <select name="preferredRole" value={formData.preferredRole} onChange={handleChange} required>
             <option value="">Select your preferred Role</option>
             {roles.map((role) => (
               <option key={role._id} value={role._id}>
@@ -310,7 +310,7 @@ const VolunteerSignUpForm = () => {
               </option>
             ))}
           </select>
-          {errors.preferredRoles && <p className="error">{errors.preferredRoles}</p>}
+          {errors.preferredRole && <p className="error">{errors.preferredRole}</p>}
         </div>
         <div className="input-box">
           <select name="event" value={formData.event} onChange={handleChange} required>
