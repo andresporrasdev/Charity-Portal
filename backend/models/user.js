@@ -59,7 +59,12 @@ userSchema.pre("save", function (next) {
     this.isPaid = true; // Optional, as 'isPaid' defaults to true
     this.isActive = true;
   }
+  next();
+});
 
+//return only documents where the isActive is not false for all find-related queries
+userSchema.pre(/^find/, function (next) {
+  this.find({ isActive: { $ne: false } });
   next();
 });
 
