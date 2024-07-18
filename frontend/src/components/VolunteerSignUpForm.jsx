@@ -42,13 +42,14 @@ const VolunteerSignUpForm = () => {
         },
       });
       // console.log("response",response)
-
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        name: `${response.data.data.user.first_name} ${response.data.data.user.last_name}`,
-        email: response.data.data.user.email,
-        userId: user._id,
-      }));
+      if (user) {
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          name: `${response.data.data.user.first_name} ${response.data.data.user.last_name}`,
+          email: response.data.data.user.email,
+          userId: user._id,
+        }));
+      }
     } catch (error) {
       console.error("Error fetching user info:", error);
     }
