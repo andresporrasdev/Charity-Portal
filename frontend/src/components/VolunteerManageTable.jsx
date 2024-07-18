@@ -128,7 +128,7 @@ const VolunteerManageTable = () => {
         },
       });
 
-      if (response.status === 204) {
+      if (response.status === 200) {
         setVolunteerData((prevVolunteerData) =>
           prevVolunteerData.filter((volunteer) => volunteer.id !== selectedVolunteerId)
         );
