@@ -31,16 +31,19 @@ const MemberManageTable = () => {
           email: user.email,
           firstName: user.first_name,
           lastName: user.last_name,
+          isActive: user.isActive ? "Active" : "Inactive",
           roles: user.roles.join(", "),
           created: new Date(user.created).toISOString().split("T")[0],
         }));
 
         const columns = [
+          { accessorKey: "id", header: "User ID" },
           { accessorKey: "email", header: "Email" },
           { accessorKey: "firstName", header: "First Name" },
           { accessorKey: "lastName", header: "Last Name" },
           { accessorKey: "roles", header: "Roles" },
           { accessorKey: "created", header: "Created", size: 50 },
+          { accessorKey: "isActive", header: "Active Status" },
         ];
         setColumns(columns);
         setUserData(fetchedData);
@@ -145,31 +148,42 @@ const MemberManageTable = () => {
         size: 30,
       },
     },
-    renderRowActionMenuItems: ({ closeMenu, row, table }) => [
-      <MRT_ActionMenuItem
-        icon={<Edit />}
-        key="edit"
-        label="Edit"
-        onClick={() => {
-          setSelectedUserId(row.original.id);
-          openEditUserModal();
-          closeMenu();
-        }}
-        table={table}
-      />,
-      <MRT_ActionMenuItem
-        icon={<Delete />}
-        key="delete"
-        label="Delete"
-        table={table}
-        sx={{ border: 0 }}
-        onClick={() => {
-          setSelectedUserId(row.original.id);
-          openDeleteModal();
-          closeMenu();
-        }}
-      />,
-    ],
+    renderRowActionMenuItems: ({ closeMenu, row, table }) => {
+      const isActive = row.original.isActive === "Active";
+
+      return [
+        <MRT_ActionMenuItem
+          icon={<Edit />}
+          key="edit"
+          label="Edit"
+          disabled={!isActive}
+          onClick={() => {
+            if (isActive) {
+              setSelectedUserId(row.original.id);
+              openEditUserModal();
+              closeMenu();
+            }
+          }}
+          table={table}
+        />,
+
+        <MRT_ActionMenuItem
+          icon={<Delete />}
+          key="delete"
+          label="Delete"
+          disabled={!isActive}
+          table={table}
+          sx={{ border: 0 }}
+          onClick={() => {
+            if (isActive) {
+              setSelectedUserId(row.original.id);
+              openDeleteModal();
+              closeMenu();
+            }
+          }}
+        />,
+      ];
+    },
     muiTableBodyProps: {
       sx: {
         "& tr:nth-of-type(odd) > td": {

@@ -26,7 +26,7 @@ const volunteerSchema = new mongoose.Schema(
       trim: true,
       match: /^[0-9]{10}$/,
     },
-    preferredRoles: {
+    preferredRole: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "VolunteerRole",
       required: true,
@@ -34,7 +34,7 @@ const volunteerSchema = new mongoose.Schema(
     },
     event: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "events",
+      ref: "Event",
       required: true,
       trim: true,
     },
