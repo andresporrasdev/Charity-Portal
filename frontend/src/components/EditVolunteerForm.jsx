@@ -25,49 +25,41 @@ const MenuProps = {
   },
 };
 
-const EditVolunteerForm = ({ user, roleOptions, onUpdateUser, onClose }) => {
-  const [editedUser, setEditedUser] = useState(user);
-  const [roleName, setRoleName] = useState([]);
+const EditVolunteerForm = ({ volunteer, roleOptions, onUpdateVolunteer, onClose }) => {
+  const [editedUser, setEditedUser] = useState(volunteer);
+  const [roleName, setRoleName] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    setEditedUser(user);
-    if (user.roles && Array.isArray(user.roles)) {
-      setRoleName(
-        // get and set role name instead of role id
-        user.roles.map((roleId) => {
-          const role = roleOptions.find((role) => role._id === roleId);
-          return role ? role.name : roleId;
-        })
-      );
+    setEditedUser(volunteer);
+
+    if (volunteer.preferredRole) {
+      const role = roleOptions.find((role) => role.name === volunteer.preferredRole);
+      setRoleName(role ? role.name : role._id);
     } else {
-      setRoleName([]);
+      setRoleName("");
     }
-  }, [roleOptions, user]);
+  }, [roleOptions, volunteer]);
 
   const handleRoleChange = (event) => {
     const {
       target: { value },
     } = event;
 
-    // use role._id instead of role.name
-    const selectedRoles = value.map((roleName) => {
-      const role = roleOptions.find((role) => role.name === roleName);
-      return role ? role._id : roleName;
-    });
+    const selectedRoleName = roleOptions.find((role) => role.name === value).name;
+    setRoleName(selectedRoleName);
 
-    setRoleName(value);
-    setEditedUser({
-      ...editedUser,
-      roles: selectedRoles,
-    });
+    setEditedUser((prevEditedUser) => ({
+      ...prevEditedUser,
+      preferredRole: selectedRoleName,
+    }));
   };
 
   const handleUpdate = async () => {
-    if (editedUser.roles.length === 0) {
-      setErrorMessage("User must have at least one role.");
+    if (!editedUser.preferredRole) {
+      setErrorMessage("Volunteer must have at least one role.");
     } else {
-      onUpdateUser(editedUser);
+      onUpdateVolunteer(editedUser);
     }
   };
 
@@ -85,19 +77,18 @@ const EditVolunteerForm = ({ user, roleOptions, onUpdateUser, onClose }) => {
             <TextField label="Email" value={editedUser.email} fullWidth disabled sx={{ mt: 1 }} />
           </Grid>
           <Grid item xs={12}>
-            <TextField label="First Name" value={editedUser.firstName} fullWidth disabled />
+            <TextField label="Name" value={editedUser.name} fullWidth disabled />
           </Grid>
           <Grid item xs={12}>
-            <TextField label="Last Name" value={editedUser.lastName} fullWidth disabled />
+            <TextField label="Event Name" value={editedUser.event} fullWidth disabled />
           </Grid>
           <Grid item xs={12}>
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Roles</InputLabel>
+              <InputLabel id="demo-simple-select-label">Role</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                label="Roles"
-                multiple
+                label="Role"
                 value={roleName}
                 onChange={handleRoleChange}
                 fullWidth

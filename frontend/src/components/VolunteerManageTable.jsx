@@ -212,18 +212,17 @@ const VolunteerManageTable = () => {
         />
       )}
 
-      {/* {showEditVolunteerModal && (
+      {showEditVolunteerModal && (
         <EditVolunteerForm
-          Volunteer={{
+          volunteer={{
             ...volunteerData.find((volunteer) => volunteer.id === selectedVolunteerId),
-            //split the roles string into an array before passing to ensure the form receives the roles in the array format
-            roles: volunteerData.find((volunteer) => volunteer.id === selectedVolunteerId).roles.split(", "),
+            preferredRole: volunteerData.find((volunteer) => volunteer.id === selectedVolunteerId).preferredRole,
           }}
           roleOptions={roleOptions}
           onUpdateVolunteer={handleUpdateVolunteer}
           onClose={handleEditVolunteerModalClose}
         />
-      )} */}
+      )}
     </>
   );
 };

@@ -1,6 +1,6 @@
 // Import the Volunteer model
 const Volunteer = require("../models/volunteerModel");
-
+const VolunteerRole = require("../models/volunteerRole");
 const express = require("express");
 const router = express.Router();
 
@@ -58,19 +58,31 @@ const getAllVolunteers = async (req, res) => {
 
 // Update volunteer
 const updateVolunteer = async (req, res) => {
-  // check if request data contain password
-  if (req.body.password) {
-    res.status(400).json({
-      status: "fail",
-      message: "You can't update password using this endpoint.",
-    });
-  }
-
   try {
-    const volunteer = await Volunteer.findByIdAndUpdate(req.params.id);
-    // Save the new volunteer document to the database
-    await volunteer.save();
-    console.log(`Volunteer updated: ${volunteer}`);
+    const filterObj = (obj, ...allowedFields) => {
+      const newObj = {};
+      Object.keys(obj).forEach((key) => {
+        if (allowedFields.includes(key)) {
+          newObj[key] = obj[key];
+        }
+      });
+      return newObj;
+    };
+
+    const filteredBody = filterObj(req.body, "preferredRole");
+    const volunteerRole = await VolunteerRole.findOne({ name: filteredBody.preferredRole });
+
+    if (!volunteerRole) {
+      throw new Error(`Role not found: ${filteredBody.preferredRoleName}`);
+    }
+
+    const update = { preferredRole: volunteerRole._id };
+
+    // Update volunteer document by ID with filteredBody
+    const volunteer = await Volunteer.findByIdAndUpdate(req.params.id, update, {
+      new: true, // Return the updated document
+      runValidators: true, // Run validators on update
+    });
 
     if (!volunteer) {
       return res.status(404).json({
