@@ -64,7 +64,10 @@ userSchema.pre("save", function (next) {
 
 //return only documents where the isActive is not false for all find-related queries
 userSchema.pre(/^find/, function (next) {
-  this.find({ isActive: { $ne: false } });
+  // only apply isActive filter if `this._activeFilter` is not set to false
+  if (!this._activeFilterDisabled) {
+    this.find({ isActive: { $ne: false } });
+  }
   next();
 });
 

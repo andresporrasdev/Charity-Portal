@@ -110,10 +110,15 @@ exports.getUserInfo = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
   try {
     //Populate the roles field to fetch role names
-    const users = await User.find().populate("roles", "name");
+    const query = User.find().populate("roles", "name");
+    // Create the query and set the custom flag to disable the isActive filter
+    query._activeFilterDisabled = true;
+
+    // Execute the query and convert Mongoose documents to plain JavaScript objects
+    const users = await query.lean();
 
     const usersWithRoleNames = users.map((user) => ({
-      ...user.toObject(),
+      ...user,
       roles: user.roles.map((role) => role.name),
     }));
 
