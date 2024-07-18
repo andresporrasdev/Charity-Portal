@@ -196,6 +196,7 @@ const VolunteerSignUpForm = () => {
       agreePolicies: false,
       understandUnpaid: false,
     });
+    setIsEmailVerified(false);
     setErrors({});
   };
 
