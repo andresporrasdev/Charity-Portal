@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import BaseURL from "../../config";
 import { Container, Button, TextField } from "@mui/material";
 import "react-quill/dist/quill.snow.css";
 import Editor from "./Editor";
+import axios from "axios";
 
-const Messages = () => {
+const AddNewsForm = () => {
   const [subject, setSubject] = useState("");
-  const [emailMessageBody, setEmailMessageBody] = useState("");
-  const [emailMessageBodyError, setEmailMessageBodyError] = useState("");
+  const [newsBody, setNewsBody] = useState("");
+  const [newsBodyError, setNewsBodyError] = useState("");
 
-  const isInvalidMessage = () => {
-    const trimmedText = emailMessageBody.trim();
+  const isInvalidBody = () => {
+    const trimmedText = newsBody.trim();
     const containsOnlyHtmlTags = /^(<p>(<br>|<br\/>|<br\s\/>|\s+|)<\/p>)*$/gm.test(trimmedText);
-    const containsPlaceholders = /{{|}}/.test(trimmedText);
-    return !trimmedText || containsOnlyHtmlTags || containsPlaceholders;
+    return !trimmedText || containsOnlyHtmlTags;
   };
 
   const handleSubmit = async (e) => {
@@ -23,12 +23,8 @@ const Messages = () => {
 
     let hasError = false;
 
-    if (isInvalidMessage()) {
-      if (/{{|}}/.test(emailMessageBody)) {
-        setEmailMessageBodyError("ReplaceExpressionsError");
-      } else {
-        setEmailMessageBodyError("EmailMessageBodyError");
-      }
+    if (isInvalidBody()) {
+      setNewsBodyError("Body Error");
       hasError = true;
     }
 
@@ -36,33 +32,29 @@ const Messages = () => {
       return;
     }
 
-    const apiUrl = `${BaseURL}/api/post/`;
+    const apiUrl = `${BaseURL}/api/post/addPost`;
     const headers = {
-      // "x-subscriber-id": subscriberId,
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
 
     const formData = new FormData();
 
-    formData.append("content", emailMessageBody);
+    formData.append("content", newsBody);
     formData.append("subject", subject);
     try {
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: headers,
-        body: formData,
-      });
+      const response = await axios.post(apiUrl, formData, { headers });
 
-      if (response.ok) {
-        toast.success("Message published successfully", {
+      if (response.status === 200) {
+        toast.success("News published successfully", {
           position: toast.POSITION.TOP_RIGHT,
           autoClose: 3000,
         });
 
         setSubject("");
-        setEmailMessageBody("");
-        setEmailMessageBodyError("");
+        setNewsBody("");
+        setNewsBodyError("");
       } else {
-        const errorMessage = await response.text();
+        const errorMessage = response.data;
         toast.error(`Error: ${errorMessage}`, {
           position: toast.POSITION.TOP_RIGHT,
           autoClose: 3000,
@@ -70,7 +62,7 @@ const Messages = () => {
       }
     } catch (error) {
       console.error("Error:", error);
-      toast.error("Failed to publish message. Please try again later.", {
+      toast.error("Failed to publish news. Please try again later.", {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 3000,
       });
@@ -85,8 +77,8 @@ const Messages = () => {
         maxWidth: "650px",
       }}
     >
-      <h3 style={{ margin: "0px 0px 15px 10px" }}>Publish Announcement</h3>
-      <form id="message-form" onSubmit={handleSubmit}>
+      <h3 style={{ margin: "0px 0px 15px 10px" }}>Publish News</h3>
+      <form id="news-form" onSubmit={handleSubmit}>
         <ToastContainer />
         <TextField
           required
@@ -100,13 +92,13 @@ const Messages = () => {
           style={{ marginBottom: "10px" }}
         />
         <Editor
-          value={emailMessageBody}
+          value={newsBody}
           onEditorChange={(value) => {
-            setEmailMessageBody(value);
+            setNewsBody(value);
           }}
-          placeholder="Enter message"
+          placeholder="Enter description"
         />
-        {emailMessageBodyError && <p className="error-text">{emailMessageBodyError}</p>}
+        {newsBodyError && <p className="error-text">{newsBodyError}</p>}
 
         <Button type="submit" variant="contained" color="primary" style={{ marginTop: "10px" }}>
           Publish
@@ -116,4 +108,4 @@ const Messages = () => {
   );
 };
 
-export default Messages;
+export default AddNewsForm;
