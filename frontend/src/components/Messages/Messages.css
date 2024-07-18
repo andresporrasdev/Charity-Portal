@@ -1,0 +1,10 @@
+#message-form {
+  max-width: 700px;
+  padding: 20px;
+  background-color: #fff;
+  /* border: 1px solid #ccc; */
+  border-radius: 5px;
+}
+.message-form-group {
+  margin-bottom: 10px;
+}

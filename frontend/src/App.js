@@ -16,6 +16,7 @@ import VolunteerManagePage from "./pages/VolunteerManagePage";
 import ResetPasswordPage from "./components/ResetPasswordPage";
 import Footer from "./components/Footer/Footer";
 import { UserProvider } from "./UserContext";
+import Messages from "./components/Messages/Messages";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
             <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
             <Route path="/member-manage" element={<MemberManagePage />} />
             <Route path="/volunteer-manage" element={<VolunteerManagePage />} />
+            <Route path="/add-announcement" element={<Messages />} />
           </Routes>
           <Footer />
         </div>
