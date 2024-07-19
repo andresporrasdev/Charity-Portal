@@ -2,6 +2,8 @@ const User = require("../models/user");
 const Role = require("../models/role");
 const { encryptPassword } = require("../utils/encryption");
 const mongoose = require("mongoose");
+const fs = require("fs");
+const path = require("path");
 
 // const getUserDataFromEventBrite = async (eventId, email) => {
 //   try {
@@ -22,24 +24,50 @@ const mongoose = require("mongoose");
 //   }
 // };
 
-exports.saveMemberToDB = async (userData) => {
+exports.saveAllUsersToDBFromMockFile = async () => {
   try {
-    const role = await Role.findOne({ name: "Member" });
+    const filePath = path.join(__dirname, "../data/tempUserData.json");
+    const tempUserData = JSON.parse(fs.readFileSync(filePath, "utf8"));
+    const users = tempUserData.orders;
 
-    if (!role) {
-      throw new Error("Role not found");
+    if (users.length > 0) {
+      for (const user of users) {
+        // 데이터베이스에서 이메일로 유저 검색
+        const existingUser = await User.findOne({ email: user.email });
+
+        // 유저가 이미 존재하지 않는 경우에만 새로운 유저 저장
+        if (!existingUser) {
+          const newUser = new User({
+            email: user.email,
+            firstName: user.first_name,
+            lastName: user.last_name,
+            created: user.created,
+            event_id: user.event_id,
+            isPaid: true,
+            isActive: false,
+          });
+          await newUser.save();
+          console.log(`User with email ${user.email} has been saved.`);
+        } else {
+          // 유저가 이미 존재하는 경우, 정보 업데이트
+          await User.findOneAndUpdate(
+            { email: user.email },
+            {
+              created: user.created,
+              event_id: user.event_id,
+              isPaid: true,
+            },
+            { new: true }
+          );
+          console.log(`User with email ${user.email} has been updated.`);
+        }
+      }
+      console.log(`${users.length} users have been saved to the DB.`);
+    } else {
+      console.log("No users found in mock file.");
     }
-    const encryptedPassword = await encryptPassword(userData.password);
-
-    const user = new User({
-      ...userData,
-      password: encryptedPassword,
-      roles: [role._id], // _id is Pk
-    });
-    await user.save();
-    console.log("user data saved in saveUserToDB method");
   } catch (error) {
-    console.error("Error saving user to DB:", error);
+    console.error("Error saving users to DB:", error);
     throw error;
   }
 };
@@ -59,6 +87,28 @@ const getUserDataFromMockFile = async (email) => {
     }
   } catch (error) {
     console.error("Error fetching data from the mock file:", error);
+    throw error;
+  }
+};
+
+exports.saveMemberToDB = async (userData) => {
+  try {
+    const role = await Role.findOne({ name: "Member" });
+
+    if (!role) {
+      throw new Error("Role not found");
+    }
+    const encryptedPassword = await encryptPassword(userData.password);
+
+    const user = new User({
+      ...userData,
+      password: encryptedPassword,
+      roles: [role._id], // _id is Pk
+    });
+    await user.save();
+    console.log("user data saved in saveUserToDB method");
+  } catch (error) {
+    console.error("Error saving user to DB:", error);
     throw error;
   }
 };

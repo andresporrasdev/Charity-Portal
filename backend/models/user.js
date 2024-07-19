@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
   first_name: { type: String },
   last_name: { type: String },
   created: { type: Date, default: Date.now },
-  password: { type: String, required: true },
+  password: { type: String },
   isPaid: { type: Boolean, default: true },
   isActive: { type: Boolean, default: true },
   event_id: { type: String },

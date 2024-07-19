@@ -7,6 +7,7 @@ const Role = require("./models/role");
 const VolunteerRole = require("./models/volunteerRole");
 const Event = require("./models/event");
 const Post = require("./models/postModel");
+const { saveAllUsersToDBFromMockFile } = require("./controllers/userController");
 
 console.log(process.env);
 
@@ -25,19 +26,18 @@ mongoose
     console.log("Some error has occured");
   });
 
-  async function initializeDatabase() {
-    try {
-      // Example: Check if any events exist, if not, create a default one
-      const eventCount = await Event.countDocuments();
-      if (eventCount === 0) {
-        console.log("No events found, creating a default event...");
-        await createDummyEvent(); //saves a dummy event to the database
-      }
-    } catch (error) {
-      console.error("Error initializing database:", error);
+async function initializeDatabase() {
+  try {
+    // Example: Check if any events exist, if not, create a default one
+    const eventCount = await Event.countDocuments();
+    if (eventCount === 0) {
+      console.log("No events found, creating a default event...");
+      await createDummyEvent(); //saves a dummy event to the database
     }
+  } catch (error) {
+    console.error("Error initializing database:", error);
   }
-  
+}
 
 // Initializes predefined roles in the MongoDB database
 async function initializeRoles() {
@@ -64,23 +64,24 @@ async function initializeRoles() {
 
 async function initializeVolunteerRoles() {
   const volunteerRoles = [
-    { name: "Tea area", 
-      description:"Guide guests at the Tea station: make sure snack tray is refilled: Tea cups/ sugar refilled etc." },
-    { name: "Reception table",
-      description: "Greet the members, ask them if they have the band, offer them the candy/flowers etc"
-     },
-    { name: "Door Greeter",
-      description: "Check the wrist band at the Auditorium entrance and Dinner hall entrance and allow ppl inside"
-     },
-    { name: "Back Stage",
-      description: "Help in organizing the performers in the green room: help certificate distribution: stage"
-     },
-    { name: "Comms",
-      description: "Audio video coordination"
+    {
+      name: "Tea area",
+      description: "Guide guests at the Tea station: make sure snack tray is refilled: Tea cups/ sugar refilled etc.",
     },
-    { name: "Dinner",
-      description: "Help in organizing the dinner area"
-     },
+    {
+      name: "Reception table",
+      description: "Greet the members, ask them if they have the band, offer them the candy/flowers etc",
+    },
+    {
+      name: "Door Greeter",
+      description: "Check the wrist band at the Auditorium entrance and Dinner hall entrance and allow ppl inside",
+    },
+    {
+      name: "Back Stage",
+      description: "Help in organizing the performers in the green room: help certificate distribution: stage",
+    },
+    { name: "Comms", description: "Audio video coordination" },
+    { name: "Dinner", description: "Help in organizing the dinner area" },
   ];
 
   for (const role of volunteerRoles) {
@@ -99,20 +100,20 @@ async function initializeVolunteerRoles() {
 async function createDummyEvent() {
   // const eventCount = await Event.countDocuments();
   // if (eventCount === 0) {
-    const dummyEvent = new Event({
-      name: 'Sample Event',
-      description: 'This is a sample event.',
-      time: '2024-06-05T16:46',
-      place: 'Main Hall',
-      pricePublic: '10',
-      priceMember: '5',
-      isMemberOnly: false,
-      imageUrl: '/image/EventImage/event1.png',
-      purchaseURL: 'https://www.ottawatamilsangam.com/',
-    });
-    await dummyEvent.save();
-    console.log('Dummy event created successfully!');
-  }
+  const dummyEvent = new Event({
+    name: "Sample Event",
+    description: "This is a sample event.",
+    time: "2024-06-05T16:46",
+    place: "Main Hall",
+    pricePublic: "10",
+    priceMember: "5",
+    isMemberOnly: false,
+    imageUrl: "/image/EventImage/event1.png",
+    purchaseURL: "https://www.ottawatamilsangam.com/",
+  });
+  await dummyEvent.save();
+  console.log("Dummy event created successfully!");
+}
 // }
 
 // Create a dummy post
@@ -125,11 +126,10 @@ async function createDummyPost() {
   console.log("Dummy post created successfully!");
 }
 
-
-
 // Start the server
 const port = process.env.PORT || 3001;
 
-app.listen(port, () => {
+app.listen(port, async () => {
   console.log(`Server is listening on port ${port}`);
+  await saveAllUsersToDBFromMockFile();
 });
