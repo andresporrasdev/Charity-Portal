@@ -29,114 +29,44 @@ exports.saveAllUsersToDBFromMockFile = async () => {
     const filePath = path.join(__dirname, "../data/tempUserData.json");
     const tempUserData = JSON.parse(fs.readFileSync(filePath, "utf8"));
     const users = tempUserData.orders;
+    const role = await Role.findOne({ name: "Member" });
 
     if (users.length > 0) {
       for (const user of users) {
-        // 데이터베이스에서 이메일로 유저 검색
-        const existingUser = await User.findOne({ email: user.email });
+        const query = User.findOne({ email: user.email });
+        query._activeFilterDisabled = true;
+        const existingUser = await query.exec();
 
-        // 유저가 이미 존재하지 않는 경우에만 새로운 유저 저장
         if (!existingUser) {
           const newUser = new User({
             email: user.email,
-            firstName: user.first_name,
-            lastName: user.last_name,
+            first_name: user.first_name,
+            last_name: user.last_name,
             created: user.created,
             event_id: user.event_id,
+            roles: [role._id],
             isPaid: true,
             isActive: false,
           });
           await newUser.save();
           console.log(`User with email ${user.email} has been saved.`);
-        } else {
-          // 유저가 이미 존재하는 경우, 정보 업데이트
-          await User.findOneAndUpdate(
-            { email: user.email },
-            {
-              created: user.created,
-              event_id: user.event_id,
-              isPaid: true,
-            },
-            { new: true }
-          );
-          console.log(`User with email ${user.email} has been updated.`);
+        } else if (existingUser) {
+          // if user exists in db then update
+          if (!existingUser.isActive && !existingUser.isPaid) {
+            existingUser.created = user.created;
+            existingUser.event_id = user.event_id;
+            existingUser.isPaid = true;
+            await existingUser.save();
+            console.log(`User with email ${user.email} has been updated.`);
+          }
         }
       }
-      console.log(`${users.length} users have been saved to the DB.`);
     } else {
       console.log("No users found in mock file.");
     }
   } catch (error) {
     console.error("Error saving users to DB:", error);
     throw error;
-  }
-};
-
-const getUserDataFromMockFile = async (email) => {
-  try {
-    //const tempUserData = fs.readFileSync('tempUserData.json', 'utf8');
-    // const orders = JSON.parse(tempUserData).orders;
-    const tempUserData = require("../data/tempUserData.json");
-    const foundUser = tempUserData.orders.find((order) => order.email === email);
-
-    if (foundUser) {
-      return foundUser;
-    } else {
-      console.log("This email is not exist in mock file.");
-      return null;
-    }
-  } catch (error) {
-    console.error("Error fetching data from the mock file:", error);
-    throw error;
-  }
-};
-
-exports.saveMemberToDB = async (userData) => {
-  try {
-    const role = await Role.findOne({ name: "Member" });
-
-    if (!role) {
-      throw new Error("Role not found");
-    }
-    const encryptedPassword = await encryptPassword(userData.password);
-
-    const user = new User({
-      ...userData,
-      password: encryptedPassword,
-      roles: [role._id], // _id is Pk
-    });
-    await user.save();
-    console.log("user data saved in saveUserToDB method");
-  } catch (error) {
-    console.error("Error saving user to DB:", error);
-    throw error;
-  }
-};
-
-exports.checkMembershipUser = async (req, res) => {
-  const { email } = req.body;
-  try {
-    const userData = await getUserDataFromMockFile(email);
-    console.log("userData:", userData);
-
-    if (userData) {
-      return res.status(200).json({
-        status: "success",
-        message: "User data fetched from mock data/EventBrite and saved to the database",
-        data: userData,
-      });
-    } else {
-      return res.status(200).json({
-        status: "fail",
-        message: "User not found in mock data/EventBrite, please sign up as new user",
-      });
-    }
-  } catch (error) {
-    console.error("An error occurred:", error);
-    return res.status(500).json({
-      status: "error",
-      message: "An error occurred while processing the request",
-    });
   }
 };
 
@@ -166,6 +96,8 @@ exports.getAllUsers = async (req, res) => {
 
     // Execute the query and convert Mongoose documents to plain JavaScript objects
     const users = await query.lean();
+
+    //const users = await User.find().populate("roles", "name");
 
     const usersWithRoleNames = users.map((user) => ({
       ...user,

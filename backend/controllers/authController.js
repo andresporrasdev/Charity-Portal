@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 const util = require("util");
 const sendEmail = require("./../utils/email");
 const crypto = require("crypto");
-const { saveMemberToDB } = require("./userController");
 const { encryptPassword } = require("../utils/encryption");
 
 const signToken = (email) => {
@@ -15,15 +14,29 @@ const signToken = (email) => {
 };
 
 exports.signup = async (req, res) => {
-  const { email, first_name, last_name, created, event_id, isPaid, password } = req.body;
+  const { email, password } = req.body;
   try {
-    const userData = { email, first_name, last_name, created, event_id, isPaid, password };
-    await saveMemberToDB(userData);
+    const query = User.findOne({ email });
+    query._activeFilterDisabled = true;
+    const existingUser = await query.exec();
+
+    if (!existingUser) {
+      return res.status(404).json({
+        status: "fail",
+        message: "User not found.",
+      });
+    }
+
+    const encryptedPassword = await encryptPassword(password);
+
+    existingUser.isActive = true;
+    existingUser.password = encryptedPassword;
+    await existingUser.save();
 
     return res.status(200).json({
       status: "success",
-      message: "Member saved successfully.",
-      data: userData,
+      message: "Member's password saved successfully.",
+      data: existingUser,
       redirectUrl: "/login",
     });
   } catch (error) {

@@ -55,16 +55,32 @@ const sendOTPByEmail = async (email, otp) => {
 exports.sendOtp = async (req, res) => {
   const { email } = req.body;
   try {
-    const existingUser = await User.findOne({ email });
+    //const existingUser = await User.findOne({ email });
+    const query = User.findOne({ email });
+    query._activeFilterDisabled = true;
+    const existingUser = await query.lean();
 
     // if the user already signed up
-    if (existingUser) {
+    if (existingUser && existingUser.isActive && existingUser.password) {
       return res.status(200).json({
         status: "fail",
         message: "User already exists. Please login with your credential.",
         data: existingUser,
       });
+    } else if (existingUser && existingUser.isPaid === false) {
+      return res.status(200).json({
+        status: "fail",
+        message: "Please purchase membership again to renew your membership.",
+        data: existingUser,
+      });
+    } else if (!existingUser) {
+      return res.status(200).json({
+        status: "fail",
+        message: "Please purchase membership to be a member before sign up.",
+        data: existingUser,
+      });
     } else {
+      // email exists in db, isActive is false, isPaid is true (when user paid membership but not signed up)
       const otp = generateNumericOTP(6);
       await Otp.create({ email, otp });
       await sendOTPByEmail(email, otp);
