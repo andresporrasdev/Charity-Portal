@@ -200,9 +200,11 @@ exports.restrict = (...allowedRoles) => {
 };
 
 exports.forgetPassword = async (req, res, next) => {
-  //1. get user based on posted email
+  //Remember, a pre-find middleware in the userSchema applies an isActive filter to all find queries,
+  //unless _activeFilterDisabled is set to true.
   const user = await User.findOne({ email: req.body.email });
 
+  //we don't want to send the reset password link to the user who is not active
   if (!user) {
     return res.status(401).json({
       status: "fail",
