@@ -53,23 +53,43 @@ exports.login = async (req, res) => {
   }
 
   try {
-    const existingUser = await User.findOne({ email });
-    console.log("User found:", existingUser);
+    //const existingUser = await User.findOne({ email });
+    //console.log("User found:", existingUser);
+
+    const query = User.findOne({ email });
+    query._activeFilterDisabled = true;
+    const existingUser = await query.exec();
 
     if (!existingUser) {
+      // user didn't buy membership, so doesn't exist in db
       return res.status(200).json({
         status: "fail",
-        message: "user doesn't exist. Please sign up.",
-        redirectUrl: "/",
+        message: "User doesn't exist. Please purchase a membership and sign up.",
       });
     }
 
-    const passwordMatch = await existingUser.comparePassword(password);
-    if (!passwordMatch) {
+    // Check if the user has a password before comparing
+    if (existingUser.password) {
+      const passwordMatch = await existingUser.comparePassword(password);
+      if (!passwordMatch) {
+        return res.status(200).json({
+          status: "fail",
+          message: "Password doesn't match. Please try again.",
+        });
+      }
+
+      if (!existingUser.isActive && !existingUser.isPaid) {
+        return res.status(200).json({
+          status: "fail",
+          message: "Your membership is expired. Please renew your membership to login.",
+        });
+      }
+    } else {
+      // Handle the case where the user does not have a password
+      // if existingUser.isPaid && !existingUser.isActive
       return res.status(200).json({
         status: "fail",
-        message: "Password doesn't match. Please try again.",
-        redirectUrl: "/",
+        message: "You already paid for our membership. Please sign up before logging in.",
       });
     }
 
