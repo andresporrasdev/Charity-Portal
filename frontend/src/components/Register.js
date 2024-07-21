@@ -76,7 +76,7 @@ const Register = () => {
 
     try {
       console.log("Sending OTP request to server...");
-      const response = await axios.post("http://localhost:3000/api/otp/send-otp", { email });
+      const response = await axios.post("http://localhost:3000/api/otp/send-otp", { email, source: "register" });
       console.log("OTP response received:", response.data);
 
       if (response.data.status === "success") {

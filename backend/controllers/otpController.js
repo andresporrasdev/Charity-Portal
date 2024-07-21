@@ -53,44 +53,64 @@ const sendOTPByEmail = async (email, otp) => {
 };
 
 exports.sendOtp = async (req, res) => {
-  const { email } = req.body;
+  const { email, source } = req.body;
   try {
     //const existingUser = await User.findOne({ email });
-    const query = User.findOne({ email });
-    query._activeFilterDisabled = true;
-    const existingUser = await query.lean();
+    let existingUser;
 
-    // if the user already signed up
-    if (existingUser && existingUser.isActive && existingUser.password) {
-      return res.status(200).json({
-        status: "fail",
-        message: "User already exists. Please login with your credential.",
-        data: existingUser,
-      });
-    } else if (existingUser && existingUser.isPaid === false) {
-      return res.status(200).json({
-        status: "fail",
-        message: "Please purchase membership again to renew your membership.",
-        data: existingUser,
-      });
-    } else if (!existingUser) {
-      return res.status(200).json({
-        status: "fail",
-        message: "Please purchase membership to be a member before sign up.",
-        data: existingUser,
-      });
-    } else {
-      // email exists in db, isActive is false, isPaid is true (when user paid membership but not signed up)
+    const sendOtpAndRespond = async () => {
       const otp = generateNumericOTP(6);
       await Otp.create({ email, otp });
       await sendOTPByEmail(email, otp);
 
       return res.status(200).json({
         status: "success",
-        message: "Sent a verifiaction code successfully",
+        message: "Sent a verification code successfully",
         data: existingUser,
         otp: otp,
       });
+    };
+
+    if (source === "volunteer") {
+      // Logic specific to volunteer sign up page
+      existingUser = await User.findOne({ email });
+
+      if (existingUser && existingUser.isActive && existingUser.password) {
+        return res.status(200).json({
+          status: "fail",
+          message: "User already exists. Please login with your credential.",
+          data: existingUser,
+        });
+      } else {
+        return await sendOtpAndRespond();
+      }
+    } else if (source === "register") {
+      // Logic specific to register page
+      const query = User.findOne({ email });
+      query._activeFilterDisabled = true;
+      existingUser = await query.lean();
+
+      if (existingUser && existingUser.isActive && existingUser.password) {
+        return res.status(200).json({
+          status: "fail",
+          message: "User already exists. Please login with your credential.",
+          data: existingUser,
+        });
+      } else if (existingUser && existingUser.isPaid === false) {
+        return res.status(200).json({
+          status: "fail",
+          message: "Please purchase membership again to renew your membership.",
+          data: existingUser,
+        });
+      } else if (!existingUser) {
+        return res.status(200).json({
+          status: "fail",
+          message: "Please purchase a membership to become a member before signing up.",
+          data: existingUser,
+        });
+      } else {
+        return await sendOtpAndRespond();
+      }
     }
   } catch (error) {
     console.error("An error occurred:", error);
