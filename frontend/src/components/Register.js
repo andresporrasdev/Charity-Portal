@@ -22,6 +22,7 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [signupMessage, setSignupMessage] = useState(false);
+  const [link, setLink] = useState("");
 
   const EyeIcon = showPassword ? FaEye : FaEyeSlash;
   const ConfirmEyeIcon = showConfirmPassword ? FaEye : FaEyeSlash;
@@ -51,6 +52,7 @@ const Register = () => {
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
     setEmailError(!isValidEmail(e.target.value) || e.target.value === "");
+    setLink("");
   };
 
   const handlePasswordChange = (e) => {
@@ -83,6 +85,9 @@ const Register = () => {
         setShowOtpModal(true);
       } else if (response.data.status === "fail") {
         setEmailError(response.data.message);
+        if (response.data.link) {
+          setLink(response.data.link);
+        }
       }
     } catch (error) {
       console.error("Error sending OTP:", error);
@@ -198,7 +203,16 @@ const Register = () => {
             disabled={additionalFieldsVisible}
           />
         </div>
-        {emailError && !isFocused && <p className="error-text">{emailError}</p>}
+        {emailError && !isFocused && (
+          <p className="error-text">
+            {emailError}
+            {link && (
+              <a href={link} style={{ display: "block", marginTop: "10px" }}>
+                Click here to purchase a membership.
+              </a>
+            )}
+          </p>
+        )}
         {loading && <p className="loading-spinner">Loading...</p>}
         {!additionalFieldsVisible && (
           <>

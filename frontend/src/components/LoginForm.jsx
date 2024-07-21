@@ -18,6 +18,7 @@ const LoginForm = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [modalEmailError, setModalEmailError] = useState("");
   const [isFocused, setIsFocused] = useState(false);
+  const [link, setLink] = useState("");
 
   const EyeIcon = showPassword ? FaEye : FaEyeSlash;
 
@@ -86,6 +87,9 @@ const LoginForm = () => {
           setRedirectUrl(response.data.redirectUrl);
         } else if (response.data.status === "fail") {
           setLoginError(response.data.message);
+          if (response.data.link) {
+            setLink(response.data.link);
+          }
           console.log(loginError);
         }
       } catch (error) {
@@ -145,6 +149,11 @@ const LoginForm = () => {
         {loginError && (
           <Alert severity="error" sx={{ mb: 2 }}>
             {loginError}
+            {link && (
+              <a href={link} style={{ display: "block", marginTop: "10px" }}>
+                Click here to purchase a membership.
+              </a>
+            )}
           </Alert>
         )}
         <div className="input-box">

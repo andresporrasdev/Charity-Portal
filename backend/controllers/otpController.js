@@ -101,12 +101,14 @@ exports.sendOtp = async (req, res) => {
           status: "fail",
           message: "Please purchase membership again to renew your membership.",
           data: existingUser,
+          link: "/membership",
         });
       } else if (!existingUser) {
         return res.status(200).json({
           status: "fail",
           message: "Please purchase a membership to become a member before signing up.",
           data: existingUser,
+          link: "/membership",
         });
       } else {
         return await sendOtpAndRespond();

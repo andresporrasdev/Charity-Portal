@@ -65,6 +65,7 @@ exports.login = async (req, res) => {
       return res.status(200).json({
         status: "fail",
         message: "User doesn't exist. Please purchase a membership and sign up.",
+        link: "/membership",
       });
     }
 
@@ -82,6 +83,7 @@ exports.login = async (req, res) => {
         return res.status(200).json({
           status: "fail",
           message: "Your membership is expired. Please renew your membership to login.",
+          link: "/membership",
         });
       }
     } else {
