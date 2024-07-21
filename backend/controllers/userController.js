@@ -24,6 +24,27 @@ const path = require("path");
 //   }
 // };
 
+exports.updateUserStatuses = async () => {
+  try {
+    const currentDate = new Date();
+
+    // find user who signed up more than a year ago and set their status to inactive
+    const users = await User.find({
+      created: { $lte: new Date(currentDate.getFullYear() - 1, currentDate.getMonth(), currentDate.getDate()) },
+    });
+
+    for (const user of users) {
+      user.isPaid = false;
+      user.isActive = false;
+      await user.save();
+    }
+
+    console.log("User statuses updated successfully.");
+  } catch (error) {
+    console.error("Error updating user statuses:", error);
+  }
+};
+
 exports.saveAllUsersToDBFromMockFile = async () => {
   try {
     const filePath = path.join(__dirname, "../data/tempUserData.json");
@@ -38,6 +59,7 @@ exports.saveAllUsersToDBFromMockFile = async () => {
         const existingUser = await query.exec();
 
         if (!existingUser) {
+          // if user paid membership but not signed up before
           const newUser = new User({
             email: user.email,
             first_name: user.first_name,
@@ -57,6 +79,11 @@ exports.saveAllUsersToDBFromMockFile = async () => {
             existingUser.event_id = user.event_id;
             existingUser.isPaid = true;
             await existingUser.save();
+            if (existingUser.password) {
+              // if the user has been singed up before and has a password
+              existingUser.isActive = true;
+              await existingUser.save();
+            }
             console.log(`User with email ${user.email} has been updated.`);
           }
         }

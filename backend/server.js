@@ -7,7 +7,7 @@ const Role = require("./models/role");
 const VolunteerRole = require("./models/volunteerRole");
 const Event = require("./models/event");
 const Post = require("./models/postModel");
-const { saveAllUsersToDBFromMockFile } = require("./controllers/userController");
+const { updateUserStatuses, saveAllUsersToDBFromMockFile } = require("./controllers/userController");
 
 console.log(process.env);
 
@@ -131,5 +131,12 @@ const port = process.env.PORT || 3001;
 
 app.listen(port, async () => {
   console.log(`Server is listening on port ${port}`);
-  await saveAllUsersToDBFromMockFile();
+
+  try {
+    await saveAllUsersToDBFromMockFile();
+    await updateUserStatuses();
+    console.log("Initialization complete. The server is now ready to handle requests.");
+  } catch (error) {
+    console.error("Error during initialization:", error);
+  }
 });
