@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const EventDetailsModal = ({ event, onClose,}) => {
 
     const navigate = useNavigate();
+    const isPastEvent = new Date(event.time) <= new Date();
 
     const handlePurchaseTicket = () => {
         window.location.href = event.purchaseURL;
@@ -12,7 +13,7 @@ const EventDetailsModal = ({ event, onClose,}) => {
     
     return (
         <div className="event_detail_modal" onClick={onClose}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="event-detail-modal-content" onClick={(e) => e.stopPropagation()}>
                 <span className="close" onClick={onClose}>&times;</span>
                 <div className="event-details-modal">
                     <h3>{event.name}</h3>
@@ -23,8 +24,12 @@ const EventDetailsModal = ({ event, onClose,}) => {
                     {!event.isMemberOnly && (
                         <p><strong>Price (Public):</strong> {event.pricePublic}</p>
                     )}
-                    <button className="action-button" onClick={handlePurchaseTicket}>Purchase Ticket</button>
-                    <button className="action-button" onClick={() => navigate("/volunteer")}>Volunteer</button>
+                    {!isPastEvent && (
+                        <>
+                        <button className="action-button" onClick={handlePurchaseTicket}>Purchase Ticket</button>
+                        <button className="action-button" onClick={() => navigate("/volunteer")}>Volunteer</button>
+                        </>
+                    )}
                 </div>
             </div>
         </div>

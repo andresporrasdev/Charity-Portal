@@ -1,5 +1,3 @@
-/* src/components/Home.css */
-
 .home-container {
     font-size: medium;
     text-align: center;
@@ -68,42 +66,17 @@
     padding-right: 8%;
 }
 
+.event-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    justify-items: center;
+}
+
 h2 {
     color: #e88a1d;
     margin-bottom: 30px;
     font-size: 36px;
-}
-
-.event-buttons {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
-
-.event-buttons>div {
-    width: 30%;
-    margin-bottom: 20px;
-    position: relative;
-}
-
-.event-buttons img {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 3 / 5;
-    object-fit: cover;
-}
-
-.event-buttons button {
-    width: 100%;
-    padding: 10px;
-    background-color: #e88a1d;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: medium;
-    border-radius: 20px;
-    margin-top: 30px;
 }
 
 .ads {

@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import BaseURL from "../config.js";
+import BaseURL from "../../config.js";
 import { MaterialReactTable, useMaterialReactTable, MRT_ActionMenuItem } from "material-react-table";
 import { Edit, Delete } from "@mui/icons-material";
 import { Box, Container } from "@mui/material";
-import ConfirmModal from "./ConfirmModal.jsx";
+import ConfirmModal from "../ConfirmModal.jsx";
 import EditVolunteerForm from "./EditVolunteerForm.jsx";
 
 const VolunteerManageTable = () => {

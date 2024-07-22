@@ -7,6 +7,7 @@ import "../components/Event/Event.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "../UserContext";
+import ConfirmModal from "../components/ConfirmModal.jsx";
 
 const EventPage = () => {
   const { user } = useContext(UserContext);
@@ -14,6 +15,8 @@ const EventPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [currentEvent, setCurrentEvent] = useState(null);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [eventToDelete, setEventToDelete] = useState(null);
 
   useEffect(() => {
     const fetchAndSetEvents = async () => {
@@ -41,16 +44,12 @@ const EventPage = () => {
   };
 
   const handleSaveEvent = async (event) => {
-    console.log("Event in save event:", event);
-    // console.log("Current event in save event:", currentEvent);
     try {
       if (currentEvent && currentEvent._id) {
-        // Editing an existing event
         const updateUrl = `http://localhost:3000/api/event/updateEvent/${currentEvent._id}`;
         await axios.patch(updateUrl, event);
         setEvents(events.map((e) => (e._id === event._id ? event : e)));
       } else {
-        // Adding a new event
         await axios.post("http://localhost:3000/api/event/addEvent", event);
         setEvents([...events, event]);
       }
@@ -60,13 +59,9 @@ const EventPage = () => {
     }
   };
 
-  const handleDeleteEvent = async (id) => {
-    try {
-      await axios.delete(`http://localhost:3000/api/event/deleteEvent/${id}`);
-      setEvents(events.filter((e) => e._id !== id));
-    } catch (error) {
-      console.error("Error deleting event:", error);
-    }
+  const handleDeleteEvent = (id) => {
+    setEventToDelete(id);
+    setConfirmModalOpen(true);
   };
 
   const handleViewDetails = (event) => {
@@ -74,6 +69,17 @@ const EventPage = () => {
     setShowDetailsModal(true);
   };
 
+  const confirmDeleteEvent = async () => {
+  try {
+    await axios.delete(`http://localhost:3000/api/event/deleteEvent/${eventToDelete}`);
+    setEvents(events.filter((e) => e._id !== eventToDelete));
+    setConfirmModalOpen(false);
+    setEventToDelete(null);
+  } catch (error) {
+    console.error("Error deleting event:", error);
+  }
+  };
+  
   const currentDate = new Date();
   const upcomingEvents = events
     .filter((event) => new Date(event.time) > currentDate)
@@ -81,7 +87,7 @@ const EventPage = () => {
   const pastEvents = events
     .filter((event) => new Date(event.time) <= currentDate)
     .sort((a, b) => new Date(b.time) - new Date(a.time))
-    .slice(0, 3);
+    .slice(0, 4);
 
   return (
     <div className="event-page">
@@ -126,6 +132,14 @@ const EventPage = () => {
         </div>
       )}
       {showDetailsModal && <EventDetailModal event={currentEvent} onClose={handleCloseModal} />}
+      <ConfirmModal
+        title="Confirm Delete"
+        text="Are you sure you want to delete this event? Please type 'DELETE' to confirm."
+        open={confirmModalOpen}
+        onConfirm={confirmDeleteEvent}
+        onClose={() => setConfirmModalOpen(false)}
+        confirmWord="DELETE"
+      />
     </div>
   );
 };

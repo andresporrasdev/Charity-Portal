@@ -3,14 +3,15 @@
     justify-content: space-between;
     align-items: center;
     background-color: white;
+    margin:0;
     padding: 10px 20px;
     flex-wrap: wrap;
     position: sticky;
     top:0;
     z-index: 1000;
-    width:98%;
+    width:100%;
+    box-sizing: border-box;
 }
-
 
 .navbar-left {
     display: flex;
@@ -62,10 +63,12 @@
 .social-login-container {
     display: flex;
     align-items: center;
+    margin-left: auto;
 }
 
 .navbar-right {
     margin-top: auto;
+    margin-right: 10px;
 }
 
 .login-button,
@@ -81,6 +84,7 @@
     cursor: pointer;
     border: none;
     height: 100%;
+    box-sizing: border-box;
 }
 
 .social-icons a {
@@ -94,9 +98,15 @@
 @media (max-width: 768px) {
     .navbar {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
         padding: 10px;
         position: relative;
+        width: 100%
+    }
+
+    .navbar-left {
+        width: 100%;
+        justify-content: center;
     }
 
     .logo {

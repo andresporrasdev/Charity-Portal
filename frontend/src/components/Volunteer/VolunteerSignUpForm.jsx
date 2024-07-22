@@ -3,8 +3,8 @@ import axios from "axios";
 import "./VolunteerSignUpForm.css";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom"; //Use navigate to redirect to another page
-import OtpModal from "./OtpModal";
-import { UserContext } from "../UserContext";
+import OtpModal from "../Otp/OtpModal";
+import { UserContext } from "../../UserContext";
 
 const VolunteerSignUpForm = () => {
   const navigate = useNavigate();
@@ -41,7 +41,6 @@ const VolunteerSignUpForm = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      // console.log("response",response)
       if (user) {
         setFormData((prevFormData) => ({
           ...prevFormData,
@@ -68,7 +67,6 @@ const VolunteerSignUpForm = () => {
     const fetchVolunteerRoles = async () => {
       try {
         const response = await axios.get("http://localhost:3000/api/volunteerRole/getAllVolunteerRoles");
-        // console.log("volunteerRoles",response.data.data.roles)
         setRoles(response.data.data.roles); // Assuming the API response structure is { data: { roles: [...] } }
         // ...prevFormData,
         //   preferredRole: `${response.data.data.name}`,
@@ -83,11 +81,9 @@ const VolunteerSignUpForm = () => {
     const fetchEvents = async () => {
       try {
         const response = await axios.get("http://localhost:3000/api/event/readEvent");
-        // console.log("events",response.data)
         const futureEvents = response.data
           .filter((event) => new Date(event.time) >= new Date())
           .sort((a, b) => new Date(b.time) - new Date(a.time));
-        // console.log("futureEvents",futureEvents)
         setEvents(futureEvents);
 
         if (location.state && location.state.eventId) {
