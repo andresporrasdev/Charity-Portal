@@ -2,25 +2,35 @@
 
 html,
 body {
-  height: 100%;
+  min-height: 100%;
   margin: 0;
   font-family: 'Anek Tamil', 'Noto Sans Tamil', sans-serif;
+  padding: 0;
+}
+
+body {
   display: flex;
   flex-direction: column;
-  padding: 0;
+}
+
+.App {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .wrapper {
   flex: 1;
 }
 
-.App {
-  text-align: center;
-}
-
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+}
+
+h2 {
+  font-size: 36px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -42,6 +52,10 @@ body {
 
 .App-link {
   color: #61dafb;
+}
+
+h2 {
+  font-size: 28px !important;
 }
 
 @keyframes App-logo-spin {

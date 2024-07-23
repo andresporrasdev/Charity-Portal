@@ -49,11 +49,10 @@
 
 .intro a {
     display: inline-block;
-    padding: 10px 20px;
+    padding: 5px 25px;
     background-color: #e88a1d;
     color: white;
     text-decoration: none;
-    font-weight: bold;
     border-radius: 20px;
 }
 

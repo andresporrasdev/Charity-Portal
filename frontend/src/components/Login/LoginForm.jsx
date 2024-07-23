@@ -180,8 +180,8 @@ const LoginForm = () => {
       </form>
 
       {showForgetPwdModal && (
-        <div className="modal">
-          <div className="modal-content">
+        <div className="forget-pwd-modal">
+          <div className="forget-pwd-modal-content">
             <span className="close" onClick={closeForgetPasswordModal}>
               &times;
             </span>

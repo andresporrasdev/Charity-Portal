@@ -63,7 +63,6 @@
 .social-login-container {
     display: flex;
     align-items: center;
-    margin-left: auto;
 }
 
 .navbar-right {
@@ -90,8 +89,12 @@
 .social-icons a {
     color: #e88a1d;
     margin-right: 10px;
-    margin-bottom: auto;
     font-size: 2em;
+    height: 100%;
+}
+
+.social-icons a svg{
+    margin-top: 5px;
     height: 100%;
 }
 
@@ -113,21 +116,35 @@
         height: 60px;
     }
 
+    .navbar-center {
+        width: 100%;
+        justify-content: center;
+    }
+
     .header-text h1 {
         font-size: 2em;
+        text-align: center;
     }
 
     .nav-menu ul {
-        flex-direction: column;
+        flex-direction: row;
         align-items: flex-start;
+        font-size: 12px;
     }
 
     .nav-menu ul li {
-        margin: 0;
+        margin: 4px;
     }
 
     .login-button,
     .logout-button {
-        font-size: 1em;
+        font-size: 12px;
+        padding: 5px 10px;
     }
+
+    .social-icons a svg {
+        width: 30%;
+        height: 30%;
+    }
+   
 }

@@ -127,3 +127,10 @@
   font-size: 14px;
   text-align: left;
 }
+
+@media (max-width: 768px) {
+  .volunteer-signup-form {
+    transform: scale(0.8);
+    transform-origin: top;
+  }
+}
