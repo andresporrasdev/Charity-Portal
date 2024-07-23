@@ -7,7 +7,7 @@ import "react-quill/dist/quill.snow.css";
 import Editor from "./Editor";
 import axios from "axios";
 
-const AddNewsForm = () => {
+const AddPostForm = () => {
   const [subject, setSubject] = useState("");
   const [newsBody, setNewsBody] = useState("");
   const [newsBodyError, setNewsBodyError] = useState("");
@@ -20,7 +20,6 @@ const AddNewsForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     let hasError = false;
 
     if (isInvalidBody()) {
@@ -32,7 +31,8 @@ const AddNewsForm = () => {
       return;
     }
 
-    const apiUrl = `${BaseURL}/api/post/addPost`;
+    const apiUrl = `http://localhost:3000/api/post/addPost`;
+    // const apiUrl = `${BaseURL}/api/post/addPost`;
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
@@ -41,31 +41,42 @@ const AddNewsForm = () => {
 
     formData.append("content", newsBody);
     formData.append("subject", subject);
+    console.log("formData", formData);
+    console.log("formData", formData.get("content"));
+    console.log("formData", formData.get("subject"));
     try {
-      const response = await axios.post(apiUrl, formData, { headers });
+      // const response = await axios.post(apiUrl, formData, { headers });
+      const response = await axios.post(apiUrl, formData);
+
 
       if (response.status === 200) {
-        toast.success("News published successfully", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
-        });
+        toast.success("News published successfully",
+        //   {
+        //   position: toast.POSITION.TOP_RIGHT,
+        //   autoClose: 3000,
+        // }
+      );
 
-        setSubject("");
-        setNewsBody("");
-        setNewsBodyError("");
+        // setSubject("");
+        // setNewsBody("");
+        // setNewsBodyError("");
       } else {
         const errorMessage = response.data;
-        toast.error(`Error: ${errorMessage}`, {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
-        });
+        toast.error(`Error: ${errorMessage}`,
+        //   {
+        //   position: toast.POSITION.TOP_RIGHT,
+        //   autoClose: 3000,
+        // }
+      );
       }
     } catch (error) {
       console.error("Error:", error);
-      toast.error("Failed to publish news. Please try again later.", {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 3000,
-      });
+      toast.error("Failed to publish news. Please try again later.",
+      //   {
+      //   position: toast.POSITION.TOP_RIGHT,
+      //   autoClose: 3000,
+      // }
+    );
     }
   };
 
@@ -108,4 +119,4 @@ const AddNewsForm = () => {
   );
 };
 
-export default AddNewsForm;
+export default AddPostForm;
