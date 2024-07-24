@@ -1,13 +1,18 @@
-import React, { useContext } from "react";
+import React, { useContext,useState  } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./Nav.css";
 import logo from "./logo.png";
-import { FaFacebook, FaInstagram } from "react-icons/fa";
+import { FaFacebook, FaInstagram,FaBars  } from "react-icons/fa";
 import { UserContext } from "../../UserContext";
 
 function Nav() {
   const navigate = useNavigate();
   const { user, logout } = useContext(UserContext);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
 
   return (
     <>
@@ -18,35 +23,40 @@ function Nav() {
         <div className="navbar-center">
           <div className="header-text">
             <h1>Ottawa Tamil Sangam</h1>
-            <nav className="nav-menu">
+            <nav className={`nav-menu ${menuOpen ? 'open' : ''}`}>
               <ul>
                 <li>
-                  <NavLink to="/" activeclassname="active">
+                  <NavLink to="/" activeclassname="active" onClick={toggleMenu}>
                     Home
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/event" activeclassname="active">
+                  <NavLink to="/event" activeclassname="active" onClick={toggleMenu}>
                     Event
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/membership" activeclassname="active">
+                  <NavLink to="/membership" activeclassname="active" onClick={toggleMenu}>
                     Membership
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/volunteer" activeclassname="active">
+                  <NavLink to="/volunteer" activeclassname="active" onClick={toggleMenu}>
                     Volunteer
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/news" activeclassname="active">
+                  <NavLink to="/news" activeclassname="active" onClick={toggleMenu}>
                     News
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/contact-us" activeclassname="active">
+                  <NavLink to="/gallery" activeclassname="active" onClick={toggleMenu}>
+                    Gallery
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/contact-us" activeclassname="active" onClick={toggleMenu}>
                     Contact
                   </NavLink>
                 </li>
@@ -80,6 +90,9 @@ function Nav() {
               </button>
             </div>
           )}
+        </div>
+        <div className="menu-toggle" onClick={toggleMenu}>
+          <FaBars />
         </div>
       </div>
     </>

@@ -341,7 +341,7 @@ const VolunteerSignUpForm = () => {
               onChange={handleChange}
               required
             />
-            I agree to abide by the policies and guidelines of Ottawa Tamil Sangam
+            I agree to abide by the <a href="/policy" target="_blank" rel="noopener noreferrer">policies and guidelines of Ottawa Tamil Sangam</a>
           </label>
           {errors.agreePolicies && <p className="error">{errors.agreePolicies}</p>}
           <label>
