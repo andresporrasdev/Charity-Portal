@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import PostList from "../components/Post/PostList";
 import AddPostForm from "../components/Post/AddPostForm";
-// import PostDetailModal from "../components/Post/PostDetailModal";
 import { fetchPosts } from "../components/Post/FetchPost";
 import "../components/Post/Post.css";
 import { Link } from "react-router-dom";
@@ -12,12 +11,12 @@ const PostPage = () => {
   const { user } = useContext(UserContext);
   const [posts, setPosts] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  // const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [currentPost, setCurrentPost] = useState(null);
 
   useEffect(() => {
     const fetchAndSetPosts = async () => {
       const postsData = await fetchPosts();
+      console.log("postsData", postsData);
       setPosts(postsData);
     };
 
@@ -36,22 +35,18 @@ const PostPage = () => {
 
   const handleCloseModal = () => {
     setShowModal(false);
-    // setShowDetailsModal(false);
     setCurrentPost(null);
   };
 
   const handleSavePost = async (post) => {
-    console.log("Post in save post:", post);
     try {
       if (currentPost && currentPost._id) {
-        // Editing an existing post
         const updateUrl = `http://localhost:3000/api/post/updatePost/${currentPost._id}`;
         await axios.patch(updateUrl, post);
         setPosts(posts.map((p) => (p._id === post._id ? post : p)));
       } else {
-        // Adding a new post
-        await axios.post("http://localhost:3000/api/post/addPost", post);
-        setPosts([...posts, post]);
+        const response = await axios.post("http://localhost:3000/api/post/addPost", post);
+        setPosts([...posts, response.data]);
       }
       handleCloseModal();
     } catch (error) {
@@ -68,19 +63,18 @@ const PostPage = () => {
     }
   };
 
-  // const handleViewDetails = (post) => {
-  //   setCurrentPost(post);
-  //   // setShowDetailsModal(true);
-  // };
-
   const currentDate = new Date();
+  // const upcomingPosts = posts
+  //   .filter((post) => new Date(post.time) > currentDate)
+  //   .sort((a, b) => new Date(a.time) - new Date(b.time));
+  // const upcomingPosts = posts.sort((a, b) => new Date(a.time) - new Date(b.time));
   const upcomingPosts = posts
-    .filter((post) => new Date(post.time) > currentDate)
-    .sort((a, b) => new Date(a.time) - new Date(b.time));
-  const pastPosts = posts
-    .filter((post) => new Date(post.time) <= currentDate)
-    .sort((a, b) => new Date(b.time) - new Date(a.time))
-    .slice(0, 3);
+  console.log("upcomingPosts", upcomingPosts);
+
+  // const pastPosts = posts
+  //   .filter((post) => new Date(post.time) <= currentDate)
+  //   .sort((a, b) => new Date(b.time) - new Date(a.time))
+  //   .slice(0, 3);
 
   return (
     <div className="post-page">
@@ -90,29 +84,27 @@ const PostPage = () => {
         </button>
       )}
       <section>
-        <h2>Upcoming Posts</h2>
+        <h2>Lastest News</h2>
         <PostList
-          posts={upcomingPosts.map((post) => ({ ...post, time: post.time.toString() }))}
+          posts={upcomingPosts.map((post) => ({ ...post,}))}
           onEdit={handleEditPost}
           onDelete={handleDeletePost}
-          // onViewDetails={handleViewDetails}
           user={user}
         />
       </section>
-      <section className="past-posts-section">
+      {/* <section className="past-posts-section">
         <h2>Past Posts</h2>
         <PostList
           posts={pastPosts.map((post) => ({ ...post, time: post.time.toString() }))}
           onEdit={handleEditPost}
           onDelete={handleDeletePost}
-          // onViewDetails={handleViewDetails}
           hideActions={true}
           user={user}
         />
         <Link to="/past-posts" className="more-link">
           See All Past Posts
         </Link>
-      </section>
+      </section> */}
 
       {showModal && (
         <div className="add_edit_post_modal" onClick={handleCloseModal}>
@@ -124,7 +116,6 @@ const PostPage = () => {
           </div>
         </div>
       )}
-      {/* {showDetailsModal && <PostDetailModal post={currentPost} onClose={handleCloseModal} />} */}
     </div>
   );
 };

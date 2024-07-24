@@ -1,13 +1,12 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
+import React, { useState, useRef } from "react";
 import "./Post.css";
 import { useNavigate } from "react-router-dom";
 import { FaEllipsisV } from "react-icons/fa";
-import { ROLES } from "../../UserContext";
 
 const PostCard = ({ post, onEdit, onDelete, onViewDetails, hideActions, user }) => {
   const [showMenu, setShowMenu] = useState(false);
-  const { name, time, place, pricePublic, priceMember, isMemberOnly, imageUrl } = post;
-  const formattedTime = time.replace("T", " ");
+  const { subject, content, imageUrl, created } = post;
+  const formattedTime = new Date(created).toLocaleString();
   const navigate = useNavigate();
   const menuRef = useRef(null);
 
@@ -28,19 +27,11 @@ const PostCard = ({ post, onEdit, onDelete, onViewDetails, hideActions, user }) 
 
   return (
     <div className="post-card">
-      <img src={imageUrl} alt={name} />
+      <img src={imageUrl} alt={subject} />
       <div className="post-details">
-        <h3>{name}</h3>
+        <h3>{subject}</h3>
         <p>{formattedTime}</p>
-        <p>{place}</p>
-        {isMemberOnly ? (
-          <p><strong>Price (Member):</strong> {priceMember}</p>
-        ) : (
-          <>
-            <p><strong>Price (Member):</strong> {priceMember}</p>
-            <p><strong>Price (Public):</strong> {pricePublic}</p>
-          </>
-        )}
+        <p>{content}</p>
       </div>
       {!hideActions && (
         <div className="post-actions">
