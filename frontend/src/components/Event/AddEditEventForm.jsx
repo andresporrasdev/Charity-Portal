@@ -49,7 +49,6 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
     onSave({ ...formData, purchaseURL: updatedPurchaseURL });
   };
 
-  // Step 1: Add a new state for the file
   const [selectedFile, setSelectedFile] = useState(null);
 
   // Function to handle file selection
@@ -57,7 +56,7 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
     setSelectedFile(e.target.files[0]);
   };
 
-  // // Function to upload the file to the server
+  // Function to upload the file to the server
   const uploadFile = async () => {
     if (!selectedFile) return;
 
@@ -111,7 +110,7 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
         <input type="text" name="pricePublic" value={formData.pricePublic} onChange={handleChange} required />
       </label>
       <label>
-        Price (Members Only):
+        Price (Member):
         <input type="text" name="priceMember" value={formData.priceMember} onChange={handleChange} />
       </label>
       <label>
@@ -123,7 +122,7 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
         <input type="text" name="imageUrl" value={formData.imageUrl} onChange={handleChange} required />
       </label>
       <label>
-        Upload Image:
+        Upload Image (Recommended Size: 1080 x 1350 pixels):
         <input type="file" onChange={handleFileChange} />
         {failMessage && (
           <Alert severity="error" sx={{ mb: 2 }}>

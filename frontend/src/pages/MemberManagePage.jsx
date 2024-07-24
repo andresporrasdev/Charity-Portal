@@ -1,4 +1,4 @@
-import MemberManageTable from "../components/MemberManageTable";
+import MemberManageTable from "../components/MemberMgmt/MemberManageTable";
 
 const MemberManagePage = () => {
   return (

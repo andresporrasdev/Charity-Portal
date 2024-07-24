@@ -1,4 +1,4 @@
-import VolunteerManageTable from "../components/VolunteerManageTable";
+import VolunteerManageTable from "../components/Volunteer/VolunteerManageTable";
 
 const VolunteerManagePage = () => {
   return (

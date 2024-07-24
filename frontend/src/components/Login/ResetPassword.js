@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./ResetPassword.css";
+import "./Login.css";
 import axios from "axios";
 import { FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import Alert from "@mui/material/Alert";

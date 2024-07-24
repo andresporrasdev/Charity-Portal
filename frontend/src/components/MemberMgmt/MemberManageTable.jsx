@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import BaseURL from "../config.js";
+import BaseURL from "../../config.js";
 import { MaterialReactTable, useMaterialReactTable, MRT_ActionMenuItem } from "material-react-table";
 import { Edit, Delete } from "@mui/icons-material";
 import { Box, Container } from "@mui/material";
-import ConfirmModal from "./ConfirmModal.jsx";
+import ConfirmModal from "../ConfirmModal.jsx";
 import EditUserForm from "./EditUserForm.jsx";
 
 const MemberManageTable = () => {
@@ -203,10 +203,11 @@ const MemberManageTable = () => {
       {showDeleteModal && (
         <ConfirmModal
           title="Delete"
-          text="Do you really want to delete this user?"
+          text="Do you really want to delete this user? Please type 'DELETE' to confirm."
           open={showDeleteModal}
           onConfirm={handleDeleteConfirm}
           onClose={handleDeleteModalClose}
+          confirmWord="DELETE"
         />
       )}
 

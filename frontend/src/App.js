@@ -9,14 +9,16 @@ import Membership from "./pages/Membership";
 import Volunteer from "./pages/Volunteer";
 import News from "./pages/PostPage";
 import ContactUs from "./pages/ContactUs";
-import LoginForm from "./components/LoginForm";
-import Register from "./components/Register";
+import Gallery from "./pages/Gallery";
+import LoginForm from "./components/Login/LoginForm";
+import Register from "./components/Register/Register";
 import MemberManagePage from "./pages/MemberManagePage";
 import VolunteerManagePage from "./pages/VolunteerManagePage";
-import ResetPasswordPage from "./components/ResetPasswordPage";
+import ResetPasswordPage from "./components/Login/ResetPasswordPage";
 import Footer from "./components/Footer/Footer";
 import { UserProvider } from "./UserContext";
 import AddPostForm from "./components/Post/AddPostForm";
+import Policy from "./components/Volunteer/Policy";
 
 function App() {
   return (
@@ -32,12 +34,14 @@ function App() {
             <Route path="/volunteer" element={<Volunteer />} />
             <Route path="/news" element={<News />} />
             <Route path="/contact-us" element={<ContactUs />} />
+            <Route path="/gallery" element={<Gallery />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/register" element={<Register />} />
             <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
             <Route path="/member-manage" element={<MemberManagePage />} />
             <Route path="/volunteer-manage" element={<VolunteerManagePage />} />
             <Route path="/add-news" element={<AddPostForm />} />
+            <Route path="/policy" element={<Policy />} />
           </Routes>
           <Footer />
         </div>

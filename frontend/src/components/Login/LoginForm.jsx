@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Alert from "@mui/material/Alert";
-import "./LoginForm.css";
+import "./Login.css";
 import { FaEnvelope, FaLock, FaUser, FaEye, FaEyeSlash } from "react-icons/fa";
 
 const LoginForm = () => {
@@ -36,7 +36,6 @@ const LoginForm = () => {
 
   const handleBlur = () => {
     setIsFocused(false);
-    // setModalEmailError("Please enter a valid email address.");
     if (!isValidEmail(modalEmail)) {
       setModalEmailError("Please enter a valid email address.");
     } else {
@@ -136,7 +135,7 @@ const LoginForm = () => {
   return (
     <div className="wrapper">
       <form onSubmit={handleSubmit}>
-        <h1>Login</h1>
+        <h2>Login</h2>
         {loginSuccessMessage && (
           <Alert severity="success" sx={{ mb: 2 }}>
             {loginSuccessMessage}
@@ -155,7 +154,6 @@ const LoginForm = () => {
         <div className="input-box">
           <FaLock className="icon" />
           <input
-            //type="password"
             type={showPassword ? "text" : "password"}
             placeholder="Password"
             value={password}
@@ -182,8 +180,8 @@ const LoginForm = () => {
       </form>
 
       {showForgetPwdModal && (
-        <div className="modal">
-          <div className="modal-content">
+        <div className="forget-pwd-modal">
+          <div className="forget-pwd-modal-content">
             <span className="close" onClick={closeForgetPasswordModal}>
               &times;
             </span>

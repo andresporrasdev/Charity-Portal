@@ -1,38 +1,35 @@
-.reset-password-wrapper {
-  font-family: "Poppins", sans-serif;
+.wrapper {
   width: 420px;
   text-align: center;
-  background: transparent;
+  background: #fff;
   border: 2px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(30px);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   color: #333;
   border-radius: 10px;
   padding: 30px 40px;
-  position: absolute;
-  top: 150px;
-  left: 50%;
-  transform: translateX(-50%);
+  margin: 10px auto;
+  position: relative;
+  justify-content: center;
+  align-items: center;
 }
 
-.reset-password-wrapper h1 {
+.register-box h2 {
   font-size: 36px;
   text-align: center;
   color: #e88a1d;
 }
 
-.reset-password-wrapper p {
-  margin-bottom: 20px;
+.register-wrapper .register-box .otp-modal {
+  background-color: white !important;
 }
-
-.reset-password-wrapper .input-box {
+.input-box {
   display: flex;
   flex-direction: column;
   margin-bottom: 30px;
   position: relative;
 }
 
-.reset-password-wrapper .input-box input {
+.input-box input {
   flex: 1;
   height: 20px;
   background: transparent;
@@ -46,11 +43,11 @@
   position: relative;
 }
 
-.reset-password-wrapper .input-box input::placeholder {
+.input-box input::placeholder {
   color: #494747;
 }
 
-.reset-password-wrapper .input-box .icon {
+.input-box .icon {
   position: absolute;
   top: 50%;
   left: 20px;
@@ -59,7 +56,11 @@
   color: #494747;
 }
 
-.reset-password-wrapper .error {
+.error-input {
+  border-color: red;
+}
+
+.error-text {
   color: red;
   font-size: 16px;
   text-align: left;
@@ -68,7 +69,7 @@
   top: -20px;
 }
 
-.reset-password-wrapper button {
+.register-button {
   width: 100%;
   height: 50px;
   background: #e88a1d;
@@ -80,30 +81,4 @@
   font-size: 18px;
   color: white;
   font-weight: 700;
-}
-
-.reset-password-wrapper .register-link {
-  font-size: 14.5px;
-  text-align: center;
-  margin: 20px 0 15px;
-}
-
-.reset-password-wrapper .register-link p a {
-  color: #333;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.reset-password-wrapper .register-link p a {
-  text-decoration: underline;
-}
-
-.link p a {
-  color: #333;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.link p a:hover {
-  text-decoration: underline;
 }

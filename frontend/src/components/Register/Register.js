@@ -3,7 +3,7 @@ import "./Register.css";
 import { FaEnvelope, FaLock, FaUser, FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import Alert from "@mui/material/Alert";
-import OtpModal from "./OtpModal";
+import OtpModal from "../Otp/OtpModal";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -226,7 +226,7 @@ const Register = () => {
   }, [redirectUrl]);
 
   return (
-    <div className="register-wrapper">
+    <div className="wrapper">
       <div className="register-box">
         <h2 id="register-modal-title">Register</h2>
         {signupMessage && (
