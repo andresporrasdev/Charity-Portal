@@ -27,11 +27,12 @@ const PostCard = ({ post, onEdit, onDelete, onViewDetails, hideActions, user }) 
 
   return (
     <div className="post-card">
-      <img src={imageUrl} alt={subject} />
+      {/* <img src={imageUrl} alt={subject} /> */}
       <div className="post-details">
         <h3>{subject}</h3>
+        <div dangerouslySetInnerHTML={{ __html: content }} />
+        <h4>Updated on:</h4>
         <p>{formattedTime}</p>
-        <p>{content}</p>
       </div>
       {!hideActions && (
         <div className="post-actions">
@@ -40,7 +41,6 @@ const PostCard = ({ post, onEdit, onDelete, onViewDetails, hideActions, user }) 
             <div className="menu" ref={menuRef}>
               <button onClick={handleEdit}>Edit</button>
               <button onClick={handleDelete}>Delete</button>
-              <button onClick={() => onViewDetails(post)}>View Details</button>
             </div>
           )}
         </div>
