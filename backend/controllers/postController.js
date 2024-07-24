@@ -53,6 +53,7 @@ exports.updatePost = async (req, res) => {
             return res.status(404).json({ message: 'Post not found to update.' });
         }
         res.status(200).json(updatedPost);
+        // console.log('Post updated successfully', updatedPost);
     }
     catch (error) {
         res.status(500).json({ message: 'An error occurred while updating the post.' });

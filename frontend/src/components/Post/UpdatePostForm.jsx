@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import BaseURL from "../../config";
@@ -7,10 +7,20 @@ import "react-quill/dist/quill.snow.css";
 import Editor from "./Editor";
 import axios from "axios";
 
-const AddPostForm = () => {
+const UpdatePostForm = ({ post, onSave, onCancel }) => {
+  const [content, setContent] = useState("");
   const [subject, setSubject] = useState("");
   const [newsBody, setNewsBody] = useState("");
   const [newsBodyError, setNewsBodyError] = useState("");
+
+  useEffect(() => {
+    if (post) {
+      setContent(post.content || "");
+      setSubject(post.subject || "");
+      setNewsBody(post.content || "");
+    }
+  }, [post]);
+
 
   const isInvalidBody = () => {
     const trimmedText = newsBody.trim();
@@ -31,7 +41,9 @@ const AddPostForm = () => {
       return;
     }
 
-    const apiUrl = `http://localhost:3000/api/post/addPost`;
+    const id = post._id;
+
+    const apiUrl = `http://localhost:3000/api/post/updatePost/${id}`;
     // const apiUrl = `${BaseURL}/api/post/addPost`;
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -46,7 +58,7 @@ const AddPostForm = () => {
     console.log("formData", formData.get("subject"));
     try {
       // const response = await axios.post(apiUrl, formData, { headers });
-      const response = await axios.post(apiUrl, formData);
+      const response = await axios.patch(apiUrl, formData);
 
 
       if (response.status === 200) {
@@ -119,4 +131,4 @@ const AddPostForm = () => {
   );
 };
 
-export default AddPostForm;
+export default UpdatePostForm;

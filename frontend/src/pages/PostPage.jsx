@@ -41,24 +41,30 @@ const PostPage = () => {
 
   const handleSavePost = async (post) => {
     try {
-      if (currentPost && currentPost._id) {
-        const updateUrl = `http://localhost:3000/api/post/updatePost/${currentPost._id}`;
-        await axios.patch(updateUrl, post);
-        setPosts(posts.map((p) => (p._id === post._id ? post : p)));
-        console.log("post", post);
-      } else {
-        const response = await axios.post("http://localhost:3000/api/post/addPost", post);
-        setPosts([...posts, response.data]);
-      }
-      handleCloseModal();
+      const response = await axios.post("http://localhost:3000/api/post/addPost", post);
+      setPosts([...posts, response.data]);
     } catch (error) {
       console.error("Error saving post:", error);
+    }
+  };
+
+  const handleUpdatePost = async (post) => {
+    try {
+      const updateUrl = `http://localhost:3000/api/post/updatePost/${currentPost._id}`;
+      console.log("updateUrl", updateUrl);
+      console.log("post", post);
+      await axios.patch(updateUrl, post);
+      setPosts(posts.map((p) => (p._id === post._id ? post : p)));
+      console.log("post updated", post);
+    } catch (error) {
+      console.error("Error updating post:", error);
     }
   };
 
   const handleDeletePost = async (id) => {
     try {
       await axios.delete(`http://localhost:3000/api/post/deletePost/${id}`);
+      console.log("post deleted", id);
       setPosts(posts.filter((p) => p._id !== id));
     } catch (error) {
       console.error("Error deleting post:", error);
@@ -67,19 +73,8 @@ const PostPage = () => {
 
   const currentDate = new Date();
   const upcomingPosts = posts
-  .filter((post) => post.updated) // Ensure the post has an updated field
-  .sort((a, b) => new Date(b.updated) - new Date(a.updated)); // Sort by updated field in descending order
-
-  // const upcomingPosts = posts
-  //   .filter((post) => new Date(post.time) > currentDate)
-  //   .sort((a, b) => new Date(a.time) - new Date(b.time));
-  // const upcomingPosts = posts.sort((a, b) => new Date(a.time) - new Date(b.time));
-  // console.log("upcomingPosts", upcomingPosts);
-
-  // const pastPosts = posts
-  //   .filter((post) => new Date(post.time) <= currentDate)
-  //   .sort((a, b) => new Date(b.time) - new Date(a.time))
-  //   .slice(0, 3);
+    .filter((post) => post.updated) // Ensure the post has an updated field
+    .sort((a, b) => new Date(b.updated) - new Date(a.updated)); // Sort by updated field in descending order
 
   return (
     <div className="post-page">
@@ -91,33 +86,19 @@ const PostPage = () => {
       <section>
         <h2>Lastest News</h2>
         <PostList
-          posts={upcomingPosts.map((post) => ({ ...post,}))}
-          onEdit={handleEditPost}
+          posts={upcomingPosts.map((post) => ({ ...post }))}
+          onEdit={handleEditPost} // Change this line
           onDelete={handleDeletePost}
           user={user}
         />
       </section>
-      {/* <section className="past-posts-section">
-        <h2>Past Posts</h2>
-        <PostList
-          posts={pastPosts.map((post) => ({ ...post, time: post.time.toString() }))}
-          onEdit={handleEditPost}
-          onDelete={handleDeletePost}
-          hideActions={true}
-          user={user}
-        />
-        <Link to="/past-posts" className="more-link">
-          See All Past Posts
-        </Link>
-      </section> */}
-
       {showModal && (
         <div className="add_edit_post_modal" onClick={handleCloseModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <span className="close" onClick={handleCloseModal}>
               &times;
             </span>
-            <AddPostForm post={currentPost} onSave={handleSavePost} onCancel={handleCloseModal} />
+            <UpdatePostForm post={currentPost} onSave={handleUpdatePost} onCancel={handleCloseModal} />
           </div>
         </div>
       )}
