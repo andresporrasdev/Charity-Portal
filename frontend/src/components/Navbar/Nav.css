@@ -250,12 +250,12 @@
     left: 0;
     right: 0;
     background-color: white;
-    border: 1px solid #ccc;
     z-index: 1000;
   }
   .navbar .dropdown-menu li {
     list-style: none;
     background-color: #f0f0f0;
+    width: 130px;
   }
 
   .navbar .dropdown-menu li a {
