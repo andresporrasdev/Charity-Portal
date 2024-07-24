@@ -98,7 +98,7 @@ async function initializeVolunteerRoles() {
 
 async function createDummyEvent() {
   // const eventCount = await Event.countDocuments();
-  // if (eventCount === 0) {
+  if (eventCount === 0) {
     const dummyEvent = new Event({
       name: 'Sample Event',
       description: 'This is a sample event.',
@@ -113,7 +113,7 @@ async function createDummyEvent() {
     await dummyEvent.save();
     console.log('Dummy event created successfully!');
   }
-// }
+}
 
 // Create a dummy post
 async function createDummyPost() {
