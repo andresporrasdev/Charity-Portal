@@ -98,7 +98,7 @@ async function initializeVolunteerRoles() {
 
 async function createDummyEvent() {
   // const eventCount = await Event.countDocuments();
-  if (eventCount === 0) {
+  // if (eventCount === 0) {
     const dummyEvent = new Event({
       name: 'Sample Event',
       description: 'This is a sample event.',
@@ -113,16 +113,21 @@ async function createDummyEvent() {
     await dummyEvent.save();
     console.log('Dummy event created successfully!');
   }
-}
+// }
 
-// Create a dummy post
+// Create a dummy post only if there are no posts in the database
 async function createDummyPost() {
-  const post = new Post({
-    subject: "Hello, World!",
-    content: "This is a sample post.",
-  });
-  await post.save();
-  console.log("Dummy post created successfully!");
+  const postCount = await Post.countDocuments();
+  if (postCount === 0) {
+    const post = new Post({
+      subject: "Hello, World!",
+      content: "This is a sample post.",
+    });
+    await post.save();
+    console.log("Dummy post created successfully!");
+  } else {
+    console.log("Posts already exist in the database. No dummy post created.");
+  }
 }
 
 
