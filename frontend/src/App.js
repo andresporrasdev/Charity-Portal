@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import "./app.css";
+import "./App.css";
 import Nav from "./components/Navbar/Nav";
 import Home from "./pages/Home";
 import EventPage from "./pages/EventPage";
@@ -18,7 +18,7 @@ import ResetPasswordPage from "./components/Login/ResetPasswordPage";
 import Footer from "./components/Footer/Footer";
 import { UserProvider } from "./UserContext";
 import AddNewsForm from "./components/News/AddNewsForm";
-import Policy from "./components/Volunteer/Policy"
+import Policy from "./components/Volunteer/Policy";
 
 function App() {
   return (
@@ -41,7 +41,7 @@ function App() {
             <Route path="/member-manage" element={<MemberManagePage />} />
             <Route path="/volunteer-manage" element={<VolunteerManagePage />} />
             <Route path="/add-news" element={<AddNewsForm />} />
-            <Route path="/policy" element={<Policy/>} />
+            <Route path="/policy" element={<Policy />} />
           </Routes>
           <Footer />
         </div>
