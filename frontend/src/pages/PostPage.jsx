@@ -64,11 +64,14 @@ const PostPage = () => {
   };
 
   const currentDate = new Date();
+  const upcomingPosts = posts
+  .filter((post) => post.updated) // Ensure the post has an updated field
+  .sort((a, b) => new Date(b.updated) - new Date(a.updated)); // Sort by updated field in descending order
+
   // const upcomingPosts = posts
   //   .filter((post) => new Date(post.time) > currentDate)
   //   .sort((a, b) => new Date(a.time) - new Date(b.time));
   // const upcomingPosts = posts.sort((a, b) => new Date(a.time) - new Date(b.time));
-  const upcomingPosts = posts
   console.log("upcomingPosts", upcomingPosts);
 
   // const pastPosts = posts
