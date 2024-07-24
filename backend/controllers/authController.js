@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 const util = require("util");
 const sendEmail = require("./../utils/email");
 const crypto = require("crypto");
-const { saveMemberToDB } = require("./userController");
 const { encryptPassword } = require("../utils/encryption");
 
 const signToken = (email) => {
@@ -15,15 +14,29 @@ const signToken = (email) => {
 };
 
 exports.signup = async (req, res) => {
-  const { email, first_name, last_name, created, event_id, isPaid, password } = req.body;
+  const { email, password } = req.body;
   try {
-    const userData = { email, first_name, last_name, created, event_id, isPaid, password };
-    await saveMemberToDB(userData);
+    const query = User.findOne({ email });
+    query._activeFilterDisabled = true;
+    const existingUser = await query.exec();
+
+    if (!existingUser) {
+      return res.status(404).json({
+        status: "fail",
+        message: "User not found.",
+      });
+    }
+
+    const encryptedPassword = await encryptPassword(password);
+
+    existingUser.isActive = true;
+    existingUser.password = encryptedPassword;
+    await existingUser.save();
 
     return res.status(200).json({
       status: "success",
-      message: "Member saved successfully.",
-      data: userData,
+      message: "Member's password saved successfully.",
+      data: existingUser,
       redirectUrl: "/login",
     });
   } catch (error) {
@@ -40,23 +53,45 @@ exports.login = async (req, res) => {
   }
 
   try {
-    const existingUser = await User.findOne({ email });
-    console.log("User found:", existingUser);
+    //const existingUser = await User.findOne({ email });
+    //console.log("User found:", existingUser);
+
+    const query = User.findOne({ email });
+    query._activeFilterDisabled = true;
+    const existingUser = await query.exec();
 
     if (!existingUser) {
+      // user didn't buy membership, so doesn't exist in db
       return res.status(200).json({
         status: "fail",
-        message: "user doesn't exist. Please sign up.",
-        redirectUrl: "/",
+        message: "User doesn't exist. Please purchase a membership and sign up.",
+        link: "/membership",
       });
     }
 
-    const passwordMatch = await existingUser.comparePassword(password);
-    if (!passwordMatch) {
+    // Check if the user has a password before comparing
+    if (existingUser.password) {
+      const passwordMatch = await existingUser.comparePassword(password);
+      if (!passwordMatch) {
+        return res.status(200).json({
+          status: "fail",
+          message: "Password doesn't match. Please try again.",
+        });
+      }
+
+      if (!existingUser.isActive && !existingUser.isPaid) {
+        return res.status(200).json({
+          status: "fail",
+          message: "Your membership is expired. Please renew your membership to login.",
+          link: "/membership",
+        });
+      }
+    } else {
+      // Handle the case where the user does not have a password
+      // if existingUser.isPaid && !existingUser.isActive
       return res.status(200).json({
         status: "fail",
-        message: "Password doesn't match. Please try again.",
-        redirectUrl: "/",
+        message: "You already paid for our membership. Please sign up before logging in.",
       });
     }
 
@@ -167,9 +202,11 @@ exports.restrict = (...allowedRoles) => {
 };
 
 exports.forgetPassword = async (req, res, next) => {
-  //1. get user based on posted email
+  //Remember, a pre-find middleware in the userSchema applies an isActive filter to all find queries,
+  //unless _activeFilterDisabled is set to true.
   const user = await User.findOne({ email: req.body.email });
 
+  //we don't want to send the reset password link to the user who is not active
   if (!user) {
     return res.status(401).json({
       status: "fail",

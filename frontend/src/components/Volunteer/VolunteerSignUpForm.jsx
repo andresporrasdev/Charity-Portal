@@ -204,7 +204,10 @@ const VolunteerSignUpForm = () => {
 
     try {
       console.log("Sending OTP request to server...");
-      const response = await axios.post("http://localhost:3000/api/otp/send-otp", { email: formData.email });
+      const response = await axios.post("http://localhost:3000/api/otp/send-otp", {
+        email: formData.email,
+        source: "volunteer",
+      });
       console.log("OTP response received:", response.data);
 
       if (response.data.status === "success") {

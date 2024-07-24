@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Register.css";
-import { FaEnvelope, FaLock, FaUser, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import Alert from "@mui/material/Alert";
 import OtpModal from "../Otp/OtpModal";
@@ -8,8 +8,6 @@ import OtpModal from "../Otp/OtpModal";
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
@@ -19,15 +17,12 @@ const Register = () => {
   const [otp, setOtp] = useState("");
   const [otpError, setOtpError] = useState("");
   const [additionalFieldsVisible, setAdditionalFieldsVisible] = useState(false);
-  const [showNameField, setShowNameField] = useState(false);
   const [redirectUrl, setRedirectUrl] = useState("");
-  const [userData, setUserData] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [firstNameError, setFirstNameError] = useState(false);
-  const [lastNameError, setLastNameError] = useState(false);
   const [signupMessage, setSignupMessage] = useState(false);
+  const [link, setLink] = useState("");
 
   const EyeIcon = showPassword ? FaEye : FaEyeSlash;
   const ConfirmEyeIcon = showConfirmPassword ? FaEye : FaEyeSlash;
@@ -57,6 +52,7 @@ const Register = () => {
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
     setEmailError(!isValidEmail(e.target.value) || e.target.value === "");
+    setLink("");
   };
 
   const handlePasswordChange = (e) => {
@@ -82,13 +78,16 @@ const Register = () => {
 
     try {
       console.log("Sending OTP request to server...");
-      const response = await axios.post("http://localhost:3000/api/otp/send-otp", { email });
+      const response = await axios.post("http://localhost:3000/api/otp/send-otp", { email, source: "register" });
       console.log("OTP response received:", response.data);
 
       if (response.data.status === "success") {
         setShowOtpModal(true);
       } else if (response.data.status === "fail") {
         setEmailError(response.data.message);
+        if (response.data.link) {
+          setLink(response.data.link);
+        }
       }
     } catch (error) {
       console.error("Error sending OTP:", error);
@@ -110,23 +109,12 @@ const Register = () => {
     console.log("OTP submitted:", otp);
 
     try {
-      const [otpResponse, userResponse] = await Promise.all([
-        axios.post("http://localhost:3000/api/otp/verify-otp", { email, otp }),
-        axios.post("http://localhost:3000/api/user/check", { email }),
-      ]);
+      const response = await axios.post("http://localhost:3000/api/otp/verify-otp", { email, otp });
 
-      if (otpResponse.data.status === "success" && userResponse.data.status === "success") {
-        console.log("OTP verified! and you have a membership");
-        console.log("userResponse.data:", userResponse.data);
-        setUserData(userResponse.data);
+      if (response.data.status === "success") {
+        console.log("OTP verified!");
         setOtpError("");
         setAdditionalFieldsVisible(true);
-        setShowNameField(false);
-        setShowOtpModal(false);
-      } else if (otpResponse.data.status === "success" && userResponse.data.status === "fail") {
-        console.log("OTP verified!");
-        setAdditionalFieldsVisible(true);
-        setShowNameField(true);
         setShowOtpModal(false);
       } else {
         setOtpError("Otp is not valid, please enter it again");
@@ -143,18 +131,6 @@ const Register = () => {
     // Handle the completion of registration here
     // Validate input fields
     let errors = {};
-
-    if (!userData || !userData.data) {
-      if (!firstName.trim()) {
-        setFirstNameError(true);
-        errors.firstName = true;
-      }
-
-      if (!lastName.trim()) {
-        setLastNameError(true);
-        errors.lastName = true;
-      }
-    }
 
     if (!password.trim()) {
       errors.password = true;
@@ -178,33 +154,12 @@ const Register = () => {
       return;
     }
 
-    let dataToSend;
-
-    if (!userData || !userData.data) {
-      // if userData not exist, create a new user
-      dataToSend = {
-        email,
-        first_name: firstName,
-        last_name: lastName,
-        created: new Date().toISOString(),
-        isPaid: false,
-        password,
-      };
-    } else {
-      // if userData exists, use the user data from mockfile/api call
-      dataToSend = {
-        email: userData.data.email,
-        first_name: userData.data.first_name || "",
-        last_name: userData.data.last_name || "",
-        created: userData.data.created,
-        event_id: userData.data.event_id,
-        isPaid: true,
-        password,
-      };
-    }
-
     try {
-      const response = await axios.post("http://localhost:3000/api/auth/signup", dataToSend);
+      const response = await axios.post("http://localhost:3000/api/auth/signup", {
+        email,
+        password,
+      });
+
       if (response.data.status === "success") {
         console.log("Success to save user data");
         setSignupMessage("Successfully signed up! Redirecting to login page...");
@@ -248,7 +203,16 @@ const Register = () => {
             disabled={additionalFieldsVisible}
           />
         </div>
-        {emailError && !isFocused && <p className="error-text">{emailError}</p>}
+        {emailError && !isFocused && (
+          <p className="error-text">
+            {emailError}
+            {link && (
+              <a href={link} style={{ display: "block", marginTop: "10px" }}>
+                Click here to purchase a membership.
+              </a>
+            )}
+          </p>
+        )}
         {loading && <p className="loading-spinner">Loading...</p>}
         {!additionalFieldsVisible && (
           <>
@@ -265,38 +229,6 @@ const Register = () => {
 
         {additionalFieldsVisible && (
           <>
-            {showNameField && (
-              <>
-                <div className="input-box">
-                  <FaUser className="icon" />
-                  <input
-                    type="text"
-                    placeholder="First Name"
-                    onChange={(e) => {
-                      setFirstName(e.target.value);
-                      setFirstNameError(false);
-                    }}
-                    required
-                    className={firstNameError ? "error-input" : ""}
-                  />
-                </div>
-                {firstNameError && <p className="error-text">First Name is required.</p>}
-                <div className="input-box">
-                  <FaUser className="icon" />
-                  <input
-                    type="text"
-                    placeholder="Last Name"
-                    onChange={(e) => {
-                      setLastName(e.target.value);
-                      setLastNameError(false);
-                    }}
-                    required
-                    className={lastNameError ? "error-input" : ""}
-                  />
-                </div>
-                {lastNameError && <p className="error-text">Last Name is required.</p>}
-              </>
-            )}
             <div className="input-box">
               <FaLock className="icon" />
               <input
@@ -339,7 +271,7 @@ const Register = () => {
             setOtp={setOtp}
             otpError={otpError}
             handleOtpSubmit={handleOtpSubmit}
-            setShowOtpModal={setShowOtpModal}         
+            setShowOtpModal={setShowOtpModal}
           />
         )}
       </div>

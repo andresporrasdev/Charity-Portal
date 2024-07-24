@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
   first_name: { type: String },
   last_name: { type: String },
   created: { type: Date, default: Date.now },
-  password: { type: String, required: true },
+  password: { type: String },
   isPaid: { type: Boolean, default: true },
   isActive: { type: Boolean, default: true },
   event_id: { type: String },
@@ -55,9 +55,6 @@ userSchema.pre("save", function (next) {
   if (currentDate > oneYearLater) {
     this.isPaid = false;
     this.isActive = false;
-  } else {
-    this.isPaid = true; // Optional, as 'isPaid' defaults to true
-    this.isActive = true;
   }
   next();
 });
@@ -68,6 +65,12 @@ userSchema.pre(/^find/, function (next) {
   if (!this._activeFilterDisabled) {
     this.find({ isActive: { $ne: false } });
   }
+  next();
+});
+
+//Ensure 'findOneAndUpdate' disables the 'isActive' filter
+userSchema.pre("findOneAndUpdate", function (next) {
+  this._activeFilterDisabled = true;
   next();
 });
 
