@@ -149,9 +149,9 @@
   padding-left: 10px;
 }
 
-.navbar .dropdown-menu li a:hover {
+/* .navbar .dropdown-menu li a:hover {
   background-color: #ddd;
-}
+} */
 
 .navbar .dropdown:hover .dropdown-menu {
   display: block;
@@ -268,9 +268,9 @@
     padding-left: 10px;
   }
 
-  .navbar .dropdown-menu li a:hover {
+  /* .navbar .dropdown-menu li a:hover {
     background-color: #ddd;
-  }
+  } */
 
   .navbar .dropdown:hover .dropdown-menu {
     display: block;
