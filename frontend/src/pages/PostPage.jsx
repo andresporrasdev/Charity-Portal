@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import PostList from "../components/Post/PostList";
 import AddPostForm from "../components/Post/AddPostForm";
+import UpdatePostForm from "../components/Post/UpdatePostForm";
 import { fetchPosts } from "../components/Post/FetchPost";
 import "../components/Post/Post.css";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "../UserContext";
 
@@ -44,6 +45,7 @@ const PostPage = () => {
         const updateUrl = `http://localhost:3000/api/post/updatePost/${currentPost._id}`;
         await axios.patch(updateUrl, post);
         setPosts(posts.map((p) => (p._id === post._id ? post : p)));
+        console.log("post", post);
       } else {
         const response = await axios.post("http://localhost:3000/api/post/addPost", post);
         setPosts([...posts, response.data]);
@@ -72,7 +74,7 @@ const PostPage = () => {
   //   .filter((post) => new Date(post.time) > currentDate)
   //   .sort((a, b) => new Date(a.time) - new Date(b.time));
   // const upcomingPosts = posts.sort((a, b) => new Date(a.time) - new Date(b.time));
-  console.log("upcomingPosts", upcomingPosts);
+  // console.log("upcomingPosts", upcomingPosts);
 
   // const pastPosts = posts
   //   .filter((post) => new Date(post.time) <= currentDate)

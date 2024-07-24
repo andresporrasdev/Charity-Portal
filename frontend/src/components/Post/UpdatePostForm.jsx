@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import BaseURL from "../../config";
@@ -7,20 +7,10 @@ import "react-quill/dist/quill.snow.css";
 import Editor from "./Editor";
 import axios from "axios";
 
-const AddPostForm = ({ post, onSave, onCancel }) => {
-  const [content, setContent] = useState("");
+const AddPostForm = () => {
   const [subject, setSubject] = useState("");
   const [newsBody, setNewsBody] = useState("");
   const [newsBodyError, setNewsBodyError] = useState("");
-
-  useEffect(() => {
-    if (post) {
-      setContent(post.content || "");
-      setSubject(post.subject || "");
-      setNewsBody(post.content || "");
-    }
-  }, [post]);
-
 
   const isInvalidBody = () => {
     const trimmedText = newsBody.trim();
