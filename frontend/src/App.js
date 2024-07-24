@@ -7,7 +7,7 @@ import EventPage from "./pages/EventPage";
 import PastEventPage from "./pages/PastEventPage";
 import Membership from "./pages/Membership";
 import Volunteer from "./pages/Volunteer";
-import News from "./pages/News";
+import News from "./pages/PostPage";
 import ContactUs from "./pages/ContactUs";
 import LoginForm from "./components/LoginForm";
 import Register from "./components/Register";
@@ -16,7 +16,7 @@ import VolunteerManagePage from "./pages/VolunteerManagePage";
 import ResetPasswordPage from "./components/ResetPasswordPage";
 import Footer from "./components/Footer/Footer";
 import { UserProvider } from "./UserContext";
-import AddNewsForm from "./components/News/AddNewsForm";
+import AddPostForm from "./components/Post/AddPostForm";
 
 function App() {
   return (
@@ -37,7 +37,7 @@ function App() {
             <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
             <Route path="/member-manage" element={<MemberManagePage />} />
             <Route path="/volunteer-manage" element={<VolunteerManagePage />} />
-            <Route path="/add-news" element={<AddNewsForm />} />
+            <Route path="/add-news" element={<AddPostForm />} />
           </Routes>
           <Footer />
         </div>

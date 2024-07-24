@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 // Define Schema
 const postSchema = new mongoose.Schema({
-    title: {type: String, required: true},
+    subject: {type: String, required: true},
     content: {type: String, required: true},
     imageUrl: {type: String},
     attachmentUrl: {type: String},

@@ -118,7 +118,7 @@ async function createDummyEvent() {
 // Create a dummy post
 async function createDummyPost() {
   const post = new Post({
-    title: "Hello, World!",
+    subject: "Hello, World!",
     content: "This is a sample post.",
   });
   await post.save();

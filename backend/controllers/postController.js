@@ -8,18 +8,30 @@ const path = require('path');
 
 //CRUD methods for post
 
-//Insert a post
-exports.addPost = async (req, res) => {
-    console.log('Request body in AddPost', req.body);
-    const post = new postModel(req.body);
-    try {
+// Set up storage for uploaded files
+const storage = multer.memoryStorage(); // Use memory storage for simplicity
+
+const upload = multer({ storage: storage });
+
+// Insert a post
+exports.addPost = [
+    upload.none(), // Use multer to parse form-data without file uploads
+    async (req, res) => {
+      console.log('Request body in AddPost', req.body);
+      const { content, subject } = req.body;
+      console.log('content:', content);
+      console.log('subject:', subject);
+      const post = new postModel({ content, subject });
+  
+      try {
         const savedPost = await post.save();
         console.log('Post saved successfully', savedPost);
         res.status(200).json(savedPost);
-    } catch (err) {
+      } catch (err) {
         res.status(400).json({ message: err.message });
+      }
     }
-};
+  ];
 
 //Get all post
 exports.getAllPosts = async (req, res) => {
@@ -104,15 +116,15 @@ if (!fs.existsSync(uploadDirImages)) {
     fs.mkdirSync(uploadDirImages, { recursive: true });
   }
 
-// Set up storage for uploaded files
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, uploadDirImages); // Use the uploads directory
-    },
-    filename: function (req, file, cb) {
-      cb(null, new Date().toISOString().replace(/:/g, "-") + "-" + file.originalname); //Create a unique filename
-    },
-  });
+// // Set up storage for uploaded files
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       cb(null, uploadDirImages); // Use the uploads directory
+//     },
+//     filename: function (req, file, cb) {
+//       cb(null, new Date().toISOString().replace(/:/g, "-") + "-" + file.originalname); //Create a unique filename
+//     },
+//   });
 
 const fileFilter = (req, file, cb) => {
     // Accept images only
@@ -123,14 +135,14 @@ const fileFilter = (req, file, cb) => {
     }
 };
 
-  // Set up the multer object for filtering file size
-const upload = multer({
-    storage: storage,
-    limits: {
-      fileSize: 1024 * 1024 * 5, // 5MB max file size
-    },
-    fileFilter: fileFilter,
-  });
+//   // Set up the multer object for filtering file size
+// const upload = multer({
+//     storage: storage,
+//     limits: {
+//       fileSize: 1024 * 1024 * 5, // 5MB max file size
+//     },
+//     fileFilter: fileFilter,
+//   });
 
   // Route to handle file upload
 async function handleFileUpload(req, res) {
@@ -163,7 +175,7 @@ exports.multerErrorHandling = (err, req, res, next) => {
     }
   };
 
-const uploadDirFiles = "public/files/events"; // Adjusted to use the public directory
+const uploadDirFiles = "public/files/posts"; // Adjusted to use the public directory
 
 // Check if the directory exists, if not, create it
 if (!fs.existsSync(uploadDirFiles)) {

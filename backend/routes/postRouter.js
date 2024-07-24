@@ -2,8 +2,11 @@ const express = require("express");
 const postController = require("../controllers/postController");
 const router = express.Router();
 
+// Import the upload middleware
+const { upload } = postController;
+
 router.get("/readPost", postController.getAllPosts);
-router.post("/addPost", postController.addPost);
+router.post("/addPost", postController.addPost, upload.none());
 router.patch("/updatePost/:id", postController.updatePost);
 router.delete("/deletePost/:id", postController.deletePost);
 router.get("/getPostById/:id", postController.getPostById);
