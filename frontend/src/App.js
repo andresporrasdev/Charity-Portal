@@ -7,7 +7,7 @@ import EventPage from "./pages/EventPage";
 import PastEventPage from "./pages/PastEventPage";
 import Membership from "./pages/Membership";
 import Volunteer from "./pages/Volunteer";
-import News from "./pages/News";
+import News from "./pages/PostPage";
 import ContactUs from "./pages/ContactUs";
 import LoginForm from "./components/LoginForm";
 import Register from "./components/Register";

@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component, createRef } from "react";
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import ImageResize from "quill-image-resize-module-react";
@@ -7,6 +7,11 @@ import "./Editor.css";
 Quill.register("modules/imageResize", ImageResize);
 
 class Editor extends Component {
+  constructor(props) {
+    super(props);
+    this.quillRef = createRef();
+  }
+
   handleChange = (html) => {
     const { onEditorChange } = this.props;
     if (onEditorChange) {
@@ -19,6 +24,7 @@ class Editor extends Component {
 
     return (
       <ReactQuill
+        ref={this.quillRef}
         theme="snow"
         onChange={this.handleChange}
         value={value}
