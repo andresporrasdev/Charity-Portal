@@ -60,6 +60,20 @@ function Nav() {
                     Contact
                   </NavLink>
                 </li>
+                {user?.roles.includes("66678417525bc55cbcd28a96") && (    
+                    <li>
+                      <NavLink to="/member-manage" activeclassname="active" onClick={toggleMenu}>
+                      Member Manage
+                      </NavLink>
+                    </li>                 
+                 )}
+                 {user?.roles.includes("66678417525bc55cbcd28a96") && (    
+                    <li>
+                      <NavLink to="/volunteer-manage" activeclassname="active" onClick={toggleMenu}>
+                      Volunteer Manage
+                      </NavLink>
+                    </li>    
+                 )}
               </ul>
             </nav>
           </div>
@@ -68,9 +82,19 @@ function Nav() {
           {user ? (
             <div className="user-info">
               <h3>Welcome, {user.first_name}</h3>
-              <button className="logout-button" onClick={logout}>
-                Logout
-              </button>
+              <div className="social-login-container">
+                <div className="social-icons">
+                  <a href="https://www.facebook.com/TamilSangamofOttawa" target="_blank" rel="noopener noreferrer">
+                    <FaFacebook />
+                  </a>
+                  <a href="https://www.instagram.com/ottawatamilsangam/" target="_blank" rel="noopener noreferrer">
+                    <FaInstagram />
+                  </a>
+                </div>
+                <button className="logout-button" onClick={logout}>
+                  Logout
+                </button>
+              </div>
             </div>
           ) : (
             <div className="social-login-container">
