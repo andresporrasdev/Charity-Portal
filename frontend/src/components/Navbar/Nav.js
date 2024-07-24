@@ -1,17 +1,22 @@
-import React, { useContext,useState  } from "react";
+import React, { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./Nav.css";
 import logo from "./logo.png";
-import { FaFacebook, FaInstagram,FaBars  } from "react-icons/fa";
-import { UserContext } from "../../UserContext";
+import { FaFacebook, FaInstagram, FaBars } from "react-icons/fa";
+import { UserContext, ROLES } from "../../UserContext";
 
 function Nav() {
   const navigate = useNavigate();
   const { user, logout } = useContext(UserContext);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [managementOpen, setManagementOpen] = useState(false);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
+  };
+
+  const toggleManagementMenu = () => {
+    setManagementOpen(!managementOpen);
   };
 
   return (
@@ -23,7 +28,7 @@ function Nav() {
         <div className="navbar-center">
           <div className="header-text">
             <h1>Ottawa Tamil Sangam</h1>
-            <nav className={`nav-menu ${menuOpen ? 'open' : ''}`}>
+            <nav className={`nav-menu ${menuOpen ? "open" : ""}`}>
               <ul>
                 <li>
                   <NavLink to="/" activeclassname="active" onClick={toggleMenu}>
@@ -60,20 +65,27 @@ function Nav() {
                     Contact
                   </NavLink>
                 </li>
-                {user?.roles.includes("66678417525bc55cbcd28a96") && (    
-                    <li>
-                      <NavLink to="/member-manage" activeclassname="active" onClick={toggleMenu}>
-                      Member Manage
-                      </NavLink>
-                    </li>                 
-                 )}
-                 {user?.roles.includes("66678417525bc55cbcd28a96") && (    
-                    <li>
-                      <NavLink to="/volunteer-manage" activeclassname="active" onClick={toggleMenu}>
-                      Volunteer Manage
-                      </NavLink>
-                    </li>    
-                 )}
+                {user?.roles.includes(ROLES.ADMIN) && (
+                  <li className="dropdown">
+                    <button onClick={toggleManagementMenu} className="dropdown-toggle">
+                      Management
+                    </button>
+                    {managementOpen && (
+                      <ul className="dropdown-menu">
+                        <li>
+                          <NavLink to="/member-manage" activeclassname="active" onClick={toggleMenu}>
+                            Members
+                          </NavLink>
+                        </li>
+                        <li>
+                          <NavLink to="/volunteer-manage" activeclassname="active" onClick={toggleMenu}>
+                            Volunteers
+                          </NavLink>
+                        </li>
+                      </ul>
+                    )}
+                  </li>
+                )}
               </ul>
             </nav>
           </div>
