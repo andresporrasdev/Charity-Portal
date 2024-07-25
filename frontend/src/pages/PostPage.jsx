@@ -116,7 +116,7 @@ const PostPage = () => {
               &times;
             </span>
             {currentPost ? (
-              <UpdatePostForm post={currentPost} onSave={handleUpdatePost} onCancel={handleCloseModal} />
+              <UpdatePostForm post={currentPost} onSave={handleUpdatePost} onCancel={handleCloseModal} roleOptions={roleOptions} />
             ) : (
               <AddPostForm onSave={handleSavePost} onCancel={handleCloseModal} roleOptions={roleOptions} />
             )}
