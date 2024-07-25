@@ -237,11 +237,10 @@ exports.forgetPassword = async (req, res, next) => {
       message: "Password reset link send to the user email",
     });
   } catch (error) {
+    console.error("Error sending reset password email:", error);
     user.passwordResetToken = undefined;
     user.passwordResetTokenExpire = undefined;
     user.save({ validateFromSave: false });
-
-    console.error("Error sending email:", error);
 
     return res.status(500).json({
       status: "fail",
