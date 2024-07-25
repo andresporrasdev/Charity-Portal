@@ -51,6 +51,8 @@ exports.getAllPosts = async (req, res) => {
 exports.updatePost = async (req, res) => {
     const postId = req.params.id;
     const updateData = req.body;
+        // Add current date to the updated field
+        updateData.updated = new Date();
     console.log('updateData:', updateData);
     try {
         const updatedPost = await postModel.findByIdAndUpdate(postId, updateData, { new: true });
