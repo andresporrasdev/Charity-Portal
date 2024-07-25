@@ -23,7 +23,13 @@ const PostPage = () => {
       console.log("postsData", postsData);
       setPosts(postsData);
       fetchRoles();
-
+      //Function to fect Tokens
+      const token = localStorage.getItem("token");
+      if (token) {
+        fetchUserInfo(token);
+      } else {
+        console.log("No token found, user not logged in");
+      }
     };
 
     const fetchRoles = async () => {
@@ -88,7 +94,21 @@ const PostPage = () => {
     }
   };
 
-  const currentDate = new Date();
+  
+  const fetchUserInfo = async (token) => {
+    try {
+      const response = await axios.get("http://localhost:3000/api/user/userinfo", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("User info fetched successfully:", response.data.data.user.roles);
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+    }
+  };
+  
+
   const upcomingPosts = posts
     .filter((post) => post.updated) // Ensure the post has an updated field
     .sort((a, b) => new Date(b.updated) - new Date(a.updated)); // Sort by updated field in descending order
