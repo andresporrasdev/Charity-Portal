@@ -17,7 +17,6 @@ const upload = multer({ storage: storage });
 exports.addPost = [
     upload.none(), // Use multer to parse form-data without file uploads
     async (req, res) => {
-      console.log('Request body in AddPost', req.body);
       const { content, subject } = req.body;
       console.log('content:', content);
       console.log('subject:', subject);
@@ -47,12 +46,14 @@ exports.getAllPosts = async (req, res) => {
 exports.updatePost = async (req, res) => {
     const postId = req.params.id;
     const updateData = req.body;
+    console.log('updateData:', updateData);
     try {
         const updatedPost = await postModel.findByIdAndUpdate(postId, updateData, { new: true });
         if (!updatedPost) {
             return res.status(404).json({ message: 'Post not found to update.' });
         }
         res.status(200).json(updatedPost);
+        console.log('Post updated successfully', updatedPost);
     }
     catch (error) {
         res.status(500).json({ message: 'An error occurred while updating the post.' });
