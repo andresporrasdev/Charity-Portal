@@ -56,6 +56,33 @@ const getAllVolunteers = async (req, res) => {
   }
 };
 
+// Route to get volunteers by event ID
+const getVolunteersByEventId = async (req, res) => {
+  try {
+    const volunteers = await Volunteer.find({ event: req.params.eventId })
+      .populate("preferredRole", "name")
+      .populate("event", "name");
+
+    const volunteersWithData = volunteers.map((volunteer) => ({
+      ...volunteer.toObject(),
+      preferredRole: volunteer.preferredRole ? volunteer.preferredRole.name : null,
+      event: volunteer.event ? volunteer.event.name : null,
+    }));
+
+    res.status(200).json({
+      status: "success",
+      results: volunteersWithData.length,
+      data: { volunteers: volunteersWithData },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Error getting volunteers for the event",
+      error: error.message,
+    });
+  }
+};
+
 // Update volunteer
 const updateVolunteer = async (req, res) => {
   try {
@@ -134,4 +161,5 @@ module.exports = {
   getAllVolunteers,
   updateVolunteer,
   deleteVolunteer,
+  getVolunteersByEventId,
 };

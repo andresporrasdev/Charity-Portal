@@ -49,7 +49,7 @@ Editor.modules = {
     [{ color: [] }, { background: [] }], // dropdown with defaults from theme
     [{ font: [] }],
     [{ align: [] }],
-    ["link", "image", "video"],
+    ["link", "image"],
     ["clean"], // remove formatting button
   ],
   clipboard: {
@@ -77,7 +77,6 @@ Editor.formats = [
   "indent",
   "link",
   "image",
-  "video",
   "color",
   "align",
   "script",
