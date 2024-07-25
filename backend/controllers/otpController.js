@@ -1,14 +1,6 @@
-const nodemailer = require("nodemailer");
 const Otp = require("../models/otp");
 const User = require("../models/user");
-
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
-  },
-});
+const sendEmail = require("./../utils/email");
 
 const generateNumericOTP = (length) => {
   let otp = "";
@@ -19,11 +11,10 @@ const generateNumericOTP = (length) => {
 };
 
 const sendOTPByEmail = async (email, otp) => {
+  console.log("Sending OTP to:", email);
   const mailOptions = {
-    from: "ottawa Sangam Tamil ",
-    to: email,
+    email: email,
     subject: "Verify your email address to register OTS",
-    //text: `Your OTP for registration is: ${otp}`,
     html: `
       <div>
         <img src="cid:logo" style="display:block; margin:auto; width:100px; height:auto;" />
@@ -43,8 +34,7 @@ const sendOTPByEmail = async (email, otp) => {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
-    console.log("OTP sent successfully to", email);
+    await sendEmail(mailOptions);
     return otp;
   } catch (error) {
     console.error("Error sending OTP:", error);
