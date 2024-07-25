@@ -134,3 +134,16 @@
     transform-origin: top;
   }
 }
+
+.volunteer-manage-page .notify-button {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  background-color: #e88a1d;
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  border-radius: 20px;
+  cursor: pointer;
+  border: none;
+}
