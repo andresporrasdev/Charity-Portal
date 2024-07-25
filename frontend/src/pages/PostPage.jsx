@@ -4,7 +4,6 @@ import AddPostForm from "../components/Post/AddPostForm";
 import UpdatePostForm from "../components/Post/UpdatePostForm";
 import { fetchPosts } from "../components/Post/FetchPost";
 import "../components/Post/Post.css";
-import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "../UserContext";
 
@@ -43,19 +42,21 @@ const PostPage = () => {
     try {
       const response = await axios.post("http://localhost:3000/api/post/addPost", post);
       setPosts([...posts, response.data]);
+      handleCloseModal();
     } catch (error) {
       console.error("Error saving post:", error);
     }
   };
 
-  const handleUpdatePost = async (post) => {
+  const handleUpdatePost = async (updatedPost) => {
     try {
       const updateUrl = `http://localhost:3000/api/post/updatePost/${currentPost._id}`;
       console.log("updateUrl", updateUrl);
-      console.log("post", post);
-      await axios.patch(updateUrl, post);
-      setPosts(posts.map((p) => (p._id === post._id ? post : p)));
-      console.log("post updated", post);
+      console.log("post", updatedPost);
+      await axios.patch(updateUrl, updatedPost);
+      setPosts(posts.map((p) => (p._id === updatedPost._id ? updatedPost : p)));
+      handleCloseModal();
+      console.log("post updated", updatedPost);
     } catch (error) {
       console.error("Error updating post:", error);
     }
@@ -87,7 +88,7 @@ const PostPage = () => {
         <h2>Lastest News</h2>
         <PostList
           posts={upcomingPosts.map((post) => ({ ...post }))}
-          onEdit={handleEditPost} // Change this line
+          onEdit={handleEditPost}
           onDelete={handleDeletePost}
           user={user}
         />
@@ -98,7 +99,11 @@ const PostPage = () => {
             <span className="close" onClick={handleCloseModal}>
               &times;
             </span>
-            <UpdatePostForm post={currentPost} onSave={handleUpdatePost} onCancel={handleCloseModal} />
+            {currentPost ? (
+              <UpdatePostForm post={currentPost} onSave={handleUpdatePost} onCancel={handleCloseModal} />
+            ) : (
+              <AddPostForm onSave={handleSavePost} onCancel={handleCloseModal} />
+            )}
           </div>
         </div>
       )}

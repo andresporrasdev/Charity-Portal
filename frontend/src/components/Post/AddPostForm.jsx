@@ -54,6 +54,7 @@ const AddPostForm = ({ post, onSave, onCancel }) => {
     console.log("formData", formData);
     console.log("formData", formData.get("content"));
     console.log("formData", formData.get("subject"));
+    console.log("Calling add post form");
     try {
       // const response = await axios.post(apiUrl, formData, { headers });
       const response = await axios.post(apiUrl, formData);

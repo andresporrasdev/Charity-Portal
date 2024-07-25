@@ -21,7 +21,6 @@ const UpdatePostForm = ({ post, onSave, onCancel }) => {
     }
   }, [post]);
 
-
   const isInvalidBody = () => {
     const trimmedText = newsBody.trim();
     const containsOnlyHtmlTags = /^(<p>(<br>|<br\/>|<br\s\/>|\s+|)<\/p>)*$/gm.test(trimmedText);
@@ -31,64 +30,47 @@ const UpdatePostForm = ({ post, onSave, onCancel }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     let hasError = false;
-
+  
     if (isInvalidBody()) {
       setNewsBodyError("Body Error");
       hasError = true;
     }
-
+  
     if (hasError) {
       return;
     }
-
+  
     const id = post._id;
-
     const apiUrl = `http://localhost:3000/api/post/updatePost/${id}`;
-    // const apiUrl = `${BaseURL}/api/post/addPost`;
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-
+  
     const formData = new FormData();
-
     formData.append("content", newsBody);
     formData.append("subject", subject);
-    console.log("formData", formData);
-    console.log("formData", formData.get("content"));
-    console.log("formData", formData.get("subject"));
+  
+    console.log("formData content:", formData.get("content"));
+    console.log("formData subject:", formData.get("subject"));
+    console.log("Calling update post form");
+  
     try {
-      // const response = await axios.post(apiUrl, formData, { headers });
-      const response = await axios.patch(apiUrl, formData);
-
-
+      const response = await axios.patch(apiUrl, formData, { headers });
       if (response.status === 200) {
-        toast.success("News published successfully",
-        //   {
-        //   position: toast.POSITION.TOP_RIGHT,
-        //   autoClose: 3000,
-        // }
-      );
-
-        // setSubject("");
-        // setNewsBody("");
-        // setNewsBodyError("");
+        toast.success("News updated successfully");
+        const updatedPost = {
+          ...post,
+          content: newsBody,
+          subject: subject,
+        };
+        onSave(updatedPost);
       } else {
         const errorMessage = response.data;
-        toast.error(`Error: ${errorMessage}`,
-        //   {
-        //   position: toast.POSITION.TOP_RIGHT,
-        //   autoClose: 3000,
-        // }
-      );
+        toast.error(`Error: ${errorMessage}`);
       }
     } catch (error) {
       console.error("Error:", error);
-      toast.error("Failed to publish news. Please try again later.",
-      //   {
-      //   position: toast.POSITION.TOP_RIGHT,
-      //   autoClose: 3000,
-      // }
-    );
+      toast.error("Failed to update news. Please try again later.");
     }
   };
 
@@ -100,7 +82,7 @@ const UpdatePostForm = ({ post, onSave, onCancel }) => {
         maxWidth: "650px",
       }}
     >
-      <h3 style={{ margin: "0px 0px 15px 10px" }}>Publish News</h3>
+      <h3 style={{ margin: "0px 0px 15px 10px" }}>Update News</h3>
       <form id="news-form" onSubmit={handleSubmit}>
         <ToastContainer />
         <TextField
@@ -109,8 +91,6 @@ const UpdatePostForm = ({ post, onSave, onCancel }) => {
           label="Subject"
           value={subject}
           onChange={(e) => setSubject(e.target.value)}
-          //error={!!subjectError}
-          // helperText={subjectError}
           fullWidth
           style={{ marginBottom: "10px" }}
         />
@@ -122,9 +102,8 @@ const UpdatePostForm = ({ post, onSave, onCancel }) => {
           placeholder="Enter description"
         />
         {newsBodyError && <p className="error-text">{newsBodyError}</p>}
-
         <Button type="submit" variant="contained" color="primary" style={{ marginTop: "10px" }}>
-          Publish
+          Update
         </Button>
       </form>
     </Container>
