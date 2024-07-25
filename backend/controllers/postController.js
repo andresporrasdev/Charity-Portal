@@ -17,10 +17,15 @@ const upload = multer({ storage: storage });
 exports.addPost = [
     upload.none(), // Use multer to parse form-data without file uploads
     async (req, res) => {
-      const { content, subject } = req.body;
+      const { content, subject, roles } = req.body;
       console.log('content:', content);
       console.log('subject:', subject);
-      const post = new postModel({ content, subject });
+      console.log('roles:', roles);
+
+      // Convert roles from string to array of ObjectId
+      const rolesArray = roles.split(',').map(role => mongoose.Types.ObjectId(role.trim()));
+
+      const post = new postModel({ content, subject, roles: rolesArray });
   
       try {
         const savedPost = await post.save();
@@ -30,7 +35,7 @@ exports.addPost = [
         res.status(400).json({ message: err.message });
       }
     }
-  ];
+];
 
 //Get all post
 exports.getAllPosts = async (req, res) => {

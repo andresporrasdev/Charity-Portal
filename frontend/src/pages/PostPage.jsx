@@ -6,20 +6,36 @@ import { fetchPosts } from "../components/Post/FetchPost";
 import "../components/Post/Post.css";
 import axios from "axios";
 import { UserContext } from "../UserContext";
+import BaseURL from "../config";
+
 
 const PostPage = () => {
   const { user } = useContext(UserContext);
   const [posts, setPosts] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [currentPost, setCurrentPost] = useState(null);
+  const [roleOptions, setRoleOptions] = useState([]);
+
 
   useEffect(() => {
     const fetchAndSetPosts = async () => {
       const postsData = await fetchPosts();
       console.log("postsData", postsData);
       setPosts(postsData);
+      fetchRoles();
+
     };
 
+    const fetchRoles = async () => {
+      // console.log("fetchRoles function called");
+      try {
+        const response = await axios.get(`${BaseURL}/api/role/getAllRoles`);
+        // console.log("Roles fetched successfully:", response.data);
+        setRoleOptions(response.data.data.roles);
+      } catch (error) {
+        console.error("Error fetching roles:", error);
+      }
+    };
     fetchAndSetPosts();
   }, []);
 
@@ -102,7 +118,7 @@ const PostPage = () => {
             {currentPost ? (
               <UpdatePostForm post={currentPost} onSave={handleUpdatePost} onCancel={handleCloseModal} />
             ) : (
-              <AddPostForm onSave={handleSavePost} onCancel={handleCloseModal} />
+              <AddPostForm onSave={handleSavePost} onCancel={handleCloseModal} roleOptions={roleOptions} />
             )}
           </div>
         </div>
