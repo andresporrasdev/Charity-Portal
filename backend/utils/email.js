@@ -1,11 +1,6 @@
-const express = require("express");
 const { google } = require("googleapis");
-const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
-
-const app = express();
-app.use(bodyParser.urlencoded({ extended: true }));
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;

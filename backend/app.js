@@ -9,9 +9,12 @@ const roleRouter = require("./routes/role");
 const volunteerRolesRouter = require("./routes/volunteerRoleRouter");
 const postRouter = require("./routes/postRouter");
 const cors = require("cors");
+const bodyParser = require("body-parser");
 
 let app = express();
 
+app.use(bodyParser.json({ limit: "25mb" }));
+app.use(bodyParser.urlencoded({ limit: "25mb", extended: true }));
 app.use(express.json());
 
 app.use(express.static("./public"));

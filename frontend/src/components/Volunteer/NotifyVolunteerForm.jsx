@@ -79,11 +79,22 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
       .map((email) => email.trim())
       .filter((email) => email !== "");
 
+    function getBase64Size(base64String) {
+      const base64Data = base64String.split(",")[1];
+      const sizeInBytes = (base64Data.length * 3) / 4;
+      return sizeInBytes;
+    }
+
     const formData = {
       subject,
       messageBody,
       emails: emailArray,
     };
+
+    console.log("Form Data:", formData);
+    const sizeInBytes = getBase64Size(formData.messageBody);
+    console.log(`Base64 Size: ${sizeInBytes} bytes`);
+
     try {
       const apiUrl = `http://localhost:3000/api/volunteer/notify-volunteers`;
       const headers = {
@@ -98,6 +109,7 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
         setMessageBody("");
         setMessageBodyError("");
         setEmailList("");
+        onClose();
       } else {
         const errorMessage = response.data;
         toast.error(`Error: ${errorMessage}`);
