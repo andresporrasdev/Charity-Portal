@@ -64,18 +64,18 @@ body {
   flex-direction: column;
 }
 
-.input-box {
+.contact-container .input-box {
   margin-bottom: 20px;
 }
 
-.input-box label {
+.contact-container .input-box label {
   font-size: 16px;
   color: #666;
   margin-bottom: 5px;
 }
 
-.input-box input,
-.input-box textarea {
+.contact-container .input-box input,
+.contact-container .input-box textarea {
   width: 100%;
   padding: 15px;
   font-size: 16px;
@@ -84,13 +84,13 @@ body {
   transition: border-color 0.3s;
 }
 
-.input-box input:focus,
-.input-box textarea:focus {
+.contact-container .input-box input:focus,
+.contact-container .input-box textarea:focus {
   border-color: #e88a1d;
   outline: none;
 }
 
-.input-box textarea {
+.contact-container .input-box textarea {
   height: 150px;
 }
 
@@ -138,10 +138,5 @@ body {
   .input-box input,
   .input-box textarea {
     font-size: 14px;
-  }
-
-  .social-icons {
-    font-size: 24px;
-    gap: 10px;
   }
 }
