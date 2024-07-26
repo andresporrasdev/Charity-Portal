@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import PostList from "../components/Post/PostList";
 import AddPostForm from "../components/Post/AddPostForm";
 import UpdatePostForm from "../components/Post/UpdatePostForm";
-import { fetchPosts } from "../components/Post/FetchPost";
+// import { fetchPosts } from "../components/Post/FetchPost";
 import "../components/Post/Post.css";
 import axios from "axios";
 import { UserContext } from "../UserContext";
@@ -15,20 +15,45 @@ const PostPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [currentPost, setCurrentPost] = useState(null);
   const [roleOptions, setRoleOptions] = useState([]);
+  // console.log("users", user.roles);
+
 
 
   useEffect(() => {
     const fetchAndSetPosts = async () => {
-      const postsData = await fetchPosts();
-      console.log("postsData", postsData);
+      let postsData;
+      if (user){
+        postsData = await fetchPostsbyRole();
+      }  else {
+        postsData = await fetchPosts();
+      }
+      //  const postsData = await fetchPosts();
+      // console.log("postsData", postsData);
       setPosts(postsData);
       fetchRoles();
-      //Function to fect Tokens
-      const token = localStorage.getItem("token");
-      if (token) {
-        fetchUserInfo(token);
-      } else {
-        console.log("No token found, user not logged in");
+    };
+
+    // Retrive all the posts from the database
+    const fetchPosts = async () => {
+      try {
+          const response = await axios.get("http://localhost:3000/api/post/readPost");
+          console.log("Posts:", response.data);
+          return response.data;
+      } catch (error) {
+          console.error("Error fetching posts:", error);
+          return [];
+      }
+    };
+
+    //Retrive post only for the user role
+    const fetchPostsbyRole = async () => {
+      try {
+        const response = await axios.post(`${BaseURL}/api/post/getPostByRole`, { roles: user.roles });
+        console.log("Posts:", response.data);
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+        return [];
       }
     };
 
@@ -43,8 +68,8 @@ const PostPage = () => {
       }
     };
     fetchAndSetPosts();
-  }, []);
-
+  }, [user]);
+ 
   const handleAddPost = () => {
     setCurrentPost(null);
     setShowModal(true);
@@ -95,19 +120,7 @@ const PostPage = () => {
   };
 
   
-  const fetchUserInfo = async (token) => {
-    try {
-      const response = await axios.get("http://localhost:3000/api/user/userinfo", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log("User info fetched successfully:", response.data.data.user.roles);
-    } catch (error) {
-      console.error("Error fetching user info:", error);
-    }
-  };
-  
+
 
   const upcomingPosts = posts
     .filter((post) => post.updated) // Ensure the post has an updated field

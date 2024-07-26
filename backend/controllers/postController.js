@@ -17,13 +17,13 @@ const upload = multer({ storage: storage });
 exports.addPost = [
     upload.none(), // Use multer to parse form-data without file uploads
     async (req, res) => {
-      const { content, subject, roles } = req.body;
+      const { content, subject, roles='' } = req.body;
       console.log('content:', content);
       console.log('subject:', subject);
-      console.log('roles:', roles);
+    //   console.log('roles:', roles);
 
       // Convert roles from string to array of ObjectId
-      const rolesArray = roles.split(',').map(role => mongoose.Types.ObjectId(role.trim()));
+      const rolesArray = roles ? roles.split(',').map(role => mongoose.Types.ObjectId(role.trim())) : null;
 
       const post = new postModel({ content, subject, roles: rolesArray });
   
@@ -40,7 +40,8 @@ exports.addPost = [
 //Get all post
 exports.getAllPosts = async (req, res) => {
     try {
-        const posts = await postModel.find({});
+        // Find posts where roles is null
+        const posts = await postModel.find({ roles: null });
         res.status(200).json(posts);
     } catch (error) {
         console.error('An error occurred:', error);
@@ -53,7 +54,7 @@ exports.updatePost = async (req, res) => {
     const updateData = req.body;
         // Add current date to the updated field
         updateData.updated = new Date();
-    console.log('updateData:', updateData);
+    // console.log('updateData:', updateData);
     try {
         const updatedPost = await postModel.findByIdAndUpdate(postId, updateData, { new: true });
         if (!updatedPost) {
@@ -101,15 +102,23 @@ exports.getPostById = async (req, res) => {
 
 
 // Method to get posts filtered by role
+// Method to get posts filtered by role
 exports.getPostByRole = async (req, res) => {
-    const roleId = req.params.role;
+    const roleIds = req.body.roles; // Expecting an array of ObjectIDs in the request body
     try {
-        // Directly find posts with the role ObjectID
-        const posts = await postModel.find({ roles: roleId }).populate('roles');
+        // Find posts that contain any of the roles in the array or where roles is null
+        const posts = await postModel.find({
+            $or: [
+                { roles: { $in: roleIds } },
+                { roles: null }
+            ]
+        }).populate('roles');
+        
         if (posts.length === 0) {
-            return res.status(404).json({ message: 'No posts found for this role.' });
+            return res.status(404).json({ message: 'No posts found for these roles.' });
         }
         res.status(200).json(posts);
+        console.log('Posts fetching by Roles:', posts);
     } catch (error) {
         res.status(500).json({ message: 'An error occurred while fetching the posts.' });
     }

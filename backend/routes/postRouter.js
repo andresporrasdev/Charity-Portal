@@ -10,7 +10,7 @@ router.post("/addPost", postController.addPost, upload.none());
 router.patch("/updatePost/:id", postController.updatePost);
 router.delete("/deletePost/:id", postController.deletePost);
 router.get("/getPostById/:id", postController.getPostById);
-router.get("/getPostByRole/:role", postController.getPostByRole);
+router.post("/getPostByRole", postController.getPostByRole);
 // router.post(
 //   "/uploadImage",
 //   postController.upload.single("file"),
