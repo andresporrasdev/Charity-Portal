@@ -1,0 +1,147 @@
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: #f9f9f9;
+  margin: 0;
+  padding: 0;
+}
+
+.contact-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 40px;
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.contact-info {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.contact-info h1 {
+  font-size: 32px;
+  color: #e88a1d;
+  margin-bottom: 20px;
+}
+
+.contact-info p {
+  font-size: 18px;
+  color: #666;
+}
+
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  font-size: 36px;
+  margin-top: 20px;
+}
+
+.social-icons a {
+  color: #e88a1d;
+  transition: color 0.3s;
+}
+
+.social-icons a:hover {
+  color: #e64a19;
+}
+
+.contact-form {
+  width: 100%;
+  max-width: 600px;
+}
+
+.contact-form form {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-box {
+  margin-bottom: 20px;
+}
+
+.input-box label {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.input-box input,
+.input-box textarea {
+  width: 100%;
+  padding: 15px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  transition: border-color 0.3s;
+}
+
+.input-box input:focus,
+.input-box textarea:focus {
+  border-color: #e88a1d;
+  outline: none;
+}
+
+.input-box textarea {
+  height: 150px;
+}
+
+.contact-form button {
+  width: 100%;
+  padding: 15px;
+  font-size: 18px;
+  color: #fff;
+  background-color: #e88a1d;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.contact-form button:hover {
+  background-color: #e64a19;
+}
+
+/* Keyframes for fadeIn animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .contact-container {
+    padding: 20px;
+  }
+
+  .contact-info h1 {
+    font-size: 28px;
+  }
+
+  .contact-info p,
+  .input-box label {
+    font-size: 16px;
+  }
+
+  .input-box input,
+  .input-box textarea {
+    font-size: 14px;
+  }
+
+  .social-icons {
+    font-size: 24px;
+    gap: 10px;
+  }
+}
