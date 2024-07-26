@@ -107,11 +107,19 @@ const EditVolunteerForm = ({ volunteer, roleOptions, onUpdateVolunteer, onClose 
           </Grid>
         </Grid>
       </DialogContent>
-      <DialogActions>
-        <Button variant="contained" color="primary" onClick={handleUpdate}>
+      <DialogActions sx={{ display: "flex", justifyContent: "center", mb: 2, p: 0 }}>
+        <Button
+          variant="contained"
+          sx={{ backgroundColor: "#e88a1d", color: "#ffffff", "&:hover": { backgroundColor: "#e88a1d" } }}
+          onClick={handleUpdate}
+        >
           Update
         </Button>
-        <Button onClick={onClose} color="primary">
+        <Button
+          onClick={onClose}
+          variant="contained"
+          sx={{ backgroundColor: "#e88a1d", color: "#ffffff", "&:hover": { backgroundColor: "#e88a1d" } }}
+        >
           Cancel
         </Button>
       </DialogActions>
