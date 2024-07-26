@@ -2,6 +2,7 @@
 const Volunteer = require("../models/volunteerModel");
 const VolunteerRole = require("../models/volunteerRole");
 const express = require("express");
+const sendEmail = require("./../utils/email");
 const router = express.Router();
 
 // Mock database for demonstration purposes
@@ -156,10 +157,34 @@ const deleteVolunteer = async (req, res) => {
   }
 };
 
+const notifyVolunteers = async (req, res) => {
+  const { subject, messageBody, emails } = req.body;
+
+  const emailOptions = emails.map((email) => ({
+    email,
+    subject,
+    html: messageBody,
+  }));
+  try {
+    await sendEmail(emailOptions);
+    res.status(200).json({
+      status: "Success",
+      message: "Emails sent successfully to volunteers",
+    });
+  } catch (error) {
+    console.error("Error sending emails to voluntter:", error);
+    res.status(500).json({
+      status: "error",
+      message: "Error sending emails to volunteer.",
+    });
+  }
+};
+
 module.exports = {
   volunteerSignUp,
   getAllVolunteers,
   updateVolunteer,
   deleteVolunteer,
   getVolunteersByEventId,
+  notifyVolunteers,
 };

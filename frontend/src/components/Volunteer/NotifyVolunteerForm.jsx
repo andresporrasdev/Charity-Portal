@@ -24,8 +24,8 @@ import {
 
 const NotifyVolunteerForm = ({ open, onClose }) => {
   const [subject, setSubject] = useState("");
-  const [newsBody, setNewsBody] = useState("");
-  const [newsBodyError, setNewsBodyError] = useState("");
+  const [messageBody, setMessageBody] = useState("");
+  const [messageBodyError, setMessageBodyError] = useState("");
   const [emailList, setEmailList] = useState("");
   const [selectedEvent, setSelectedEvent] = useState("");
   const [events, setEvents] = useState([]);
@@ -56,7 +56,7 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
   }, []);
 
   const isInvalidBody = () => {
-    const trimmedText = newsBody.trim();
+    const trimmedText = messageBody.trim();
     const containsOnlyHtmlTags = /^(<p>(<br>|<br\/>|<br\s\/>|\s+|)<\/p>)*$/gm.test(trimmedText);
     return !trimmedText || containsOnlyHtmlTags;
   };
@@ -65,61 +65,47 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
     e.preventDefault();
     let hasError = false;
 
-    // if (isInvalidBody()) {
-    //   setNewsBodyError("Body Error");
-    //   hasError = true;
-    // }
+    if (isInvalidBody()) {
+      setMessageBodyError("Body Error");
+      hasError = true;
+    }
 
-    // if (hasError) {
-    //   return;
-    // }
+    if (hasError) {
+      return;
+    }
 
-    // const apiUrl = `http://localhost:3000/api/post/addPost`;
-    // // const apiUrl = `${BaseURL}/api/post/addPost`;
-    // const headers = {
-    //   Authorization: `Bearer ${localStorage.getItem("token")}`,
-    // };
+    const emailArray = emailList
+      .split(",")
+      .map((email) => email.trim())
+      .filter((email) => email !== "");
 
-    // const formData = new FormData();
+    const formData = {
+      subject,
+      messageBody,
+      emails: emailArray,
+    };
+    try {
+      const apiUrl = `http://localhost:3000/api/volunteer/notify-volunteers`;
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      };
 
-    // formData.append("content", newsBody);
-    // formData.append("subject", subject);
-    // console.log("formData", formData);
-    // console.log("formData", formData.get("content"));
-    // console.log("formData", formData.get("subject"));
-    // try {
-    //   // const response = await axios.post(apiUrl, formData, { headers });
-    //   const response = await axios.post(apiUrl, formData);
+      const response = await axios.post(apiUrl, formData, { headers });
 
-    //   if (response.status === 200) {
-    //     toast.success("Notification published successfully",
-    //     //   {
-    //     //   position: toast.POSITION.TOP_RIGHT,
-    //     //   autoClose: 3000,
-    //     // }
-    //   );
-
-    //     // setSubject("");
-    //     // setNewsBody("");
-    //     // setNewsBodyError("");
-    //   } else {
-    //     const errorMessage = response.data;
-    //     toast.error(`Error: ${errorMessage}`,
-    //     //   {
-    //     //   position: toast.POSITION.TOP_RIGHT,
-    //     //   autoClose: 3000,
-    //     // }
-    //   );
-    //   }
-    // } catch (error) {
-    //   console.error("Error:", error);
-    //   toast.error("Failed to publish news. Please try again later.",
-    //   //   {
-    //   //   position: toast.POSITION.TOP_RIGHT,
-    //   //   autoClose: 3000,
-    //   // }
-    // );
-    // }
+      if (response.status === 200) {
+        toast.success("Notification published successfully");
+        setSubject("");
+        setMessageBody("");
+        setMessageBodyError("");
+        setEmailList("");
+      } else {
+        const errorMessage = response.data;
+        toast.error(`Error: ${errorMessage}`);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Failed to send notifications. Please try again later.");
+    }
   };
 
   const handleChange = async (e) => {
@@ -207,13 +193,13 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
           </Grid>
           <Grid item xs={12}>
             <Editor
-              value={newsBody}
+              value={messageBody}
               onEditorChange={(value) => {
-                setNewsBody(value);
+                setMessageBody(value);
               }}
               placeholder="Enter description"
             />
-            {newsBodyError && <Alert severity="error">{newsBodyError}</Alert>}
+            {messageBodyError && <Alert severity="error">{messageBodyError}</Alert>}
           </Grid>
         </Grid>
       </DialogContent>

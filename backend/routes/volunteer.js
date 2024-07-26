@@ -39,4 +39,12 @@ router.delete(
   volunteerController.deleteVolunteer
 );
 
+router.post(
+  "/notify-volunteers",
+  authController.protect,
+  //authController.restrict("Administrator"),
+  authController.restrict("Administrator", "Organizer"),
+  volunteerController.notifyVolunteers
+);
+
 module.exports = router;
