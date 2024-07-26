@@ -57,4 +57,7 @@ export const UserProvider = ({ children }) => {
 export const ROLES = {
   ADMIN: "66678417525bc55cbcd28a96",
   MEMBER: "66678416525bc55cbcd28a93",
+  ORGANIZER: "66678417525bc55cbcd28a99",
+  VOLUNTEER: "66678417525bc55cbcd28a9c",
+  PERFORMER: "66678417525bc55cbcd28a9f",
 };

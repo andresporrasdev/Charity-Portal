@@ -2,6 +2,7 @@
 const Volunteer = require("../models/volunteerModel");
 const VolunteerRole = require("../models/volunteerRole");
 const express = require("express");
+const sendEmail = require("./../utils/email");
 const router = express.Router();
 
 // Mock database for demonstration purposes
@@ -51,6 +52,33 @@ const getAllVolunteers = async (req, res) => {
     res.status(500).json({
       status: "error",
       message: "Error getting volunteers",
+      error: error.message,
+    });
+  }
+};
+
+// Route to get volunteers by event ID
+const getVolunteersByEventId = async (req, res) => {
+  try {
+    const volunteers = await Volunteer.find({ event: req.params.eventId })
+      .populate("preferredRole", "name")
+      .populate("event", "name");
+
+    const volunteersWithData = volunteers.map((volunteer) => ({
+      ...volunteer.toObject(),
+      preferredRole: volunteer.preferredRole ? volunteer.preferredRole.name : null,
+      event: volunteer.event ? volunteer.event.name : null,
+    }));
+
+    res.status(200).json({
+      status: "success",
+      results: volunteersWithData.length,
+      data: { volunteers: volunteersWithData },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Error getting volunteers for the event",
       error: error.message,
     });
   }
@@ -129,9 +157,34 @@ const deleteVolunteer = async (req, res) => {
   }
 };
 
+const notifyVolunteers = async (req, res) => {
+  const { subject, messageBody, emails } = req.body;
+
+  const emailOptions = emails.map((email) => ({
+    email,
+    subject,
+    html: messageBody,
+  }));
+  try {
+    await sendEmail(emailOptions);
+    res.status(200).json({
+      status: "Success",
+      message: "Emails sent successfully to volunteers",
+    });
+  } catch (error) {
+    console.error("Error sending emails to voluntter:", error);
+    res.status(500).json({
+      status: "error",
+      message: "Error sending emails to volunteer.",
+    });
+  }
+};
+
 module.exports = {
   volunteerSignUp,
   getAllVolunteers,
   updateVolunteer,
   deleteVolunteer,
+  getVolunteersByEventId,
+  notifyVolunteers,
 };

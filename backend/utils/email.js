@@ -17,8 +17,13 @@ const oauth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_U
 
 oauth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
-const sendEmail = async (option) => {
+const sendEmail = async (options) => {
   try {
+    // Convert a single email object to an array
+    if (!Array.isArray(options)) {
+      options = [options];
+    }
+
     const accessToken = await oauth2Client.getAccessToken();
 
     // Nodemailer
@@ -34,18 +39,23 @@ const sendEmail = async (option) => {
       },
     });
 
-    const mailOptions = {
-      from: SENDING_ADDRESS,
-      to: option.email,
-      subject: option.subject,
-      text: option.text,
-      html: option.html,
-      attachments: option.attachments,
-    };
+    const results = [];
 
-    const result = await transport.sendMail(mailOptions);
-    console.log("Email sent:", result);
-    return result;
+    for (const option of options) {
+      const mailOptions = {
+        from: SENDING_ADDRESS,
+        to: option.email,
+        subject: option.subject,
+        text: option.text,
+        html: option.html,
+        attachments: option.attachments,
+      };
+
+      const result = await transport.sendMail(mailOptions);
+      console.log("Email sent:", result);
+      results.push(result);
+    }
+    return results;
   } catch (error) {
     console.error("Error sending email:", error);
     return error;
