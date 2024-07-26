@@ -2,27 +2,74 @@ import React, { useState, useEffect, useContext } from "react";
 import PostList from "../components/Post/PostList";
 import AddPostForm from "../components/Post/AddPostForm";
 import UpdatePostForm from "../components/Post/UpdatePostForm";
-import { fetchPosts } from "../components/Post/FetchPost";
+// import { fetchPosts } from "../components/Post/FetchPost";
 import "../components/Post/Post.css";
 import axios from "axios";
 import { UserContext } from "../UserContext";
+import BaseURL from "../config";
+
 
 const PostPage = () => {
   const { user } = useContext(UserContext);
   const [posts, setPosts] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [currentPost, setCurrentPost] = useState(null);
+  const [roleOptions, setRoleOptions] = useState([]);
+  // console.log("users", user.roles);
+
+
 
   useEffect(() => {
     const fetchAndSetPosts = async () => {
-      const postsData = await fetchPosts();
-      console.log("postsData", postsData);
+      let postsData;
+      if (user){
+        postsData = await fetchPostsbyRole();
+      }  else {
+        postsData = await fetchPosts();
+      }
+      //  const postsData = await fetchPosts();
+      // console.log("postsData", postsData);
       setPosts(postsData);
+      fetchRoles();
     };
 
-    fetchAndSetPosts();
-  }, []);
+    // Retrive all the posts from the database
+    const fetchPosts = async () => {
+      try {
+          const response = await axios.get("http://localhost:3000/api/post/readPost");
+          console.log("Posts:", response.data);
+          return response.data;
+      } catch (error) {
+          console.error("Error fetching posts:", error);
+          return [];
+      }
+    };
 
+    //Retrive post only for the user role
+    const fetchPostsbyRole = async () => {
+      try {
+        const response = await axios.post(`${BaseURL}/api/post/getPostByRole`, { roles: user.roles });
+        console.log("Posts:", response.data);
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+        return [];
+      }
+    };
+
+    const fetchRoles = async () => {
+      // console.log("fetchRoles function called");
+      try {
+        const response = await axios.get(`${BaseURL}/api/role/getAllRoles`);
+        // console.log("Roles fetched successfully:", response.data);
+        setRoleOptions(response.data.data.roles);
+      } catch (error) {
+        console.error("Error fetching roles:", error);
+      }
+    };
+    fetchAndSetPosts();
+  }, [user]);
+ 
   const handleAddPost = () => {
     setCurrentPost(null);
     setShowModal(true);
@@ -72,7 +119,9 @@ const PostPage = () => {
     }
   };
 
-  const currentDate = new Date();
+  
+
+
   const upcomingPosts = posts
     .filter((post) => post.updated) // Ensure the post has an updated field
     .sort((a, b) => new Date(b.updated) - new Date(a.updated)); // Sort by updated field in descending order
@@ -100,9 +149,9 @@ const PostPage = () => {
               &times;
             </span>
             {currentPost ? (
-              <UpdatePostForm post={currentPost} onSave={handleUpdatePost} onCancel={handleCloseModal} />
+              <UpdatePostForm post={currentPost} onSave={handleUpdatePost} onCancel={handleCloseModal} roleOptions={roleOptions} />
             ) : (
-              <AddPostForm onSave={handleSavePost} onCancel={handleCloseModal} />
+              <AddPostForm onSave={handleSavePost} onCancel={handleCloseModal} roleOptions={roleOptions} />
             )}
           </div>
         </div>

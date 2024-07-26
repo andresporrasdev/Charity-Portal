@@ -5,8 +5,8 @@ import { FaEllipsisV } from "react-icons/fa";
 
 const PostCard = ({ post, onEdit, onDelete, onViewDetails, hideActions, user }) => {
   const [showMenu, setShowMenu] = useState(false);
-  const { subject, content, imageUrl, created } = post;
-  const formattedTime = new Date(created).toLocaleString();
+  const { subject, content, imageUrl, updated } = post;
+  const formattedTime = new Date(updated).toLocaleString();
   const navigate = useNavigate();
   const menuRef = useRef(null);
 
