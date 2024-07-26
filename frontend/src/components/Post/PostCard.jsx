@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import "./Post.css";
 import { useNavigate } from "react-router-dom";
 import { FaEllipsisV } from "react-icons/fa";
+import { ROLES } from "../../UserContext";
 
 const PostCard = ({ post, onEdit, onDelete, onViewDetails, hideActions, user }) => {
   const [showMenu, setShowMenu] = useState(false);
@@ -34,7 +35,7 @@ const PostCard = ({ post, onEdit, onDelete, onViewDetails, hideActions, user }) 
         <h4>Updated on:</h4>
         <p>{formattedTime}</p>
       </div>
-      {!hideActions && (
+      {user?.roles.includes(ROLES.ADMIN) && (
         <div className="post-actions">
           <FaEllipsisV onClick={handleMenuToggle} />
           {showMenu && (
