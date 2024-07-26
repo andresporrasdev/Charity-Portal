@@ -1,0 +1,99 @@
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: #f9f9f9;
+  margin: 0;
+  padding: 0;
+}
+
+.membership-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 40px;
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.membership-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.membership-header h1 {
+  font-size: 36px;
+  color: #e88a1d;
+  margin-bottom: 20px;
+}
+
+.membership-header p {
+  font-size: 18px;
+  color: #666;
+}
+
+.membership-content {
+  width: 100%;
+}
+
+.membership-content section {
+  margin-bottom: 40px;
+}
+
+.membership-content h2 {
+  font-size: 28px;
+  color: #e88a1d;
+  border-bottom: 2px solid #e88a1d;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.membership-content p,
+.membership-content ul {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.membership-content ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.membership-content ul li {
+  margin-bottom: 10px;
+}
+
+/* Keyframes for fadeIn animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .membership-container {
+    padding: 20px;
+  }
+
+  .membership-header h1 {
+    font-size: 28px;
+  }
+
+  .membership-content h2 {
+    font-size: 24px;
+  }
+
+  .membership-content p,
+  .membership-content ul {
+    font-size: 16px;
+  }
+}
