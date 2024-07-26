@@ -3,10 +3,8 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-quill/dist/quill.snow.css";
 import BaseURL from "../../config";
-
 import Editor from "../Post/Editor";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import {
   TextField,
   Grid,
@@ -14,23 +12,27 @@ import {
   MenuItem,
   Select,
   FormControl,
+  FormHelperText,
   InputLabel,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  Alert,
+  Typography,
+  CircularProgress,
 } from "@mui/material";
 
 const NotifyVolunteerForm = ({ open, onClose }) => {
   const [subject, setSubject] = useState("");
   const [messageBody, setMessageBody] = useState("");
-  const [messageBodyError, setMessageBodyError] = useState("");
   const [emailList, setEmailList] = useState("");
   const [selectedEvent, setSelectedEvent] = useState("");
   const [events, setEvents] = useState([]);
-  const [error, setError] = useState({});
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [subjectError, setSubjectError] = useState("");
+  const [messageBodyError, setMessageBodyError] = useState("");
+  const [emailListError, setEmailListError] = useState("");
+  const [eventError, setEventError] = useState("");
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -49,6 +51,7 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
         //}
       } catch (error) {
         console.error("Error fetching events:", error);
+        toast.error("Failed to fetch events");
       }
     };
 
@@ -61,12 +64,37 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
     return !trimmedText || containsOnlyHtmlTags;
   };
 
+  const isBase64 = (str) => {
+    return /^(?:[A-Za-z0-9+\/]{4}){1,}(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.test(str);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     let hasError = false;
 
-    if (isInvalidBody()) {
-      setMessageBodyError("Body Error");
+    // Reset all error states
+    setSubjectError("");
+    setMessageBodyError("");
+    setEmailListError("");
+    setEventError("");
+    // Check if required fields are empty
+    if (!selectedEvent) {
+      setEventError("Event selection is required");
+      hasError = true;
+    }
+
+    if (!emailList.trim()) {
+      setEmailListError("Email list is required");
+      hasError = true;
+    }
+
+    if (!subject.trim()) {
+      setSubjectError("Subject is required");
+      hasError = true;
+    }
+
+    if (!messageBody.trim() || isInvalidBody()) {
+      setMessageBodyError("Message body is required");
       hasError = true;
     }
 
@@ -74,16 +102,23 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
       return;
     }
 
+    setLoading(true);
+
     const emailArray = emailList
       .split(",")
       .map((email) => email.trim())
       .filter((email) => email !== "");
 
-    function getBase64Size(base64String) {
-      const base64Data = base64String.split(",")[1];
-      const sizeInBytes = (base64Data.length * 3) / 4;
-      return sizeInBytes;
-    }
+    // function getBase64Size(base64String) {
+    //   if (!base64String) {
+    //     console.error("Base64 String is undefined or null");
+    //     return 0;
+    //   }
+
+    //   const padding = (base64String.match(/=/g) || []).length;
+    //   const size = (base64String.length * 3) / 4 - padding;
+    //   return size;
+    // }
 
     const formData = {
       subject,
@@ -91,9 +126,16 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
       emails: emailArray,
     };
 
-    console.log("Form Data:", formData);
-    const sizeInBytes = getBase64Size(formData.messageBody);
-    console.log(`Base64 Size: ${sizeInBytes} bytes`);
+    if (isBase64(formData.messageBody)) {
+      const decodedMessageBody = Buffer.from(formData.messageBody, "base64").toString("utf-8");
+      console.log("Decoded Message Body:", decodedMessageBody);
+      formData.messageBody = decodedMessageBody;
+    }
+
+    //console.log("Form Data:", formData);
+
+    // const sizeInBytes = getBase64Size(formData.messageBody);
+    // console.log(`Base64 Size: ${sizeInBytes} bytes`);
 
     try {
       const apiUrl = `http://localhost:3000/api/volunteer/notify-volunteers`;
@@ -105,11 +147,13 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
 
       if (response.status === 200) {
         toast.success("Notification published successfully");
-        setSubject("");
-        setMessageBody("");
-        setMessageBodyError("");
-        setEmailList("");
-        onClose();
+        setTimeout(() => {
+          setSubject("");
+          setMessageBody("");
+          setMessageBodyError("");
+          setEmailList("");
+          onClose();
+        }, 2000);
       } else {
         const errorMessage = response.data;
         toast.error(`Error: ${errorMessage}`);
@@ -117,15 +161,19 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
     } catch (error) {
       console.error("Error:", error);
       toast.error("Failed to send notifications. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleChange = async (e) => {
-    setSelectedEvent(e.target.value);
+    const eventId = e.target.value;
+    setSelectedEvent(eventId);
 
-    console.log("Selected Event:", e.target.value);
+    console.log("Selected Event:", eventId);
     // Fetch volunteers' emails for the selected event
-    if (e.target.value) {
+    if (eventId) {
+      setEventError("");
       try {
         const response = await axios.get(
           `http://localhost:3000/api/volunteer/getVolunteersByEventId/${e.target.value}`,
@@ -140,8 +188,10 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
           ", "
         );
         setEmailList(volunteerEmails);
+        setEmailListError("");
       } catch (error) {
         console.error("Error fetching volunteer emails:", error);
+        toast.error("Failed to fetch emails");
       }
     } else {
       setEmailList("");
@@ -159,11 +209,11 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
       <DialogContent sx={{ minHeight: "40vh" }}>
         <Grid container spacing={1}>
           <Grid item xs={12} mt={1}>
-            <FormControl required fullWidth>
+            <FormControl required fullWidth error={!!eventError}>
               <InputLabel id="demo-simple-select-required-label">Event</InputLabel>
               <Select
                 labelId="demo-simple-select-required-label"
-                id="demo-simple-select"
+                id="demo-simple-select-required"
                 label="Event *"
                 value={selectedEvent}
                 onChange={handleChange}
@@ -178,8 +228,8 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
                   </MenuItem>
                 ))}
               </Select>
+              {eventError && <FormHelperText>{eventError}</FormHelperText>}
             </FormControl>
-            {/* {error && <Alert severity="error">{error}</Alert>} */}
           </Grid>
           <Grid item xs={12} mt={1}>
             <TextField
@@ -190,6 +240,8 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
               value={emailList}
               onChange={(e) => setEmailList(e.target.value)}
               fullWidth
+              error={!!emailListError}
+              helperText={emailListError}
             />
           </Grid>
           <Grid item xs={12} mb={1} mt={1}>
@@ -201,6 +253,8 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
               fullWidth
+              error={!!subjectError}
+              helperText={subjectError}
             />
           </Grid>
           <Grid item xs={12}>
@@ -211,15 +265,28 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
               }}
               placeholder="Enter description"
             />
-            {messageBodyError && <Alert severity="error">{messageBodyError}</Alert>}
+            {messageBodyError && (
+              <Typography color="error" variant="caption" sx={{ ml: 1 }}>
+                {messageBodyError}
+              </Typography>
+            )}
           </Grid>
         </Grid>
       </DialogContent>
-      <DialogActions>
-        <Button variant="contained" color="primary" onClick={handleSubmit}>
-          Publish
+      <DialogActions sx={{ display: "flex", justifyContent: "center", mb: 2, p: 0 }}>
+        <Button
+          variant="contained"
+          sx={{ backgroundColor: "#e88a1d", color: "#ffffff", "&:hover": { backgroundColor: "#e88a1d" } }}
+          onClick={handleSubmit}
+          disabled={loading}
+        >
+          {loading ? <CircularProgress size={24} /> : "Publish"}
         </Button>
-        <Button onClick={onClose} color="primary">
+        <Button
+          onClick={onClose}
+          variant="contained"
+          sx={{ backgroundColor: "#e88a1d", color: "#ffffff", "&:hover": { backgroundColor: "#e88a1d" } }}
+        >
           Cancel
         </Button>
       </DialogActions>
