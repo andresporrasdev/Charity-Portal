@@ -4,6 +4,13 @@ const VolunteerRole = require("../models/volunteerRole");
 const express = require("express");
 const sendEmail = require("./../utils/email");
 const router = express.Router();
+const {
+  convertBase64ImagesToBase64Url,
+  extractBase64Images,
+  removeImageTags,
+  adjustLineHeight,
+  getAttachments,
+} = require("./../utils/emailHelper");
 
 // Mock database for demonstration purposes
 let volunteers = [];
@@ -160,10 +167,16 @@ const deleteVolunteer = async (req, res) => {
 const notifyVolunteers = async (req, res) => {
   const { subject, messageBody, emails } = req.body;
 
+  const convertedMessageBody = convertBase64ImagesToBase64Url(messageBody);
+  const base64Images = extractBase64Images(messageBody);
+  const cleanedMessageBody = removeImageTags(convertedMessageBody);
+  const adjustedMessageBody = adjustLineHeight(cleanedMessageBody);
+
   const emailOptions = emails.map((email) => ({
     email,
     subject,
-    html: messageBody,
+    html: adjustedMessageBody,
+    attachments: getAttachments(base64Images),
   }));
   try {
     await sendEmail(emailOptions);
