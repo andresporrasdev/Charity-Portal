@@ -210,7 +210,7 @@ exports.updateUser = async (req, res) => {
 
 exports.deleteUser = async (req, res, next) => {
   try {
-    await User.findByIdAndUpdate(req.params.id, { isActive: false });
+    await User.findByIdAndUpdate(req.params.id, { isActive: false, $unset: { password: "" } });
     res.status(204).json({
       status: "success",
       data: null,
