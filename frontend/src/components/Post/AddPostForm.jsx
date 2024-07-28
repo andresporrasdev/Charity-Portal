@@ -11,8 +11,8 @@ import {
   Button,
   MenuItem,
   Select,
+  Alert,
   FormControl,
-  FormHelperText,
   InputLabel,
   Dialog,
   DialogTitle,
@@ -177,6 +177,11 @@ const AddPostForm = ({ open, onSave, onCancel, roleOptions }) => {
       <DialogTitle>Publish News</DialogTitle>
       <DialogContent sx={{ minHeight: "40vh" }}>
         <Grid container spacing={1}>
+          <Grid item xs={12} mt={1}>
+            <Alert severity="info">
+              Select roles to notify. If none are selected, the post will be public and not sent to any members.
+            </Alert>
+          </Grid>
           <Grid item xs={12} mt={1}>
             <FormControl fullWidth>
               {/* error={!!eventError} */}
