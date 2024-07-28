@@ -2,6 +2,7 @@
 const Volunteer = require("../models/volunteerModel");
 const VolunteerRole = require("../models/volunteerRole");
 const { sendEmailWithImageAttachment } = require("./../utils/email");
+const Event = require("../models/event");
 
 // Mock database for demonstration purposes
 let volunteers = [];
@@ -25,21 +26,31 @@ const volunteerSignUp = async (req, res) => {
   }
 };
 
-// Route to get all volunteers (for demonstration)
+// Retrieve all volunteers who are associated with upcoming events only.
 const getAllVolunteers = async (req, res) => {
   try {
-    const volunteers = await Volunteer.find().populate("preferredRole", "name").populate("event", "name");
+    const volunteers = await Volunteer.find().populate("preferredRole", "name").populate("event");
 
-    // const volunteersWithRoleName = volunteers.map((volunteer) => ({
-    //   ...volunteer.toObject(),
-    //   preferredRole: volunteer.preferredRole.name,
-    // }));
+    const eventIds = volunteers.map((volunteer) => volunteer.event);
+    const events = await Event.find({ _id: { $in: eventIds } });
+    const eventMap = {};
+    events.forEach((event) => {
+      eventMap[event._id] = event;
+    });
 
-    const volunteersWithData = volunteers.map((volunteer) => ({
-      ...volunteer.toObject(),
-      preferredRole: volunteer.preferredRole ? volunteer.preferredRole.name : null,
-      event: volunteer.event ? volunteer.event.name : null,
-    }));
+    const currentDate = new Date();
+
+    const volunteersWithData = volunteers
+      .filter((volunteer) => {
+        const event = eventMap[volunteer.event._id];
+        return event && new Date(event.time) > currentDate;
+      })
+      .map((volunteer) => ({
+        ...volunteer.toObject(),
+        preferredRole: volunteer.preferredRole ? volunteer.preferredRole.name : null,
+        event: volunteer.event ? eventMap[volunteer.event._id].name : null,
+      }));
+
     res.status(200).json({
       status: "success",
       results: volunteersWithData.length,
