@@ -105,7 +105,7 @@ const AddPostForm = ({ open, onSave, onCancel, roleOptions }) => {
         .map((email) => email.trim())
         .filter((email) => email !== "");
 
-      const emailApiUrl = `${BaseURL}/api/volunteer/notify-volunteers`;
+      const emailApiUrl = `${BaseURL}/api/post/notify-users`;
       const emailPayload = {
         emails: emailArray,
         subject: subject,
