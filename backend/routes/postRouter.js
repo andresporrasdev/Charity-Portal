@@ -5,7 +5,7 @@ const router = express.Router();
 // Import the upload middleware
 const { upload } = postController;
 
-router.get("/readPost", postController.getAllPosts);
+router.get("/getPostsForNonMember", postController.getPostsWithEmptyRoles);
 router.post("/addPost", postController.addPost, upload.none());
 router.patch("/updatePost/:id", postController.updatePost);
 router.delete("/deletePost/:id", postController.deletePost);

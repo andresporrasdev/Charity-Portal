@@ -24,7 +24,7 @@ exports.addPost = [
     //   console.log('roles:', roles);
 
     // Convert roles from string to array of ObjectId
-    const rolesArray = roles ? roles.split(",").map((role) => mongoose.Types.ObjectId(role.trim())) : null;
+    const rolesArray = roles ? roles.split(",").map((role) => mongoose.Types.ObjectId(role.trim())) : [];
 
     const post = new postModel({ content, subject, roles: rolesArray });
 
@@ -39,10 +39,10 @@ exports.addPost = [
 ];
 
 //Get all post
-exports.getAllPosts = async (req, res) => {
+exports.getPostsWithEmptyRoles = async (req, res) => {
   try {
     // Find posts where roles is null
-    const posts = await postModel.find({ roles: null });
+    const posts = await postModel.find({ roles: { $size: 0 } });
     res.status(200).json(posts);
   } catch (error) {
     console.error("An error occurred:", error);
@@ -107,7 +107,7 @@ exports.getPostByRole = async (req, res) => {
     // Find posts that contain any of the roles in the array or where roles is null
     const posts = await postModel
       .find({
-        $or: [{ roles: { $in: roleIds } }, { roles: null }],
+        $or: [{ roles: { $in: roleIds } }, { roles: { $size: 0 } }],
       })
       .populate("roles");
 
