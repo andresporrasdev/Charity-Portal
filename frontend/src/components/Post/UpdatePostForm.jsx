@@ -20,6 +20,7 @@ import {
   Typography,
   CircularProgress,
 } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
 
 const UpdatePostForm = ({ post, open, onSave, onCancel, roleOptions }) => {
   const [subject, setSubject] = useState("");
@@ -161,6 +162,41 @@ const UpdatePostForm = ({ post, open, onSave, onCancel, roleOptions }) => {
     }
   };
 
+  const handleSendEmail = async () => {
+    if (selectedRoles.length > 0) {
+      const emailArray = emailList
+        .split(",")
+        .map((email) => email.trim())
+        .filter((email) => email !== "");
+
+      const emailApiUrl = `${BaseURL}/api/post/notify-users`;
+      const emailPayload = {
+        emails: emailArray,
+        subject: subject,
+        messageBody: newsBody,
+      };
+
+      const emailHeaders = {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      };
+
+      try {
+        const response = await axios.post(emailApiUrl, emailPayload, { headers: emailHeaders });
+        if (response.status === 200) {
+          toast.success("Emails sent successfully");
+        } else {
+          toast.error(`Error: ${response.data}`);
+        }
+      } catch (error) {
+        console.error("Error sending emails:", error);
+        toast.error("Failed to send emails. Please try again later.");
+      }
+    } else {
+      toast.error("No roles selected. Cannot send emails.");
+    }
+  };
+
   return (
     <Dialog
       open={open}
@@ -243,7 +279,11 @@ const UpdatePostForm = ({ post, open, onSave, onCancel, roleOptions }) => {
           </Grid>
         </Grid>
       </DialogContent>
-      <DialogActions sx={{ display: "flex", justifyContent: "center", mb: 2, p: 0 }}>
+      <DialogActions sx={{ display: "flex", justifyContent: "space-between", mb: 2, p: 0 }}>
+        <Button variant="contained" color="primary" startIcon={<SendIcon />} onClick={handleSendEmail} sx={{ ml: 3 }}>
+          Send Email
+        </Button>
+        <div style={{ flexGrow: 1 }} />
         <Button
           variant="contained"
           sx={{ backgroundColor: "#e88a1d", color: "#ffffff", "&:hover": { backgroundColor: "#e88a1d" } }}
@@ -255,7 +295,7 @@ const UpdatePostForm = ({ post, open, onSave, onCancel, roleOptions }) => {
         <Button
           onClick={onCancel}
           variant="contained"
-          sx={{ backgroundColor: "#e88a1d", color: "#ffffff", "&:hover": { backgroundColor: "#e88a1d" } }}
+          sx={{ backgroundColor: "#e88a1d", color: "#ffffff", "&:hover": { backgroundColor: "#e88a1d" }, mr: 3 }}
         >
           Cancel
         </Button>
