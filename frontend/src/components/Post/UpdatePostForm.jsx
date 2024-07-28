@@ -12,7 +12,6 @@ import {
   MenuItem,
   Select,
   FormControl,
-  FormHelperText,
   InputLabel,
   Dialog,
   DialogTitle,
@@ -23,7 +22,6 @@ import {
 } from "@mui/material";
 
 const UpdatePostForm = ({ post, open, onSave, onCancel, roleOptions }) => {
-  const [content, setContent] = useState("");
   const [subject, setSubject] = useState("");
   const [newsBody, setNewsBody] = useState("");
   const [emailList, setEmailList] = useState("");
@@ -35,10 +33,13 @@ const UpdatePostForm = ({ post, open, onSave, onCancel, roleOptions }) => {
 
   useEffect(() => {
     if (post) {
-      setContent(post.content || "");
       setSubject(post.subject || "");
       setNewsBody(post.content || "");
-      setSelectedRoles(post.roles ? post.roles.map((role) => role._id) : []);
+      const roles = post.roles ? post.roles.map((role) => role._id) : [];
+      setSelectedRoles(roles);
+      if (roles.length > 0) {
+        handleChange({ target: { value: roles } });
+      }
     }
   }, [post]);
 
