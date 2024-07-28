@@ -81,8 +81,6 @@ const UpdatePostForm = ({ post, open, onSave, onCancel, roleOptions }) => {
       return;
     }
 
-    setLoading(true);
-
     const id = post._id;
     const apiUrl = `http://localhost:3000/api/post/updatePost/${id}`;
     const headers = {
@@ -121,8 +119,6 @@ const UpdatePostForm = ({ post, open, onSave, onCancel, roleOptions }) => {
     } catch (error) {
       console.error("Error:", error);
       toast.error("Failed to update news. Please try again later.");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -163,6 +159,8 @@ const UpdatePostForm = ({ post, open, onSave, onCancel, roleOptions }) => {
   };
 
   const handleSendEmail = async () => {
+    setLoading(true);
+
     if (selectedRoles.length > 0) {
       const emailArray = emailList
         .split(",")
@@ -191,6 +189,8 @@ const UpdatePostForm = ({ post, open, onSave, onCancel, roleOptions }) => {
       } catch (error) {
         console.error("Error sending emails:", error);
         toast.error("Failed to send emails. Please try again later.");
+      } finally {
+        setLoading(false);
       }
     } else {
       toast.error("No roles selected. Cannot send emails.");
@@ -280,17 +280,23 @@ const UpdatePostForm = ({ post, open, onSave, onCancel, roleOptions }) => {
         </Grid>
       </DialogContent>
       <DialogActions sx={{ display: "flex", justifyContent: "space-between", mb: 2, p: 0 }}>
-        <Button variant="contained" color="primary" startIcon={<SendIcon />} onClick={handleSendEmail} sx={{ ml: 3 }}>
-          Send Email
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<SendIcon />}
+          onClick={handleSendEmail}
+          disabled={loading}
+          sx={{ ml: 3 }}
+        >
+          {loading ? <CircularProgress size={24} /> : "Send Email"}
         </Button>
         <div style={{ flexGrow: 1 }} />
         <Button
           variant="contained"
           sx={{ backgroundColor: "#e88a1d", color: "#ffffff", "&:hover": { backgroundColor: "#e88a1d" } }}
           onClick={handleSubmit}
-          disabled={loading}
         >
-          {loading ? <CircularProgress size={24} /> : "Update"}
+          Update
         </Button>
         <Button
           onClick={onCancel}
