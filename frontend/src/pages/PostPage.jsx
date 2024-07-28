@@ -87,8 +87,9 @@ const PostPage = () => {
   const handleSavePost = async (post) => {
     try {
       const response = await axios.post("http://localhost:3000/api/post/addPost", post);
+      console.log("Post saved successfully:", response.data);
       setPosts([...posts, response.data]);
-      fetchAndSetPosts(); // Post를 추가한 후 게시물 목록을 다시 가져옴
+      fetchAndSetPosts(); // After adding a post, fetch the list of posts again
       handleCloseModal();
     } catch (error) {
       console.error("Error saving post:", error);
