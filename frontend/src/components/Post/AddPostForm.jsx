@@ -22,7 +22,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 
-const AddPostForm = ({ open, onCancel, roleOptions }) => {
+const AddPostForm = ({ open, onSave, onCancel, roleOptions }) => {
   const [subject, setSubject] = useState("");
   const [newsBody, setNewsBody] = useState("");
   const [emailList, setEmailList] = useState("");
@@ -47,7 +47,7 @@ const AddPostForm = ({ open, onCancel, roleOptions }) => {
     setNewsBodyError("");
     setEmailListError("");
 
-    if (!emailList.trim()) {
+    if (selectedRoles.length > 0 && !emailList.trim()) {
       setEmailListError("Email list is required");
       hasError = true;
     }
@@ -73,10 +73,10 @@ const AddPostForm = ({ open, onCancel, roleOptions }) => {
       .map((email) => email.trim())
       .filter((email) => email !== "");
 
-    const apiUrl = `${BaseURL}/api/post/addPost`;
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
+    // const apiUrl = `${BaseURL}/api/post/addPost`;
+    // const headers = {
+    //   Authorization: `Bearer ${localStorage.getItem("token")}`,
+    // };
 
     const formData = new FormData();
     formData.append("content", newsBody);
@@ -87,13 +87,18 @@ const AddPostForm = ({ open, onCancel, roleOptions }) => {
     // console.log("formData:", formData);
 
     try {
-      const response = await axios.post(apiUrl, formData, { headers });
-      if (response.status === 200) {
-        toast.success("News published successfully");
-      } else {
-        const errorMessage = response.data;
-        toast.error(`Error: ${errorMessage}`);
-      }
+      // const response = await axios.post(apiUrl, formData, { headers });
+      // if (response.status === 200) {
+      //   toast.success("News published successfully");
+      //   setTimeout(() => {
+      //     onCancel();
+      //     //window.location.reload();
+      //   }, 2000);
+      // } else {
+      //   const errorMessage = response.data;
+      //   toast.error(`Error: ${errorMessage}`);
+      // }
+      await onSave(formData);
     } catch (error) {
       console.error("Error:", error);
       toast.error("Failed to publish news. Please try again later.");

@@ -16,56 +16,58 @@ const PostPage = () => {
   const [roleOptions, setRoleOptions] = useState([]);
   // console.log("users", user.roles);
 
+  const fetchAndSetPosts = async () => {
+    //let postsData;
+    // if (user) {
+    //   postsData = await fetchPostsbyRole();
+    // } else {
+    //   postsData = await fetchPosts();
+    // }
+    const postsData = user ? await fetchPostsbyRole() : await fetchPosts();
+    //  const postsData = await fetchPosts();
+    // console.log("postsData", postsData);
+    setPosts(postsData);
+    fetchRoles();
+  };
+
   useEffect(() => {
-    const fetchAndSetPosts = async () => {
-      let postsData;
-      if (user) {
-        postsData = await fetchPostsbyRole();
-      } else {
-        postsData = await fetchPosts();
-      }
-      //  const postsData = await fetchPosts();
-      // console.log("postsData", postsData);
-      setPosts(postsData);
-      fetchRoles();
-    };
-
-    // Retrive all the posts from the database
-    const fetchPosts = async () => {
-      try {
-        const response = await axios.get("http://localhost:3000/api/post/readPost");
-        console.log("Posts:", response.data);
-        return response.data;
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-        return [];
-      }
-    };
-
-    //Retrive post only for the user role
-    const fetchPostsbyRole = async () => {
-      try {
-        const response = await axios.post(`${BaseURL}/api/post/getPostByRole`, { roles: user.roles });
-        console.log("Posts:", response.data);
-        return response.data;
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-        return [];
-      }
-    };
-
-    const fetchRoles = async () => {
-      // console.log("fetchRoles function called");
-      try {
-        const response = await axios.get(`${BaseURL}/api/role/getAllRoles`);
-        // console.log("Roles fetched successfully:", response.data);
-        setRoleOptions(response.data.data.roles);
-      } catch (error) {
-        console.error("Error fetching roles:", error);
-      }
-    };
     fetchAndSetPosts();
   }, [user]);
+
+  // Retrive all the posts from the database
+  const fetchPosts = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/api/post/readPost");
+      console.log("Posts:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+      return [];
+    }
+  };
+
+  //Retrive post only for the user role
+  const fetchPostsbyRole = async () => {
+    try {
+      const response = await axios.post(`${BaseURL}/api/post/getPostByRole`, { roles: user.roles });
+      console.log("Posts:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+      return [];
+    }
+  };
+
+  const fetchRoles = async () => {
+    // console.log("fetchRoles function called");
+    try {
+      const response = await axios.get(`${BaseURL}/api/role/getAllRoles`);
+      // console.log("Roles fetched successfully:", response.data);
+      setRoleOptions(response.data.data.roles);
+    } catch (error) {
+      console.error("Error fetching roles:", error);
+    }
+  };
 
   const handleAddPost = () => {
     setCurrentPost(null);
@@ -86,6 +88,7 @@ const PostPage = () => {
     try {
       const response = await axios.post("http://localhost:3000/api/post/addPost", post);
       setPosts([...posts, response.data]);
+      fetchAndSetPosts(); // Post를 추가한 후 게시물 목록을 다시 가져옴
       handleCloseModal();
     } catch (error) {
       console.error("Error saving post:", error);
@@ -145,6 +148,7 @@ const PostPage = () => {
             {currentPost ? (
               <UpdatePostForm
                 post={currentPost}
+                open={handleEditPost}
                 onSave={handleUpdatePost}
                 onCancel={handleCloseModal}
                 roleOptions={roleOptions}
@@ -152,7 +156,7 @@ const PostPage = () => {
             ) : (
               <AddPostForm
                 open={handleAddPost}
-                // onSave={handleSavePost}
+                onSave={handleSavePost}
                 onCancel={handleCloseModal}
                 roleOptions={roleOptions}
               />
