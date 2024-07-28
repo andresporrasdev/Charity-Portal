@@ -98,7 +98,36 @@ const AddPostForm = ({ open, onSave, onCancel, roleOptions }) => {
       //   const errorMessage = response.data;
       //   toast.error(`Error: ${errorMessage}`);
       // }
-      await onSave(formData);
+
+      // Send email API call
+      const emailArray = emailList
+        .split(",")
+        .map((email) => email.trim())
+        .filter((email) => email !== "");
+
+      const emailApiUrl = `${BaseURL}/api/volunteer/notify-volunteers`;
+      const emailPayload = {
+        emails: emailArray,
+        subject: subject,
+        messageBody: newsBody,
+      };
+
+      const emailHeaders = {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      };
+
+      const emailResponse = await axios.post(emailApiUrl, emailPayload, { headers: emailHeaders });
+
+      if (emailResponse.status === 200) {
+        toast.success("Email sent successfully");
+        console.log("Email sent successfully");
+        setTimeout(async () => {
+          await onSave(formData);
+        }, 2000);
+      } else {
+        toast.error("Failed to send email");
+      }
     } catch (error) {
       console.error("Error:", error);
       toast.error("Failed to publish news. Please try again later.");

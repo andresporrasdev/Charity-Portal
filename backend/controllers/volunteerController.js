@@ -182,13 +182,13 @@ const notifyVolunteers = async (req, res) => {
     await sendEmail(emailOptions);
     res.status(200).json({
       status: "Success",
-      message: "Emails sent successfully to volunteers",
+      message: "Emails sent successfully to users",
     });
   } catch (error) {
-    console.error("Error sending emails to voluntter:", error);
+    console.error("Error sending emails to users:", error);
     res.status(500).json({
       status: "error",
-      message: "Error sending emails to volunteer.",
+      message: "Error sending emails to users.",
     });
   }
 };
