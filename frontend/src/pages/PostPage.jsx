@@ -2,10 +2,9 @@ import React, { useState, useEffect, useContext } from "react";
 import PostList from "../components/Post/PostList";
 import AddPostForm from "../components/Post/AddPostForm";
 import UpdatePostForm from "../components/Post/UpdatePostForm";
-// import { fetchPosts } from "../components/Post/FetchPost";
 import "../components/Post/Post.css";
 import axios from "axios";
-import { UserContext } from "../UserContext";
+import { UserContext, ROLES } from "../UserContext";
 import BaseURL from "../config";
 
 const PostPage = () => {
@@ -14,18 +13,9 @@ const PostPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [currentPost, setCurrentPost] = useState(null);
   const [roleOptions, setRoleOptions] = useState([]);
-  // console.log("users", user.roles);
 
   const fetchAndSetPosts = async () => {
-    //let postsData;
-    // if (user) {
-    //   postsData = await fetchPostsbyRole();
-    // } else {
-    //   postsData = await fetchPosts();
-    // }
-    const postsData = user ? await fetchPostsbyRole() : await fetchPosts();
-    //  const postsData = await fetchPosts();
-    // console.log("postsData", postsData);
+    const postsData = user ? await fetchPostsbyRole() : await fetchPostsForNonMember();
     setPosts(postsData);
     fetchRoles();
   };
@@ -35,9 +25,9 @@ const PostPage = () => {
   }, [user]);
 
   // Retrive all the posts from the database
-  const fetchPosts = async () => {
+  const fetchPostsForNonMember = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/post/readPost");
+      const response = await axios.get("http://localhost:3000/api/post/getPostsForNonMember");
       console.log("Posts:", response.data);
       return response.data;
     } catch (error) {
@@ -126,7 +116,7 @@ const PostPage = () => {
 
   return (
     <div className="post-page">
-      {user?.roles.includes("66678417525bc55cbcd28a96") && (
+      {user?.roles.includes(ROLES.ADMIN) && (
         <button className="add-post-button" onClick={handleAddPost}>
           Add Post
         </button>

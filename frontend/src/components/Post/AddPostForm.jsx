@@ -73,60 +73,44 @@ const AddPostForm = ({ open, onSave, onCancel, roleOptions }) => {
       .map((email) => email.trim())
       .filter((email) => email !== "");
 
-    // const apiUrl = `${BaseURL}/api/post/addPost`;
-    // const headers = {
-    //   Authorization: `Bearer ${localStorage.getItem("token")}`,
-    // };
-
     const formData = new FormData();
     formData.append("content", newsBody);
     formData.append("subject", subject);
     formData.append("roles", selectedRoles);
-    formData.append("emails", emailArray);
-    // console.log("Roles:", selectedRoles);
-    // console.log("formData:", formData);
 
     try {
-      // const response = await axios.post(apiUrl, formData, { headers });
-      // if (response.status === 200) {
-      //   toast.success("News published successfully");
-      //   setTimeout(() => {
-      //     onCancel();
-      //     //window.location.reload();
-      //   }, 2000);
-      // } else {
-      //   const errorMessage = response.data;
-      //   toast.error(`Error: ${errorMessage}`);
-      // }
+      //Send email API call only if roles are selected
+      if (selectedRoles.length > 0) {
+        const emailArray = emailList
+          .split(",")
+          .map((email) => email.trim())
+          .filter((email) => email !== "");
 
-      // Send email API call
-      const emailArray = emailList
-        .split(",")
-        .map((email) => email.trim())
-        .filter((email) => email !== "");
+        const emailApiUrl = `${BaseURL}/api/post/notify-users`;
+        const emailPayload = {
+          emails: emailArray,
+          subject: subject,
+          messageBody: newsBody,
+        };
 
-      const emailApiUrl = `${BaseURL}/api/post/notify-users`;
-      const emailPayload = {
-        emails: emailArray,
-        subject: subject,
-        messageBody: newsBody,
-      };
+        const emailHeaders = {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        };
 
-      const emailHeaders = {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-        "Content-Type": "application/json",
-      };
+        const emailResponse = await axios.post(emailApiUrl, emailPayload, { headers: emailHeaders });
 
-      const emailResponse = await axios.post(emailApiUrl, emailPayload, { headers: emailHeaders });
-
-      if (emailResponse.status === 200) {
-        toast.success("Email sent successfully");
-        console.log("Email sent successfully");
-        setTimeout(async () => {
-          await onSave(formData);
-        }, 2000);
+        if (emailResponse.status === 200) {
+          toast.success("Email sent successfully");
+          console.log("Email sent successfully");
+          setTimeout(async () => {
+            await onSave(formData);
+          }, 2000);
+        } else {
+          toast.error("Failed to send email");
+        }
       } else {
-        toast.error("Failed to send email");
+        await onSave(formData);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -150,7 +134,6 @@ const AddPostForm = ({ open, onSave, onCancel, roleOptions }) => {
             },
           })
         );
-
         const responses = await Promise.all(emailPromises);
         const memberEmails = responses
           //.flatMap((response) => response.data.data.members.map((member) => member.email))
@@ -174,26 +157,6 @@ const AddPostForm = ({ open, onSave, onCancel, roleOptions }) => {
     } else {
       setEmailList("");
     }
-
-    // Fetch members' emails for the selected event
-    // if (roleIds) {
-    //   try {
-    //     const response = await axios.get(`http://localhost:3000/api/volunteer/getMembersByRoleId/${e.target.value}`, {
-    //       headers: {
-    //         Authorization: `Bearer ${localStorage.getItem("token")}`, // Add authorization header
-    //       },
-    //     });
-    //     // Fetch the emails and remove duplicates
-    //     const memberEmails = [...new Set(response.data.data.members.map((member) => member.email))].join(", ");
-    //     setEmailList(memberEmails);
-    //     setEmailListError("");
-    //   } catch (error) {
-    //     console.error("Error fetching member emails:", error);
-    //     toast.error("Failed to fetch emails");
-    //   }
-    // } else {
-    //   setEmailList("");
-    // }
   };
 
   return (
