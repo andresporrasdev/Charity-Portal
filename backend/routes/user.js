@@ -15,6 +15,13 @@ router.get(
   userController.getAllUsers
 );
 
+router.get(
+  "/getUsersByRoleId/:roleId",
+  authController.protect,
+  authController.restrict("Administrator"),
+  userController.getUsersByRoleId
+);
+
 router.patch(
   "/updateUser/:id",
   authController.protect,

@@ -144,6 +144,30 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
+// Route to get users by role ID
+exports.getUsersByRoleId = async (req, res) => {
+  try {
+    const users = await User.find({ roles: { $in: [req.params.roleId] } }).populate("roles", "name");
+    console.log("got it?");
+    const usersWithRoleNames = users.map((user) => ({
+      ...user.toObject(),
+      roles: user.roles.map((role) => role.name),
+    }));
+    console.log("usersWithRoleNames:", usersWithRoleNames);
+
+    res.status(200).json({
+      status: "success",
+      results: usersWithRoleNames.length,
+      data: { users: usersWithRoleNames },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Failed to fetch users.",
+    });
+  }
+};
+
 exports.updateUser = async (req, res) => {
   // check if request data contain password
   if (req.body.password) {
@@ -210,7 +234,7 @@ exports.updateUser = async (req, res) => {
 
 exports.deleteUser = async (req, res, next) => {
   try {
-    await User.findByIdAndUpdate(req.params.id, { isActive: false });
+    await User.findByIdAndUpdate(req.params.id, { isActive: false, $unset: { password: "" } });
     res.status(204).json({
       status: "success",
       data: null,

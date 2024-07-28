@@ -1,9 +1,8 @@
 // Import the Volunteer model
 const Volunteer = require("../models/volunteerModel");
 const VolunteerRole = require("../models/volunteerRole");
-const express = require("express");
-const sendEmail = require("./../utils/email");
-const router = express.Router();
+const { sendEmailWithImageAttachment } = require("./../utils/email");
+const Event = require("../models/event");
 
 // Mock database for demonstration purposes
 let volunteers = [];
@@ -27,21 +26,31 @@ const volunteerSignUp = async (req, res) => {
   }
 };
 
-// Route to get all volunteers (for demonstration)
+// Retrieve all volunteers who are associated with upcoming events only.
 const getAllVolunteers = async (req, res) => {
   try {
-    const volunteers = await Volunteer.find().populate("preferredRole", "name").populate("event", "name");
+    const volunteers = await Volunteer.find().populate("preferredRole", "name").populate("event");
 
-    // const volunteersWithRoleName = volunteers.map((volunteer) => ({
-    //   ...volunteer.toObject(),
-    //   preferredRole: volunteer.preferredRole.name,
-    // }));
+    const eventIds = volunteers.map((volunteer) => volunteer.event);
+    const events = await Event.find({ _id: { $in: eventIds } });
+    const eventMap = {};
+    events.forEach((event) => {
+      eventMap[event._id] = event;
+    });
 
-    const volunteersWithData = volunteers.map((volunteer) => ({
-      ...volunteer.toObject(),
-      preferredRole: volunteer.preferredRole ? volunteer.preferredRole.name : null,
-      event: volunteer.event ? volunteer.event.name : null,
-    }));
+    const currentDate = new Date();
+
+    const volunteersWithData = volunteers
+      .filter((volunteer) => {
+        const event = eventMap[volunteer.event._id];
+        return event && new Date(event.time) > currentDate;
+      })
+      .map((volunteer) => ({
+        ...volunteer.toObject(),
+        preferredRole: volunteer.preferredRole ? volunteer.preferredRole.name : null,
+        event: volunteer.event ? eventMap[volunteer.event._id].name : null,
+      }));
+
     res.status(200).json({
       status: "success",
       results: volunteersWithData.length,
@@ -158,24 +167,13 @@ const deleteVolunteer = async (req, res) => {
 };
 
 const notifyVolunteers = async (req, res) => {
-  const { subject, messageBody, emails } = req.body;
-
-  const emailOptions = emails.map((email) => ({
-    email,
-    subject,
-    html: messageBody,
-  }));
   try {
-    await sendEmail(emailOptions);
-    res.status(200).json({
-      status: "Success",
-      message: "Emails sent successfully to volunteers",
-    });
+    await sendEmailWithImageAttachment(req, res);
   } catch (error) {
-    console.error("Error sending emails to voluntter:", error);
+    console.error("Error notifying volunteers:", error);
     res.status(500).json({
       status: "error",
-      message: "Error sending emails to volunteer.",
+      message: "Failed to notify volunteers.",
     });
   }
 };
