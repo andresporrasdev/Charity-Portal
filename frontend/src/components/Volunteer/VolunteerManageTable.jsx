@@ -205,10 +205,11 @@ const VolunteerManageTable = () => {
       {showDeleteModal && (
         <ConfirmModal
           title="Delete"
-          text="Do you really want to delete this Volunteer?"
+          text="Do you really want to delete this Volunteer? Please type 'DELETE' to confirm."
           open={showDeleteModal}
           onConfirm={handleDeleteConfirm}
           onClose={handleDeleteModalClose}
+          confirmWord="DELETE"
         />
       )}
 

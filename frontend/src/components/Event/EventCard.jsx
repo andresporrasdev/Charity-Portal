@@ -32,7 +32,11 @@ const EventCard = ({ event, onEdit, onDelete, onViewDetails, hideActions, user }
 
   const handlePurchaseTicket = () => {
     // console.log("purchaseURL in EventCard", event.purchaseURL);
-    window.open(event.purchaseURL, "_blank");
+    if (isMemberOnly && !user?.roles.includes(ROLES.MEMBER)) {
+      navigate("/membership");
+    } else {
+      window.open(event.purchaseURL, "_blank");
+    }
   };
 
   const renderPrice = () => {
