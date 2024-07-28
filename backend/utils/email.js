@@ -1,5 +1,12 @@
 const { google } = require("googleapis");
 const nodemailer = require("nodemailer");
+const {
+  convertBase64ImagesToBase64Url,
+  extractBase64Images,
+  removeImageTags,
+  adjustLineHeight,
+  getAttachments,
+} = require("./../utils/emailHelper");
 require("dotenv").config();
 
 const CLIENT_ID = process.env.CLIENT_ID;
@@ -57,4 +64,36 @@ const sendEmail = async (options) => {
   }
 };
 
-module.exports = sendEmail;
+const sendEmailWithImageAttachment = async (req, res) => {
+  const { subject, messageBody, emails } = req.body;
+
+  const convertedMessageBody = convertBase64ImagesToBase64Url(messageBody);
+  const base64Images = extractBase64Images(messageBody);
+  const cleanedMessageBody = removeImageTags(convertedMessageBody);
+  const adjustedMessageBody = adjustLineHeight(cleanedMessageBody);
+
+  const emailOptions = emails.map((email) => ({
+    email,
+    subject,
+    html: adjustedMessageBody,
+    attachments: getAttachments(base64Images),
+  }));
+  try {
+    await sendEmail(emailOptions);
+    res.status(200).json({
+      status: "Success",
+      message: "Emails sent successfully",
+    });
+  } catch (error) {
+    console.error("Error sending emails:", error);
+    res.status(500).json({
+      status: "error",
+      message: "Error sending emails.",
+    });
+  }
+};
+
+module.exports = {
+  sendEmail,
+  sendEmailWithImageAttachment,
+};

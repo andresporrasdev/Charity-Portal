@@ -1,16 +1,7 @@
 // Import the Volunteer model
 const Volunteer = require("../models/volunteerModel");
 const VolunteerRole = require("../models/volunteerRole");
-const express = require("express");
-const sendEmail = require("./../utils/email");
-const router = express.Router();
-const {
-  convertBase64ImagesToBase64Url,
-  extractBase64Images,
-  removeImageTags,
-  adjustLineHeight,
-  getAttachments,
-} = require("./../utils/emailHelper");
+const { sendEmailWithImageAttachment } = require("./../utils/email");
 
 // Mock database for demonstration purposes
 let volunteers = [];
@@ -165,30 +156,13 @@ const deleteVolunteer = async (req, res) => {
 };
 
 const notifyVolunteers = async (req, res) => {
-  const { subject, messageBody, emails } = req.body;
-
-  const convertedMessageBody = convertBase64ImagesToBase64Url(messageBody);
-  const base64Images = extractBase64Images(messageBody);
-  const cleanedMessageBody = removeImageTags(convertedMessageBody);
-  const adjustedMessageBody = adjustLineHeight(cleanedMessageBody);
-
-  const emailOptions = emails.map((email) => ({
-    email,
-    subject,
-    html: adjustedMessageBody,
-    attachments: getAttachments(base64Images),
-  }));
   try {
-    await sendEmail(emailOptions);
-    res.status(200).json({
-      status: "Success",
-      message: "Emails sent successfully to users",
-    });
+    await sendEmailWithImageAttachment(req, res);
   } catch (error) {
-    console.error("Error sending emails to users:", error);
+    console.error("Error notifying volunteers:", error);
     res.status(500).json({
       status: "error",
-      message: "Error sending emails to users.",
+      message: "Failed to notify volunteers.",
     });
   }
 };
