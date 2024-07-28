@@ -11,6 +11,15 @@ router.patch("/updatePost/:id", postController.updatePost);
 router.delete("/deletePost/:id", postController.deletePost);
 router.get("/getPostById/:id", postController.getPostById);
 router.post("/getPostByRole", postController.getPostByRole);
+
+router.post(
+  "/notify-users",
+  // authController.protect,
+  // //authController.restrict("Administrator"),
+  // authController.restrict("Administrator", "Organizer"),
+  postController.notifyUsersAboutPost
+);
+
 // router.post(
 //   "/uploadImage",
 //   postController.upload.single("file"),
