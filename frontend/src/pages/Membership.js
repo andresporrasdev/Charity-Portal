@@ -1,8 +1,6 @@
 import React from 'react';
 import './membership.css';
 
-
-
 function Membership() {
     return (
         <div className="membership-container">
