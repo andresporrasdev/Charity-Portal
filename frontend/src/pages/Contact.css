@@ -1,147 +1,216 @@
 body {
-  font-family: "Poppins", sans-serif;
-  background-color: #f9f9f9;
-  margin: 0;
-  padding: 0;
+    font-family: "Poppins", sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
 }
 
-.contact-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 90%;
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 40px;
-  background: #fff;
-  border-radius: 15px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  border: 1px solid #ddd;
-  animation: fadeIn 1s ease-in-out;
+.contact-container,
+.membership-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    animation: fadeIn 1s ease-in-out;
 }
 
-.contact-info {
-  text-align: center;
-  margin-bottom: 40px;
+.contact-info,
+.membership-header {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-.contact-info h1 {
-  font-size: 32px;
-  color: #e88a1d;
-  margin-bottom: 20px;
+.contact-info h1,
+.membership-header h1 {
+    font-size: 28px;
+    color: #e88a1d;
+    margin-bottom: 10px;
 }
 
-.contact-info p {
-  font-size: 18px;
-  color: #666;
+.contact-info p,
+.membership-header p,
+.membership-content p,
+.membership-content ul {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 10px;
 }
 
 .social-icons {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  font-size: 36px;
-  margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    font-size: 24px;
+    margin-top: 20px;
 }
 
 .social-icons a {
-  color: #e88a1d;
-  transition: color 0.3s;
+    color: #e88a1d;
+    transition: color 0.3s;
 }
 
 .social-icons a:hover {
-  color: #e64a19;
+    color: #e64a19;
 }
 
-.contact-form {
-  width: 100%;
-  max-width: 600px;
+.contact-form,
+.membership-content {
+    width: 100%;
+    max-width: 600px;
 }
 
-.contact-form form {
-  display: flex;
-  flex-direction: column;
+.contact-form form,
+.membership-content section {
+    display: flex;
+    flex-direction: column;
 }
 
 .input-box {
-  margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .input-box label {
-  font-size: 16px;
-  color: #666;
-  margin-bottom: 5px;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
 }
 
 .input-box input,
 .input-box textarea {
-  width: 100%;
-  padding: 15px;
-  font-size: 16px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  transition: border-color 0.3s;
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: border-color 0.3s;
 }
 
 .input-box input:focus,
 .input-box textarea:focus {
-  border-color: #e88a1d;
-  outline: none;
+    border-color: #e88a1d;
+    outline: none;
 }
 
 .input-box textarea {
-  height: 150px;
+    height: 120px;
 }
 
 .contact-form button {
-  width: 100%;
-  padding: 15px;
-  font-size: 18px;
-  color: #fff;
-  background-color: #e88a1d;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #e88a1d;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .contact-form button:hover {
-  background-color: #e64a19;
+    background-color: #e64a19;
+}
+
+.membership-content h2 {
+    font-size: 24px;
+    color: #e88a1d;
+    border-bottom: 2px solid #e88a1d;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.membership-content ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.membership-content ul li {
+    margin-bottom: 5px;
 }
 
 /* Keyframes for fadeIn animation */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 /* Media Queries for Responsiveness */
 @media (max-width: 768px) {
-  .contact-container {
-    padding: 20px;
-  }
+    .contact-container,
+    .membership-container {
+        padding: 15px;
+    }
 
-  .contact-info h1 {
-    font-size: 28px;
-  }
+    .contact-info h1,
+    .membership-header h1 {
+        font-size: 24px;
+    }
 
-  .contact-info p,
-  .input-box label {
-    font-size: 16px;
-  }
+    .contact-info p,
+    .input-box label,
+    .membership-header p,
+    .membership-content p,
+    .membership-content ul {
+        font-size: 14px;
+    }
 
-  .input-box input,
-  .input-box textarea {
-    font-size: 14px;
-  }
+    .input-box input,
+    .input-box textarea {
+        font-size: 12px;
+    }
 
-  .social-icons {
-    font-size: 24px;
-    gap: 10px;
-  }
+    .social-icons {
+        font-size: 20px;
+        gap: 10px;
+    }
+
+    .membership-content h2 {
+        font-size: 20px;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .contact-container,
+    .membership-container {
+        padding: 25px;
+    }
+
+    .contact-info h1,
+    .membership-header h1 {
+        font-size: 28px;
+    }
+
+    .contact-info p,
+    .input-box label,
+    .membership-header p,
+    .membership-content p,
+    .membership-content ul {
+        font-size: 16px;
+    }
+
+    .input-box input,
+    .input-box textarea {
+        font-size: 14px;
+    }
+
+    .social-icons {
+        font-size: 24px;
+        gap: 15px;
+    }
+
+    .membership-content h2 {
+        font-size: 22px;
+    }
 }
