@@ -1,99 +1,128 @@
 body {
-  font-family: "Poppins", sans-serif;
-  background-color: #f9f9f9;
-  margin: 0;
-  padding: 0;
+    font-family: "Poppins", sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
 }
 
 .membership-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 80%;
-  max-width: 1200px;
-  margin: 40px auto;
-  padding: 40px;
-  background: #fff;
-  border-radius: 15px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  border: 1px solid #ddd;
-  animation: fadeIn 1s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    animation: fadeIn 1s ease-in-out;
 }
 
 .membership-header {
-  text-align: center;
-  margin-bottom: 40px;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 .membership-header h1 {
-  font-size: 36px;
-  color: #e88a1d;
-  margin-bottom: 20px;
+    font-size: 28px;
+    color: #e88a1d;
+    margin-bottom: 10px;
 }
 
 .membership-header p {
-  font-size: 18px;
-  color: #666;
+    font-size: 16px;
+    color: #666;
 }
 
 .membership-content {
-  width: 100%;
+    width: 100%;
 }
 
 .membership-content section {
-  margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 
 .membership-content h2 {
-  font-size: 28px;
-  color: #e88a1d;
-  border-bottom: 2px solid #e88a1d;
-  padding-bottom: 10px;
-  margin-bottom: 20px;
+    font-size: 24px;
+    color: #e88a1d;
+    border-bottom: 2px solid #e88a1d;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 .membership-content p,
 .membership-content ul {
-  font-size: 18px;
-  color: #666;
-  margin-bottom: 20px;
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 10px;
 }
 
 .membership-content ul {
-  list-style-type: none;
-  padding-left: 0;
+    list-style-type: none;
+    padding-left: 0;
 }
 
 .membership-content ul li {
-  margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 /* Keyframes for fadeIn animation */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 /* Media Queries for Responsiveness */
 @media (max-width: 768px) {
-  .membership-container {
-    padding: 20px;
-  }
+    .membership-container {
+        padding: 15px;
+    }
 
-  .membership-header h1 {
-    font-size: 28px;
-  }
+    .membership-header h1 {
+        font-size: 24px;
+    }
 
-  .membership-content h2 {
-    font-size: 24px;
-  }
+    .membership-content h2 {
+        font-size: 20px;
+    }
 
-  .membership-content p,
-  .membership-content ul {
-    font-size: 16px;
-  }
+    .membership-header p,
+    .membership-content p,
+    .membership-content ul {
+        font-size: 14px;
+    }
+
+    .membership-content ul li {
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .membership-container {
+        padding: 25px;
+    }
+
+    .membership-header h1 {
+        font-size: 28px;
+    }
+
+    .membership-content h2 {
+        font-size: 22px;
+    }
+
+    .membership-header p,
+    .membership-content p,
+    .membership-content ul {
+        font-size: 16px;
+    }
+
+    .membership-content ul li {
+        font-size: 16px;
+    }
 }
