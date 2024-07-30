@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import "./Post.css";
 import { FaEllipsisV, FaTimes } from "react-icons/fa";
 import { ROLES } from "../../UserContext";
+import FiberNewOutlinedIcon from "@mui/icons-material/FiberNewOutlined";
 
 const getImageSrcFromContent = (content) => {
   const div = document.createElement("div");
@@ -40,11 +41,20 @@ const PostCard = ({ post, onEdit, onDelete, user }) => {
     setShowMenu(false);
   };
 
+  const isNewPost = () => {
+    const postDate = new Date(post.created);
+    const now = new Date();
+    const weeksAgo = new Date(now.setDate(now.getDate() - 7));
+    return postDate >= weeksAgo;
+  };
+
   return (
     <div className="post-card">
       {imageSrc && <img src={imageSrc} alt="Post Image" />}
-      <div className="post-details">       
-        <h3>{subject}</h3>
+      <div className="post-details">
+        <h3>
+          {subject} {isNewPost() && <FiberNewOutlinedIcon color="primary" fontSize="large" />}
+        </h3>
         <p>{snippet}</p>
         <a className="more-link" onClick={() => setShowModal(true)}>
           More
