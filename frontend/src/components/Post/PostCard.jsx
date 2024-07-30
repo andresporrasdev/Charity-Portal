@@ -1,14 +1,12 @@
 import React, { useState, useRef } from "react";
 import "./Post.css";
-import { useNavigate } from "react-router-dom";
 import { FaEllipsisV } from "react-icons/fa";
 import { ROLES } from "../../UserContext";
 
-const PostCard = ({ post, onEdit, onDelete, onViewDetails, hideActions, user }) => {
+const PostCard = ({ post, onEdit, onDelete, user }) => {
   const [showMenu, setShowMenu] = useState(false);
-  const { subject, content, imageUrl, updated } = post;
+  const { subject, content, updated } = post;
   const formattedTime = new Date(updated).toLocaleString();
-  const navigate = useNavigate();
   const menuRef = useRef(null);
 
   const handleMenuToggle = (e) => {
@@ -28,7 +26,6 @@ const PostCard = ({ post, onEdit, onDelete, onViewDetails, hideActions, user }) 
 
   return (
     <div className="post-card">
-      {/* <img src={imageUrl} alt={subject} /> */}
       <div className="post-details">
         <h3>{subject}</h3>
         <div dangerouslySetInnerHTML={{ __html: content }} />

@@ -37,18 +37,11 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/event/readEvent");
+        const response = await axios.get(`${BaseURL}/api/event/readEvent`);
         const futureEvents = response.data
           .filter((event) => new Date(event.time) >= new Date())
           .sort((a, b) => new Date(b.time) - new Date(a.time));
         setEvents(futureEvents);
-
-        // if (navigate.state && navigate.state.eventId) {
-        //   setFormData((prevFormData) => ({
-        //     ...prevFormData,
-        //     event: navigate.state.eventId,
-        //   }));
-        //}
       } catch (error) {
         console.error("Error fetching events:", error);
         toast.error("Failed to fetch events");
@@ -65,7 +58,7 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
   };
 
   const isBase64 = (str) => {
-    return /^(?:[A-Za-z0-9+\/]{4}){1,}(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.test(str);
+    return /^(?:[A-Za-z0-9+/]{4}){1,}(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(str);
   };
 
   const handleSubmit = async (e) => {
@@ -109,17 +102,6 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
       .map((email) => email.trim())
       .filter((email) => email !== "");
 
-    // function getBase64Size(base64String) {
-    //   if (!base64String) {
-    //     console.error("Base64 String is undefined or null");
-    //     return 0;
-    //   }
-
-    //   const padding = (base64String.match(/=/g) || []).length;
-    //   const size = (base64String.length * 3) / 4 - padding;
-    //   return size;
-    // }
-
     const formData = {
       subject,
       messageBody,
@@ -132,13 +114,8 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
       formData.messageBody = decodedMessageBody;
     }
 
-    //console.log("Form Data:", formData);
-
-    // const sizeInBytes = getBase64Size(formData.messageBody);
-    // console.log(`Base64 Size: ${sizeInBytes} bytes`);
-
     try {
-      const apiUrl = `http://localhost:3000/api/volunteer/notify-volunteers`;
+      const apiUrl = `${BaseURL}/api/volunteer/notify-volunteers`;
       const headers = {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       };
@@ -175,14 +152,11 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
     if (eventId) {
       setEventError("");
       try {
-        const response = await axios.get(
-          `http://localhost:3000/api/volunteer/getVolunteersByEventId/${e.target.value}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`, // Add authorization header
-            },
-          }
-        );
+        const response = await axios.get(`${BaseURL}/api/volunteer/getVolunteersByEventId/${e.target.value}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Add authorization header
+          },
+        });
         // Fetch the emails and remove duplicates
         const volunteerEmails = [...new Set(response.data.data.volunteers.map((volunteer) => volunteer.email))].join(
           ", "

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-quill/dist/quill.snow.css";
@@ -67,11 +67,6 @@ const AddPostForm = ({ open, onSave, onCancel, roleOptions }) => {
     }
 
     setLoading(true);
-
-    const emailArray = emailList
-      .split(",")
-      .map((email) => email.trim())
-      .filter((email) => email !== "");
 
     const formData = new FormData();
     formData.append("content", newsBody);

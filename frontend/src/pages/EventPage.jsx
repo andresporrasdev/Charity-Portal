@@ -6,7 +6,7 @@ import { fetchEvents } from "../components/Event/FetchEvent";
 import "../components/Event/Event.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { UserContext } from "../UserContext";
+import { UserContext, ROLES } from "../UserContext";
 import ConfirmModal from "../components/ConfirmModal.jsx";
 
 const EventPage = () => {
@@ -70,16 +70,16 @@ const EventPage = () => {
   };
 
   const confirmDeleteEvent = async () => {
-  try {
-    await axios.delete(`http://localhost:3000/api/event/deleteEvent/${eventToDelete}`);
-    setEvents(events.filter((e) => e._id !== eventToDelete));
-    setConfirmModalOpen(false);
-    setEventToDelete(null);
-  } catch (error) {
-    console.error("Error deleting event:", error);
-  }
+    try {
+      await axios.delete(`http://localhost:3000/api/event/deleteEvent/${eventToDelete}`);
+      setEvents(events.filter((e) => e._id !== eventToDelete));
+      setConfirmModalOpen(false);
+      setEventToDelete(null);
+    } catch (error) {
+      console.error("Error deleting event:", error);
+    }
   };
-  
+
   const currentDate = new Date();
   const upcomingEvents = events
     .filter((event) => new Date(event.time) > currentDate)
@@ -91,7 +91,7 @@ const EventPage = () => {
 
   return (
     <div className="event-page">
-      {user?.roles.includes("66678417525bc55cbcd28a96") && (
+      {user?.roles.includes(ROLES.ADMIN) && (
         <button className="add-event-button" onClick={handleAddEvent}>
           Add Event
         </button>
