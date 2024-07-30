@@ -3,7 +3,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-quill/dist/quill.snow.css";
 import BaseURL from "../../config";
-import Editor from "../Post/Editor";
+import Editor from "../Editor/Editor";
 import axios from "axios";
 import {
   TextField,

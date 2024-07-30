@@ -15,3 +15,7 @@
 .ql-editor {
   min-height: 16em;
 }
+
+.ql-tooltip {
+  left: 0 !important;
+}
