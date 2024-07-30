@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { UserContext, ROLES } from "../UserContext";
 import ConfirmModal from "../components/ConfirmModal.jsx";
+import BaseURL from "../config";
 
 const EventPage = () => {
   const { user } = useContext(UserContext);
@@ -46,11 +47,11 @@ const EventPage = () => {
   const handleSaveEvent = async (event) => {
     try {
       if (currentEvent && currentEvent._id) {
-        const updateUrl = `http://localhost:3000/api/event/updateEvent/${currentEvent._id}`;
+        const updateUrl = `${BaseURL}/api/event/updateEvent/${currentEvent._id}`;
         await axios.patch(updateUrl, event);
         setEvents(events.map((e) => (e._id === event._id ? event : e)));
       } else {
-        await axios.post("http://localhost:3000/api/event/addEvent", event);
+        await axios.post(`${BaseURL}/api/event/addEvent`, event);
         setEvents([...events, event]);
       }
       handleCloseModal();
@@ -71,7 +72,7 @@ const EventPage = () => {
 
   const confirmDeleteEvent = async () => {
     try {
-      await axios.delete(`http://localhost:3000/api/event/deleteEvent/${eventToDelete}`);
+      await axios.delete(`${BaseURL}/api/event/deleteEvent/${eventToDelete}`);
       setEvents(events.filter((e) => e._id !== eventToDelete));
       setConfirmModalOpen(false);
       setEventToDelete(null);

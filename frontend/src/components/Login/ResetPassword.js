@@ -3,6 +3,7 @@ import "./Login.css";
 import axios from "axios";
 import { FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import Alert from "@mui/material/Alert";
+import BaseURL from "../../config";
 
 const ResetPassword = ({ token }) => {
   const [password, setPassword] = useState("");
@@ -74,7 +75,7 @@ const ResetPassword = ({ token }) => {
     e.preventDefault();
     if (validate()) {
       try {
-        const response = await axios.patch(`http://localhost:3000/api/auth/resetPassword/${token}`, {
+        const response = await axios.patch(`${BaseURL}/api/auth/resetPassword/${token}`, {
           password,
           confirmPassword,
         });

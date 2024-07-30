@@ -27,7 +27,7 @@ const PostPage = () => {
   // Retrive all the posts from the database
   const fetchPostsForNonMember = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/post/getPostsForNonMember");
+      const response = await axios.get(`${BaseURL}/api/post/getPostsForNonMember`);
       console.log("Posts:", response.data);
       return response.data;
     } catch (error) {
@@ -76,7 +76,7 @@ const PostPage = () => {
 
   const handleSavePost = async (post) => {
     try {
-      const response = await axios.post("http://localhost:3000/api/post/addPost", post);
+      const response = await axios.post(`${BaseURL}/api/post/addPost`, post);
       console.log("Post saved successfully:", response.data);
       setPosts([...posts, response.data]);
       fetchAndSetPosts(); // After adding a post, fetch the list of posts again
@@ -88,7 +88,7 @@ const PostPage = () => {
 
   const handleUpdatePost = async (updatedPost) => {
     try {
-      const updateUrl = `http://localhost:3000/api/post/updatePost/${currentPost._id}`;
+      const updateUrl = `${BaseURL}/api/post/updatePost/${currentPost._id}`;
       console.log("updateUrl", updateUrl);
       console.log("post", updatedPost);
       await axios.patch(updateUrl, updatedPost);
@@ -102,7 +102,7 @@ const PostPage = () => {
 
   const handleDeletePost = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/post/deletePost/${id}`);
+      await axios.delete(`${BaseURL}/api/post/deletePost/${id}`);
       console.log("post deleted", id);
       setPosts(posts.filter((p) => p._id !== id));
     } catch (error) {

@@ -3,6 +3,7 @@ import axios from "axios";
 import Alert from "@mui/material/Alert";
 import "./Login.css";
 import { FaEnvelope, FaLock, FaUser, FaEye, FaEyeSlash } from "react-icons/fa";
+import BaseURL from "../../config";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -75,7 +76,7 @@ const LoginForm = () => {
     e.preventDefault();
     if (validate(email)) {
       try {
-        const response = await axios.post("http://localhost:3000/api/auth/login", { email, password });
+        const response = await axios.post(`${BaseURL}/api/auth/login`, { email, password });
         if (response.data.status === "success") {
           // Get JWT from backend and save it in the localStorage
           const token = response.data.token;
@@ -101,7 +102,7 @@ const LoginForm = () => {
     e.preventDefault();
     if (modalEmailValidate(modalEmail)) {
       try {
-        const response = await axios.post("http://localhost:3000/api/auth/forgetPassword", { email: modalEmail });
+        const response = await axios.post(`${BaseURL}/api/auth/forgetPassword`, { email: modalEmail });
         if (response.data.status === "success") {
           setFailMessage("");
           setSuccessMessage(response.data.message);

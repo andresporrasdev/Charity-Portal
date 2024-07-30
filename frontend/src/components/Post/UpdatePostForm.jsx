@@ -82,7 +82,7 @@ const UpdatePostForm = ({ post, open, onSave, onCancel, roleOptions }) => {
     }
 
     const id = post._id;
-    const apiUrl = `http://localhost:3000/api/post/updatePost/${id}`;
+    const apiUrl = `${BaseURL}/api/post/updatePost/${id}`;
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
@@ -129,7 +129,7 @@ const UpdatePostForm = ({ post, open, onSave, onCancel, roleOptions }) => {
     if (roleIds.length > 0) {
       try {
         const emailPromises = roleIds.map((roleId) =>
-          axios.get(`http://localhost:3000/api/user/getUsersByRoleId/${roleId}`, {
+          axios.get(`${BaseURL}/api/user/getUsersByRoleId/${roleId}`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
@@ -279,7 +279,7 @@ const UpdatePostForm = ({ post, open, onSave, onCancel, roleOptions }) => {
           </Grid>
         </Grid>
       </DialogContent>
-      <DialogActions sx={{ display: "flex", justifyContent: "space-between", mb: 2, p: 0 }}>
+      <DialogActions sx={{ display: "flex", justifyContent: "space-between", mb: 2, p: 0, mt: 2 }}>
         <Button
           variant="contained"
           color="primary"

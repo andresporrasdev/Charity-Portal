@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./Event.css";
 import Alert from "@mui/material/Alert";
 import axios from "axios";
+import BaseURL from "../../config";
 
 const AddEditEventForm = ({ event, onSave, onCancel }) => {
   const [failMessage, setFailMessage] = useState("");
@@ -64,7 +65,7 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
     uploadFormData.append("file", selectedFile);
 
     try {
-      const response = await axios.post("http://localhost:3000/api/event/upload", uploadFormData);
+      const response = await axios.post(`${BaseURL}/api/event/upload`, uploadFormData);
 
       if (response.data.status === "success") {
         setFailMessage("");

@@ -247,7 +247,7 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
           </Grid>
         </Grid>
       </DialogContent>
-      <DialogActions sx={{ display: "flex", justifyContent: "center", mb: 2, p: 0 }}>
+      <DialogActions sx={{ display: "flex", justifyContent: "center", mb: 2, p: 0, mt: 2 }}>
         <Button
           variant="contained"
           sx={{ backgroundColor: "#e88a1d", color: "#ffffff", "&:hover": { backgroundColor: "#e88a1d" } }}

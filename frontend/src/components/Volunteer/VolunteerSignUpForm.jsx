@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom"; //Use navigate to redirect to another page
 import OtpModal from "../Otp/OtpModal";
 import { UserContext } from "../../UserContext";
+import BaseURL from "../../config";
 
 const VolunteerSignUpForm = () => {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ const VolunteerSignUpForm = () => {
 
   const fetchUserInfo = async (token) => {
     try {
-      const response = await axios.get("http://localhost:3000/api/user/userinfo", {
+      const response = await axios.get(`${BaseURL}/api/user/userinfo`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -66,7 +67,7 @@ const VolunteerSignUpForm = () => {
 
     const fetchVolunteerRoles = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/volunteerRole/getAllVolunteerRoles");
+        const response = await axios.get(`${BaseURL}/api/volunteerRole/getAllVolunteerRoles`);
         setRoles(response.data.data.roles); // Assuming the API response structure is { data: { roles: [...] } }
         // ...prevFormData,
         //   preferredRole: `${response.data.data.name}`,
@@ -80,7 +81,7 @@ const VolunteerSignUpForm = () => {
 
     const fetchEvents = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/event/readEvent");
+        const response = await axios.get(`${BaseURL}/api/event/readEvent`);
         const futureEvents = response.data
           .filter((event) => new Date(event.time) >= new Date())
           .sort((a, b) => new Date(b.time) - new Date(a.time));
@@ -168,7 +169,7 @@ const VolunteerSignUpForm = () => {
 
     if (validateForm()) {
       try {
-        await axios.post("http://localhost:3000/api/volunteer/volunteerSignUp", formData);
+        await axios.post(`${BaseURL}/api/volunteer/volunteerSignUp`, formData);
         alert("Volunteer signed up successfully! \nPress OK to return to the events page");
         setSubmissionStatus("success");
         navigate("/event");
@@ -204,7 +205,7 @@ const VolunteerSignUpForm = () => {
 
     try {
       console.log("Sending OTP request to server...");
-      const response = await axios.post("http://localhost:3000/api/otp/send-otp", {
+      const response = await axios.post(`${BaseURL}/api/otp/send-otp`, {
         email: formData.email,
         source: "volunteer",
       });
@@ -229,7 +230,7 @@ const VolunteerSignUpForm = () => {
 
     try {
       console.log("Submitting OTP to server...");
-      const response = await axios.post("http://localhost:3000/api/otp/verify-otp", { email: formData.email, otp });
+      const response = await axios.post(`${BaseURL}/api/otp/verify-otp`, { email: formData.email, otp });
       console.log("OTP verification response:", response.data);
 
       if (response.data.status === "success") {
@@ -344,7 +345,10 @@ const VolunteerSignUpForm = () => {
               onChange={handleChange}
               required
             />
-            I agree to abide by the <a href="/policy" target="_blank" rel="noopener noreferrer">policies and guidelines of Ottawa Tamil Sangam</a>
+            I agree to abide by the{" "}
+            <a href="/policy" target="_blank" rel="noopener noreferrer">
+              policies and guidelines of Ottawa Tamil Sangam
+            </a>
           </label>
           {errors.agreePolicies && <p className="error">{errors.agreePolicies}</p>}
           <label>

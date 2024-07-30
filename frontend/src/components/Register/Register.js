@@ -4,6 +4,7 @@ import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import Alert from "@mui/material/Alert";
 import OtpModal from "../Otp/OtpModal";
+import BaseURL from "../../config";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -78,7 +79,7 @@ const Register = () => {
 
     try {
       console.log("Sending OTP request to server...");
-      const response = await axios.post("http://localhost:3000/api/otp/send-otp", { email, source: "register" });
+      const response = await axios.post(`${BaseURL}/api/otp/send-otp`, { email, source: "register" });
       console.log("OTP response received:", response.data);
 
       if (response.data.status === "success") {
@@ -109,7 +110,7 @@ const Register = () => {
     console.log("OTP submitted:", otp);
 
     try {
-      const response = await axios.post("http://localhost:3000/api/otp/verify-otp", { email, otp });
+      const response = await axios.post(`${BaseURL}/api/otp/verify-otp`, { email, otp });
 
       if (response.data.status === "success") {
         console.log("OTP verified!");
@@ -155,7 +156,7 @@ const Register = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:3000/api/auth/signup", {
+      const response = await axios.post(`${BaseURL}/api/auth/signup`, {
         email,
         password,
       });

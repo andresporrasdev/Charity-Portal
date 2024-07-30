@@ -123,7 +123,7 @@ const AddPostForm = ({ open, onSave, onCancel, roleOptions }) => {
     if (roleIds.length > 0) {
       try {
         const emailPromises = roleIds.map((roleId) =>
-          axios.get(`http://localhost:3000/api/user/getUsersByRoleId/${roleId}`, {
+          axios.get(`${BaseURL}/api/user/getUsersByRoleId/${roleId}`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
@@ -241,7 +241,7 @@ const AddPostForm = ({ open, onSave, onCancel, roleOptions }) => {
           </Grid>
         </Grid>
       </DialogContent>
-      <DialogActions sx={{ display: "flex", justifyContent: "center", mb: 2, p: 0 }}>
+      <DialogActions sx={{ display: "flex", justifyContent: "center", mb: 2, p: 0, mt: 2 }}>
         <Button
           variant="contained"
           sx={{ backgroundColor: "#e88a1d", color: "#ffffff", "&:hover": { backgroundColor: "#e88a1d" } }}
