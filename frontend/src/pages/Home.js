@@ -4,13 +4,14 @@ import home1 from '../image/home1.jpg';
 import home2 from '../image/home2.jpg';
 import { fetchEvents } from '../components/Event/FetchEvent';
 import EventList from '../components/Event/EventList';
+import PostList from '../components/Post/PostList';
 import adImage1 from '../image/sponsor.jpeg';
-import newsImage1 from '../image/news.png';
 import './Home.css';
 
 function Home() {
     const [currentHome, setCurrentHome] = useState(1); // State to track the current home picture
     const [upcomingEvents, setUpcomingEvents] = useState([]);
+    const [posts, setPosts] = useState([]); 
 
     const prevHome = () => {
         setCurrentHome(1);
@@ -31,6 +32,15 @@ function Home() {
 
         fetchAndSetEvents();
     }, []);
+
+    //useEffect(() => {
+    //    const fetchPosts = async () => {
+    //        const postsData = await fetch('/api/posts').then(res => res.json());
+    //        setPosts(postsData);
+    //    };
+    //
+    //    fetchPosts();
+    //}, []);
 
     return (
         <div className="home-container">
@@ -77,27 +87,9 @@ function Home() {
             
             <div className="news">
                 <h2>News</h2>
-                <div className="news-item">
-                    <img src={newsImage1} alt="News 1" />
-                    <div className="news-text">
-                        <h3>Event A Successful</h3>
-                        <p>Our recent event was a great success, bringing together members of the community for a night of celebration and culture.</p>
-                    </div>
-                </div>
-                <div className="news-item">
-                    <img src={newsImage1} alt="News 1" />
-                    <div className="news-text">
-                        <h3>Event A Successful</h3>
-                        <p>Our recent event was a great success, bringing together members of the community for a night of celebration and culture.</p>
-                    </div>
-                </div>
-                <div className="news-item">
-                    <img src={newsImage1} alt="News 1" />
-                    <div className="news-text">
-                        <h3>Event A Successful</h3>
-                        <p>Our recent event was a great success, bringing together members of the community for a night of celebration and culture.</p>
-                    </div>
-                </div>
+                <PostList
+                    posts={posts.slice(0, 3)}
+                />
             </div>
 
         </div>
