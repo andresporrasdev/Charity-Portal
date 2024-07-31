@@ -7,80 +7,94 @@ body {
 .contact-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  width: 90%;
+  width: 100%;
   max-width: 800px;
-  margin: 40px auto;
-  padding: 40px;
+  margin: 20px auto;
+  padding: 20px;
   background: #fff;
   border-radius: 15px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   border: 1px solid #ddd;
-  animation: fadeIn 1s ease-in-out;
+  box-sizing: border-box; /* Ensure padding is included in the total width */
 }
 
 .contact-info {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
+  width: 100%;
+  padding: 20px;
+  background-color: #f3f4f6; /* Light background color */
+  border-radius: 10px;
+  box-sizing: border-box; /* Ensure padding is included in the total width */
 }
 
 .contact-info h1 {
-  font-size: 32px;
+  font-size: 28px;
   color: #e88a1d;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .contact-info p {
-  font-size: 18px;
+  font-size: 16px;
   color: #666;
+  word-wrap: break-word; /* Ensure long words break and wrap */
+  overflow-wrap: break-word; /* Ensure long words break and wrap */
+  margin: 0; /* Remove default margin */
+  padding: 0 10px; /* Add padding for spacing */
 }
-/* 
-.social-icons {
+
+.contact-container .social-icons {
   display: flex;
   justify-content: center;
-  gap: 20px;
-  font-size: 36px;
+  gap: 10px;
+  font-size: 20px;
   margin-top: 20px;
 }
 
-.social-icons a {
+.contact-container .social-icons a {
   color: #e88a1d;
   transition: color 0.3s;
 }
 
-.social-icons a:hover {
+.contact-container .social-icons a:hover {
   color: #e64a19;
-} */
+}
 
 .contact-form {
   width: 100%;
-  max-width: 600px;
+  padding: 20px;
+  background-color: #f3f4f6; /* Light background color */
+  border-radius: 10px;
+  box-sizing: border-box;
 }
 
 .contact-form form {
   display: flex;
   flex-direction: column;
+  width: 100%; /* Ensure the form takes up the full width */
 }
 
-.contact-container .input-box {
-  margin-bottom: 20px;
+.input-box {
+  margin-bottom: 15px;
 }
 
-.contact-container .input-box label {
-  font-size: 16px;
+.input-box label {
+  font-size: 14px;
   color: #666;
   margin-bottom: 5px;
+  display: block;
 }
 
 .contact-container .input-box input,
 .contact-container .input-box textarea {
   width: 100%;
-  padding: 15px;
-  font-size: 16px;
+  padding: 10px;
+  font-size: 14px;
   border: 1px solid #ddd;
   border-radius: 5px;
   transition: border-color 0.3s;
+  box-sizing: border-box; /* Ensure padding is included in the total width */
 }
 
 .contact-container .input-box input:focus,
@@ -89,14 +103,15 @@ body {
   outline: none;
 }
 
-.contact-container .input-box textarea {
-  height: 150px;
+.input-box textarea {
+  height: 120px; /* Ensure the textarea has sufficient height */
+  resize: vertical; /* Allow vertical resizing */
 }
 
 .contact-form button {
   width: 100%;
-  padding: 15px;
-  font-size: 18px;
+  padding: 10px;
+  font-size: 16px;
   color: #fff;
   background-color: #e88a1d;
   border: none;
@@ -122,7 +137,58 @@ body {
 /* Media Queries for Responsiveness */
 @media (max-width: 768px) {
   .contact-container {
+    width: calc(100% - 40px); /* Ensure the container takes up most of the screen with some padding */
+    padding: 15px;
+    margin: 20px auto;
+  }
+
+  .contact-info {
     padding: 20px;
+    box-sizing: border-box; /* Ensure padding is included in the total width */
+  }
+
+  .contact-form {
+    padding: 20px;
+    box-sizing: border-box; /* Ensure padding is included in the total width */
+  }
+
+  .contact-info h1 {
+    font-size: 24px;
+  }
+
+  .contact-info p,
+  .input-box label {
+    font-size: 14px;
+  }
+
+  .input-box input,
+  .input-box textarea {
+    font-size: 14px;
+  }
+
+  .social-icons {
+    font-size: 20px;
+    gap: 15px;
+  }
+
+  .contact-form button {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .contact-container {
+    padding: 25px;
+  }
+
+  .contact-info {
+    padding: 20px;
+    box-sizing: border-box; /* Ensure padding is included in the total width */
+  }
+
+  .contact-form {
+    padding: 20px;
+    box-sizing: border-box; /* Ensure padding is included in the total width */
   }
 
   .contact-info h1 {
@@ -136,6 +202,15 @@ body {
 
   .input-box input,
   .input-box textarea {
-    font-size: 14px;
+    font-size: 16px;
+  }
+
+  .social-icons {
+    font-size: 24px;
+    gap: 20px;
+  }
+
+  .contact-form button {
+    font-size: 16px;
   }
 }
