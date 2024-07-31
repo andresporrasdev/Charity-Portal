@@ -2,7 +2,7 @@ const User = require("../models/user");
 const Role = require("../models/role");
 const jwt = require("jsonwebtoken");
 const util = require("util");
-const sendEmail = require("./../utils/email");
+const { sendEmail } = require("./../utils/email");
 const crypto = require("crypto");
 const { encryptPassword } = require("../utils/encryption");
 
