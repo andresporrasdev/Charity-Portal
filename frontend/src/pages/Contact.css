@@ -5,13 +5,11 @@ body {
     padding: 0;
 }
 
-.contact-container,
-.membership-container {
+.contact-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    width: 90%;
+    width: 100%;
     max-width: 800px;
     margin: 20px auto;
     padding: 20px;
@@ -19,29 +17,32 @@ body {
     border-radius: 15px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     border: 1px solid #ddd;
-    animation: fadeIn 1s ease-in-out;
+    box-sizing: border-box; /* Ensure padding is included in the total width */
 }
 
-.contact-info,
-.membership-header {
+.contact-info {
     text-align: center;
     margin-bottom: 20px;
+    width: 100%;
+    padding: 20px;
+    background-color: #f3f4f6; /* Light background color */
+    border-radius: 10px;
+    box-sizing: border-box; /* Ensure padding is included in the total width */
 }
 
-.contact-info h1,
-.membership-header h1 {
+.contact-info h1 {
     font-size: 28px;
     color: #e88a1d;
     margin-bottom: 10px;
 }
 
-.contact-info p,
-.membership-header p,
-.membership-content p,
-.membership-content ul {
+.contact-info p {
     font-size: 16px;
     color: #666;
-    margin-bottom: 10px;
+    word-wrap: break-word; /* Ensure long words break and wrap */
+    overflow-wrap: break-word; /* Ensure long words break and wrap */
+    margin: 0; /* Remove default margin */
+    padding: 0 10px; /* Add padding for spacing */
 }
 
 .social-icons {
@@ -61,16 +62,18 @@ body {
     color: #e64a19;
 }
 
-.contact-form,
-.membership-content {
+.contact-form {
     width: 100%;
-    max-width: 600px;
+    padding: 20px;
+    background-color: #f3f4f6; /* Light background color */
+    border-radius: 10px;
+    box-sizing: border-box;
 }
 
-.contact-form form,
-.membership-content section {
+.contact-form form {
     display: flex;
     flex-direction: column;
+    width: 100%; /* Ensure the form takes up the full width */
 }
 
 .input-box {
@@ -81,6 +84,7 @@ body {
     font-size: 14px;
     color: #666;
     margin-bottom: 5px;
+    display: block;
 }
 
 .input-box input,
@@ -91,6 +95,7 @@ body {
     border: 1px solid #ddd;
     border-radius: 5px;
     transition: border-color 0.3s;
+    box-sizing: border-box; /* Ensure padding is included in the total width */
 }
 
 .input-box input:focus,
@@ -100,7 +105,8 @@ body {
 }
 
 .input-box textarea {
-    height: 120px;
+    height: 120px; /* Ensure the textarea has sufficient height */
+    resize: vertical; /* Allow vertical resizing */
 }
 
 .contact-form button {
@@ -119,23 +125,6 @@ body {
     background-color: #e64a19;
 }
 
-.membership-content h2 {
-    font-size: 24px;
-    color: #e88a1d;
-    border-bottom: 2px solid #e88a1d;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-}
-
-.membership-content ul {
-    list-style-type: none;
-    padding-left: 0;
-}
-
-.membership-content ul li {
-    margin-bottom: 5px;
-}
-
 /* Keyframes for fadeIn animation */
 @keyframes fadeIn {
     from {
@@ -148,69 +137,81 @@ body {
 
 /* Media Queries for Responsiveness */
 @media (max-width: 768px) {
-    .contact-container,
-    .membership-container {
+    .contact-container {
+        width: calc(100% - 40px); /* Ensure the container takes up most of the screen with some padding */
         padding: 15px;
+        margin: 20px auto;
     }
 
-    .contact-info h1,
-    .membership-header h1 {
+    .contact-info {
+        padding: 20px;
+        box-sizing: border-box; /* Ensure padding is included in the total width */
+    }
+
+    .contact-form {
+        padding: 20px;
+        box-sizing: border-box; /* Ensure padding is included in the total width */
+    }
+
+    .contact-info h1 {
         font-size: 24px;
     }
 
     .contact-info p,
-    .input-box label,
-    .membership-header p,
-    .membership-content p,
-    .membership-content ul {
+    .input-box label {
         font-size: 14px;
     }
 
     .input-box input,
     .input-box textarea {
-        font-size: 12px;
+        font-size: 14px;
     }
 
     .social-icons {
         font-size: 20px;
-        gap: 10px;
+        gap: 15px;
     }
 
-    .membership-content h2 {
-        font-size: 20px;
+    .contact-form button {
+        font-size: 14px;
     }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
-    .contact-container,
-    .membership-container {
+    .contact-container {
         padding: 25px;
     }
 
-    .contact-info h1,
-    .membership-header h1 {
+    .contact-info {
+        padding: 20px;
+        box-sizing: border-box; /* Ensure padding is included in the total width */
+    }
+
+    .contact-form {
+        padding: 20px;
+        box-sizing: border-box; /* Ensure padding is included in the total width */
+    }
+
+    .contact-info h1 {
         font-size: 28px;
     }
 
     .contact-info p,
-    .input-box label,
-    .membership-header p,
-    .membership-content p,
-    .membership-content ul {
+    .input-box label {
         font-size: 16px;
     }
 
     .input-box input,
     .input-box textarea {
-        font-size: 14px;
+        font-size: 16px;
     }
 
     .social-icons {
         font-size: 24px;
-        gap: 15px;
+        gap: 20px;
     }
 
-    .membership-content h2 {
-        font-size: 22px;
+    .contact-form button {
+        font-size: 16px;
     }
 }
