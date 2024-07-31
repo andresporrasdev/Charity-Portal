@@ -2,9 +2,10 @@ import React, { useState, useRef, useEffect, useContext } from "react";
 import "./Event.css";
 import { useNavigate } from "react-router-dom";
 import { FaEllipsisV } from "react-icons/fa";
-import { ROLES } from "../../UserContext";
+import { UserContext, ROLES } from "../../UserContext";
 
-const EventCard = ({ event, onEdit, onDelete, onViewDetails, hideActions, user }) => {
+const EventCard = ({ event, onEdit, onDelete, onViewDetails, hideActions }) => {
+  const { user } = useContext(UserContext);
   const [showMenu, setShowMenu] = useState(false);
   const { name, time, place, pricePublic, priceMember, isMemberOnly, imageUrl } = event;
   const formattedTime = time.replace("T", " ");

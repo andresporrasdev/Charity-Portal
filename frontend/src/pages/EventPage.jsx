@@ -104,7 +104,6 @@ const EventPage = () => {
           onEdit={handleEditEvent}
           onDelete={handleDeleteEvent}
           onViewDetails={handleViewDetails}
-          user={user}
         />
       </section>
       <section className="past-events-section">
@@ -115,7 +114,6 @@ const EventPage = () => {
           onDelete={handleDeleteEvent}
           onViewDetails={handleViewDetails}
           hideActions={true}
-          user={user}
         />
         <Link to="/past-events" className="more-link">
           See All Past Events

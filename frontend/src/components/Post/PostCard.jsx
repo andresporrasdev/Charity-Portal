@@ -1,7 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import "./Post.css";
 import { FaEllipsisV, FaTimes } from "react-icons/fa";
-import { ROLES } from "../../UserContext";
+import { UserContext, ROLES } from "../../UserContext";
 import FiberNewOutlinedIcon from "@mui/icons-material/FiberNewOutlined";
 import defaultImageSrc from "./defaultPic.png";
 
@@ -18,7 +18,8 @@ const extractTextSnippet = (content, length = 100) => {
   return div.textContent.substring(0, length) + "...";
 };
 
-const PostCard = ({ post, onEdit, onDelete, user }) => {
+const PostCard = ({ post, onEdit, onDelete }) => {
+  const { user } = useContext(UserContext);
   const [showMenu, setShowMenu] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const { subject, content, updated } = post;
@@ -48,6 +49,20 @@ const PostCard = ({ post, onEdit, onDelete, user }) => {
     const weeksAgo = new Date(now.setDate(now.getDate() - 7));
     return postDate >= weeksAgo;
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuRef]);
 
   return (
     <div className="post-card">
