@@ -30,7 +30,7 @@ const adjustLineHeight = (html) => {
   const style = `
     <style>
       p {
-        line-height: 1.0;
+        line-height: 1.2;
       }
     </style>
   `;
