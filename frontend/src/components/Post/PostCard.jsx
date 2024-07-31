@@ -3,6 +3,7 @@ import "./Post.css";
 import { FaEllipsisV, FaTimes } from "react-icons/fa";
 import { ROLES } from "../../UserContext";
 import FiberNewOutlinedIcon from "@mui/icons-material/FiberNewOutlined";
+import defaultImageSrc from "./defaultPic.png";
 
 const getImageSrcFromContent = (content) => {
   const div = document.createElement("div");
@@ -50,7 +51,7 @@ const PostCard = ({ post, onEdit, onDelete, user }) => {
 
   return (
     <div className="post-card">
-      {imageSrc && <img src={imageSrc} alt="Post Image" />}
+      <img src={imageSrc || defaultImageSrc} alt="Post Image" />
       <div className="post-details">
         <h3>
           {subject} {isNewPost() && <FiberNewOutlinedIcon color="primary" fontSize="large" />}
