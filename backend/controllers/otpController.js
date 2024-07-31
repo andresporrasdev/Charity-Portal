@@ -1,6 +1,6 @@
 const Otp = require("../models/otp");
 const User = require("../models/user");
-const sendEmail = require("./../utils/email");
+const { sendEmail } = require("./../utils/email");
 
 const generateNumericOTP = (length) => {
   let otp = "";
@@ -76,17 +76,22 @@ exports.sendOtp = async (req, res) => {
       }
     } else if (source === "register") {
       // Logic specific to register page
+      console.log("Register page");
       const query = User.findOne({ email });
       query._activeFilterDisabled = true;
       existingUser = await query.lean();
 
       if (existingUser && existingUser.isActive && existingUser.password) {
+        console.log("Register page2");
+
         return res.status(200).json({
           status: "fail",
           message: "User already exists. Please login with your credential.",
           data: existingUser,
         });
       } else if (existingUser && existingUser.isPaid === false) {
+        console.log("Register page3");
+
         return res.status(200).json({
           status: "fail",
           message: "Please purchase membership again to renew your membership.",
@@ -94,6 +99,8 @@ exports.sendOtp = async (req, res) => {
           link: "/membership",
         });
       } else if (!existingUser) {
+        console.log("Register page4");
+
         return res.status(200).json({
           status: "fail",
           message: "Please purchase a membership to become a member before signing up.",
@@ -101,6 +108,8 @@ exports.sendOtp = async (req, res) => {
           link: "/membership",
         });
       } else {
+        console.log("Register page5");
+
         return await sendOtpAndRespond();
       }
     }
