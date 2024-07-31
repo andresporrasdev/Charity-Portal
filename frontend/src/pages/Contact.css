@@ -29,7 +29,7 @@ body {
   box-sizing: border-box; /* Ensure padding is included in the total width */
 }
 
-.contact-info h1 {
+.contact-container h1 {
   font-size: 28px;
   color: #e88a1d;
   margin-bottom: 10px;

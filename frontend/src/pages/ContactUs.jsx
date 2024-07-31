@@ -5,8 +5,8 @@ import { FaFacebook, FaInstagram } from "react-icons/fa";
 function ContactUs() {
   return (
     <div className="contact-container">
+      <h1>Contact us</h1>
       <div className="contact-info">
-        <h1>Contact us</h1>
         <p>
           We would love to hear your thoughts and suggestions! Feel free to drop us an email at{" "}
           <strong>ottawatamilsangam@gmail.com</strong>
@@ -26,7 +26,7 @@ function ContactUs() {
       <div className="contact-form">
         <form>
           <div className="input-box">
-            <label htmlFor="lastName"> Name (required)</label>
+            <label htmlFor="lastName">Name (required)</label>
             <input type="text" id="name" placeholder="name" required />
           </div>
           <div className="input-box">
