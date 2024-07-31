@@ -100,7 +100,7 @@ function Home() {
 
       <div className="news">
         <h2>News</h2>
-        <PostList posts={posts.slice(0, 3)} />
+        <PostList posts={posts.slice(0, 3).reverse()} />
       </div>
     </div>
   );
