@@ -6,9 +6,8 @@ function Membership() {
     <div className="membership-container">
       <div className="membership-header">
         <h1>Become a Member!</h1>
-        <p>
-          Join our growing family! There are tons of benefits for becoming a member, hope you join us in our adventures!
-        </p>
+        <p>Join our growing family!</p>
+        <p> There are tons of benefits for becoming a member, hope you join us in our adventures!</p>
       </div>
       <div className="membership-content">
         <section>
