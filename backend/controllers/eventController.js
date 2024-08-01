@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const Event = require("../models/event");
 const { upload, multerErrorHandling } = require("../utils/uploads"); // Import from uploads.js
 const path = require("path");
+const config = require("../config"); // Import the config file
 
 // Route to handle file upload
 async function handleFileUpload(req, res) {
@@ -12,7 +13,7 @@ async function handleFileUpload(req, res) {
     const filename = path.basename(req.file.path);
 
     // Construct the new URL
-    const imageUrl = `http://localhost:3000/images/${filename}`;
+    const imageUrl = `${config.baseURL}/images/${filename}`;
 
     // Use the new imageUrl in the response
     res.status(200).json({
