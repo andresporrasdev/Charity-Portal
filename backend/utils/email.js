@@ -60,7 +60,10 @@ const sendEmail = async (options) => {
     return results;
   } catch (error) {
     console.error("Error sending email:", error);
-    return error;
+    return res.status(500).json({
+      status: "error",
+      message: "An error occurred while processing the request",
+    });
   }
 };
 

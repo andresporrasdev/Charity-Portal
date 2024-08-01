@@ -37,8 +37,11 @@ const sendOTPByEmail = async (email, otp) => {
     await sendEmail(mailOptions);
     return otp;
   } catch (error) {
-    console.error("Error sending OTP:", error);
-    throw error;
+    console.error("Error sending OTP by email:", error);
+    return res.status(500).json({
+      status: "error",
+      message: "An error occurred while processing the request",
+    });
   }
 };
 

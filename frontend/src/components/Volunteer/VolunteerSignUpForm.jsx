@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom"; //Use navigate to redirect to an
 import OtpModal from "../Otp/OtpModal";
 import { UserContext } from "../../UserContext";
 import BaseURL from "../../config";
+import { toast, ToastContainer } from "react-toastify";
 
 const VolunteerSignUpForm = () => {
   const navigate = useNavigate();
@@ -214,11 +215,11 @@ const VolunteerSignUpForm = () => {
       if (response.data.status === "success") {
         setShowOtpModal(true);
       } else if (response.data.status === "fail") {
-        setVerifyError(response.data.message);
+        toast.error(response.data.message);
         console.error("Failed to send OTP:", response.data.message);
       }
     } catch (error) {
-      setVerifyError(error.response.data.message);
+      toast.error(error.response.data.message);
       console.error("Error sending OTP:", error);
     } finally {
       setLoading(false);
@@ -380,6 +381,7 @@ const VolunteerSignUpForm = () => {
           setShowOtpModal={setShowOtpModal}
         />
       )}
+      <ToastContainer />
     </div>
   );
 };
