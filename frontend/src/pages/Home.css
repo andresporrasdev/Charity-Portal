@@ -80,7 +80,7 @@ h2 {
 
 .ads {
     background-color: #ffffff;
-    border-radius: 3%;
+        border-radius: 3%;
 
 }
 
@@ -91,9 +91,26 @@ h2 {
 
 .ads-container {
     display: flex;
-    overflow-x: scroll;
+    overflow-x: scroll; /* Ensure the scrollbar is always visible */
     padding: 30px 0;
+    scrollbar-width: thin; /* For Firefox */
+    scrollbar-color: #e88a1d #ffffff; /* For Firefox */
+}
 
+/* For WebKit browsers (Chrome, Safari) */
+.ads-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.ads-container::-webkit-scrollbar-track {
+    background: #ffffff;
+    border-radius: 10px;
+}
+
+.ads-container::-webkit-scrollbar-thumb {
+    background-color: #e88a1d;
+    border-radius: 10px;
+    border: 2px solid #ffffff;
 }
 
 .ads-container img {
