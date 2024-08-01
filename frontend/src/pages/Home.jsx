@@ -107,41 +107,41 @@ function Home() {
         <h2>Gold Sponsors</h2>
         <div className="ads-container">
         <a href="http://www.kulosmortgages.ca/" target="_blank" rel="noopener noreferrer">
-          <img src={GoldSponsor1} alt="Sponsor" />
+          <img src={GoldSponsor1} alt="GoldSponsor1" />
           </a>
           <a href="https://www.dtdcottawa.com/" target="_blank" rel="noopener noreferrer">
-          <img src={GoldSponsor2} alt="Sponsor" />
+          <img src={GoldSponsor2} alt="GoldSponsor2" />
           </a>
           <a href="https://www.suanrealestate.com/" target="_blank" rel="noopener noreferrer">
-          <img src={GoldSponsor3} alt="Sponsor" />
+          <img src={GoldSponsor3} alt="GoldSponsor3" />
           </a>
           <a href="https://thanjaigroup.com/" target="_blank" rel="noopener noreferrer">
-          <img src={GoldSponsor4} alt="Sponsor" />
+          <img src={GoldSponsor4} alt="GoldSponsor4" />
           </a>
-          <img src={GoldSponsor5} alt="Sponsor" />
+          <img src={GoldSponsor5} alt="GoldSponsor5" />
         </div>
         <h2>Silver Sponsors</h2>
         <div className="ads-container">
         <a href="https://www.facebook.com/spiceworldkanata/" target="_blank" rel="noopener noreferrer">
-          <img src={SilverSponsor1} alt="Sponsor" />
+          <img src={SilverSponsor1} alt="SilverSponsor1" />
           </a>
           <a href="https://wowindiarestaurants.ca/menu-ottawa.html" target="_blank" rel="noopener noreferrer">
-          <img src={SilverSponsor2} alt="Sponsor" />
+          <img src={SilverSponsor2} alt="SilverSponsor2" />
           </a>
           <a href="http://www.curryandkebabhouse.ca/" target="_blank" rel="noopener noreferrer">
-          <img src={SilverSponsor3} alt="Sponsor" />
+          <img src={SilverSponsor3} alt="SilverSponsor3" />
           </a>
         </div>
         <h2>Bronze Sponsors</h2>
         <div className="ads-container">
         <a href="https://www.facebook.com/NishaJewelleryDesigns4Ever/" target="_blank" rel="noopener noreferrer">
-          <img src={BronzeSponsor1} alt="Sponsor" />
+          <img src={BronzeSponsor1} alt="BronzeSponsor1" />
           </a>
           <a href="https://www.google.com/maps/place/Priya+Medical+Centre/@45.3427474,-75.7621741,17z/data=!3m1!5s0x4cce073d63755487:0x430203c26e4f45e5!4m15!1m8!3m7!1s0x4cce07b0d45127e7:0x84edf559acbcddba!2sPriya+Medical+Centre!8m2!3d45.3427753!4d-75.7624218!10e5!16s%2Fg%2F11fsnpcrtm!3m5!1s0x4cce07b0d45127e7:0x84edf559acbcddba!8m2!3d45.3427753!4d-75.7624218!16s%2Fg%2F11fsnpcrtm?entry=ttu" target="_blank" rel="noopener noreferrer">
-          <img src={BronzeSponsor2} alt="Sponsor" />
+          <img src={BronzeSponsor2} alt="BronzeSponsor2" />
           </a>
           <a href="http://www.curryandkebabhouse.ca/" target="_blank" rel="noopener noreferrer">
-          <img src={BronzeSponsor3} alt="Sponsor" />
+          <img src={BronzeSponsor3} alt="BronzeSponsor3" />
           </a>
         </div>
       </div>
