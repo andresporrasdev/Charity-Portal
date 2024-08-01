@@ -5,7 +5,19 @@ import home2 from "../image/home2.jpg";
 import { fetchEvents } from "../components/Event/FetchEvent";
 import EventList from "../components/Event/EventList";
 import PostList from "../components/Post/PostList";
-import adImage1 from "../image/sponsor.jpeg";
+import GoldSponsor1 from "../image/sponsors/Gold/GoldSponsor1.JPG";
+import GoldSponsor2 from "../image/sponsors/Gold/GoldSponsor2.png";
+import GoldSponsor3 from "../image/sponsors/Gold/GoldSponsor3.png";
+import GoldSponsor4 from "../image/sponsors/Gold/GoldSponsor4.jpeg";
+import GoldSponsor5 from "../image/sponsors/Gold/GoldSponsor5.png";
+import SilverSponsor1 from "../image/sponsors/Silver/SilverSponsor1.jpg";
+import SilverSponsor2 from "../image/sponsors/Silver/SilverSponsor2.png";
+import SilverSponsor3 from "../image/sponsors/Silver/SilverSponsor3.png";
+import BronzeSponsor1 from "../image/sponsors/Bronze/BronzeSponsor1.jpg";
+import BronzeSponsor2 from "../image/sponsors/Bronze/BronzeSponsor2.jpg";
+import BronzeSponsor3 from "../image/sponsors/Bronze/BronzeSponsor3.jpg";
+ 
+
 import "./Home.css";
 import BaseURL from "../config";
 import axios from "axios";
@@ -85,22 +97,33 @@ function Home() {
         />
       </div>
 
-      <div className="ads">
-        <div className="ads-container">
-          <img src={adImage1} alt="Sponsor" />
-          <img src={adImage1} alt="Sponsor" />
-          <img src={adImage1} alt="Sponsor" />
-          <img src={adImage1} alt="Sponsor" />
-          <img src={adImage1} alt="Sponsor" />
-          <img src={adImage1} alt="Sponsor" />
-          <img src={adImage1} alt="Sponsor" />
-          <img src={adImage1} alt="Sponsor" />
-        </div>
-      </div>
+
 
       <div className="news">
         <h2>News</h2>
         <PostList posts={posts.slice(0, 3).reverse()} />
+      </div>
+      <div className="ads">
+        <h2>Gold Sponsors</h2>
+        <div className="ads-container">
+          <img src={GoldSponsor1} alt="Sponsor" />
+          <img src={GoldSponsor2} alt="Sponsor" />
+          <img src={GoldSponsor3} alt="Sponsor" />
+          <img src={GoldSponsor4} alt="Sponsor" />
+          <img src={GoldSponsor5} alt="Sponsor" />
+        </div>
+        <h2>Silver Sponsors</h2>
+        <div className="ads-container">
+          <img src={SilverSponsor1} alt="Sponsor" />
+          <img src={SilverSponsor2} alt="Sponsor" />
+          <img src={SilverSponsor3} alt="Sponsor" />
+        </div>
+        <h2>Bronze Sponsors</h2>
+        <div className="ads-container">
+          <img src={BronzeSponsor1} alt="Sponsor" />
+          <img src={BronzeSponsor2} alt="Sponsor" />
+          <img src={BronzeSponsor3} alt="Sponsor" />
+        </div>
       </div>
     </div>
   );

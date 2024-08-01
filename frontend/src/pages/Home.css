@@ -79,17 +79,21 @@ h2 {
 }
 
 .ads {
-    background-color: #fff3b7;
+    background-color: #ffffff;
+    border-radius: 3%;
+
 }
 
 .ads h2 {
     text-align: center;
+
 }
 
 .ads-container {
     display: flex;
     overflow-x: scroll;
     padding: 30px 0;
+
 }
 
 .ads-container img {
