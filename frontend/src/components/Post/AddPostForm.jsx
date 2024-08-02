@@ -161,12 +161,12 @@ const AddPostForm = ({ open, onSave, onCancel, roleOptions }) => {
       aria-labelledby="notify-volunteers-dialog"
       sx={{ minHeight: "100vh", maxHeight: "80vh" }}
     >
-      <DialogTitle>Publish News</DialogTitle>
+      <DialogTitle>Add News</DialogTitle>
       <DialogContent sx={{ minHeight: "40vh" }}>
         <Grid container spacing={1}>
           <Grid item xs={12} mt={1}>
             <Alert severity="info">
-              Select roles to notify. If none are selected, the post will be public and not sent to any members.
+              Select roles to notify. If none are selected, the news will be public and not sent to any members.
             </Alert>
           </Grid>
           <Grid item xs={12} mt={1}>
@@ -248,7 +248,7 @@ const AddPostForm = ({ open, onSave, onCancel, roleOptions }) => {
           onClick={handleSubmit}
           disabled={loading}
         >
-          {loading ? <CircularProgress size={24} /> : "Post"}
+          {loading ? <CircularProgress size={24} /> : "Send & Save"}
         </Button>
         <Button
           onClick={onCancel}

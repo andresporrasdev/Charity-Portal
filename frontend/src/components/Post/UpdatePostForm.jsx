@@ -204,7 +204,7 @@ const UpdatePostForm = ({ post, open, onSave, onCancel, roleOptions }) => {
       aria-labelledby="notify-volunteers-dialog"
       sx={{ minHeight: "100vh", maxHeight: "80vh" }}
     >
-      <DialogTitle>Update News</DialogTitle>
+      <DialogTitle>Edit News</DialogTitle>
       <DialogContent sx={{ minHeight: "40vh" }}>
         <Grid container spacing={1}>
           <Grid item xs={12} mt={1}>
@@ -296,7 +296,7 @@ const UpdatePostForm = ({ post, open, onSave, onCancel, roleOptions }) => {
           sx={{ backgroundColor: "#e88a1d", color: "#ffffff", "&:hover": { backgroundColor: "#e88a1d" } }}
           onClick={handleSubmit}
         >
-          Update
+          Save
         </Button>
         <Button
           onClick={onCancel}

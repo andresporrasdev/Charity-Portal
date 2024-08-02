@@ -6,6 +6,7 @@ import "../components/Post/Post.css";
 import axios from "axios";
 import { UserContext, ROLES } from "../UserContext";
 import BaseURL from "../config";
+import ConfirmModal from "../components/ConfirmModal.jsx";
 
 const PostPage = () => {
   const { user } = useContext(UserContext);
@@ -13,6 +14,8 @@ const PostPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [currentPost, setCurrentPost] = useState(null);
   const [roleOptions, setRoleOptions] = useState([]);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [postToDelete, setPostToDelete] = useState(null);
 
   const fetchAndSetPosts = async () => {
     const postsData = user ? await fetchPostsbyRole() : await fetchPostsForNonMember();
@@ -69,6 +72,11 @@ const PostPage = () => {
     setShowModal(true);
   };
 
+  const handleDeletePost = (id) => {
+    setPostToDelete(id);
+    setConfirmModalOpen(true);
+  };
+
   const handleCloseModal = () => {
     setShowModal(false);
     setCurrentPost(null);
@@ -100,11 +108,13 @@ const PostPage = () => {
     }
   };
 
-  const handleDeletePost = async (id) => {
+  const confirmDeletePost = async () => {
     try {
-      await axios.delete(`${BaseURL}/api/post/deletePost/${id}`);
-      console.log("post deleted", id);
-      setPosts(posts.filter((p) => p._id !== id));
+      await axios.delete(`${BaseURL}/api/post/deletePost/${postToDelete}`);
+      console.log("post deleted", postToDelete);
+      setPosts(posts.filter((p) => p._id !== postToDelete));
+      setConfirmModalOpen(false);
+      setPostToDelete(null);
     } catch (error) {
       console.error("Error deleting post:", error);
     }
@@ -118,7 +128,7 @@ const PostPage = () => {
     <div className="post-page">
       {user?.roles.includes(ROLES.ADMIN) && (
         <button className="add-post-button" onClick={handleAddPost}>
-          Add Post
+          Add News
         </button>
       )}
       <section>
@@ -155,6 +165,14 @@ const PostPage = () => {
           </div>
         </div>
       )}
+      <ConfirmModal
+        title="Confirm Delete"
+        text="Are you sure you want to delete this news? Please type 'DELETE' to confirm."
+        open={confirmModalOpen}
+        onConfirm={confirmDeletePost}
+        onClose={() => setConfirmModalOpen(false)}
+        confirmWord="DELETE"
+      />
     </div>
   );
 };

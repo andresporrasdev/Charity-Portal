@@ -21,6 +21,7 @@ import {
   Typography,
   CircularProgress,
 } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
 
 const NotifyVolunteerForm = ({ open, onClose }) => {
   const [subject, setSubject] = useState("");
@@ -247,19 +248,22 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
           </Grid>
         </Grid>
       </DialogContent>
-      <DialogActions sx={{ display: "flex", justifyContent: "center", mb: 2, p: 0, mt: 2 }}>
+      <DialogActions sx={{ display: "flex", justifyContent: "space-between", mb: 2, p: 0, mt: 2 }}>
         <Button
           variant="contained"
-          sx={{ backgroundColor: "#e88a1d", color: "#ffffff", "&:hover": { backgroundColor: "#e88a1d" } }}
+          color="primary"
+          startIcon={<SendIcon />}
           onClick={handleSubmit}
           disabled={loading}
+          sx={{ ml: 3 }}
         >
-          {loading ? <CircularProgress size={24} /> : "Publish"}
+          {loading ? <CircularProgress size={24} /> : "Send Email"}
         </Button>
+        <div style={{ flexGrow: 1 }} />
         <Button
           onClick={onClose}
           variant="contained"
-          sx={{ backgroundColor: "#e88a1d", color: "#ffffff", "&:hover": { backgroundColor: "#e88a1d" } }}
+          sx={{ backgroundColor: "#e88a1d", color: "#ffffff", "&:hover": { backgroundColor: "#e88a1d" }, mr: 4 }}
         >
           Cancel
         </Button>

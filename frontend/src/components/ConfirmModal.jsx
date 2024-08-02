@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
 
 const ConfirmModal = ({ title, text, open, onConfirm, onClose, confirmWord }) => {
@@ -32,11 +32,16 @@ const ConfirmModal = ({ title, text, open, onConfirm, onClose, confirmWord }) =>
           fullWidth
           value={inputValue}
           onChange={handleInputChange}
+          sx={{ mt: 3 }}
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleConfirm} disabled={inputValue !== confirmWord}>Delete</Button>
-        <Button onClick={onClose} autoFocus>Cancel</Button>
+        <Button onClick={handleConfirm} disabled={inputValue !== confirmWord}>
+          Delete
+        </Button>
+        <Button onClick={onClose} autoFocus>
+          Cancel
+        </Button>
       </DialogActions>
     </Dialog>
   );
