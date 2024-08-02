@@ -72,7 +72,7 @@
   justify-items: center;
 }
 
-.events h2 {
+h2 {
   color: #e88a1d;
   margin-bottom: 30px;
   font-size: 36px;
@@ -91,7 +91,7 @@
 
 .ads-container {
   display: flex;
-  overflow-x: scroll; /* Ensure the scrollbar is always visible */
+  flex-wrap: wrap;
   scrollbar-width: thin; /* For Firefox */
   scrollbar-color: #e88a1d #fff3b7; /* For Firefox */
   justify-content: center;
@@ -117,6 +117,7 @@
   width: 250px;
   height: 150px;
   margin-right: 10px;
+  margin-bottom: 10px;
 }
 
 .news {
@@ -190,5 +191,17 @@ footer p {
 
   .event-buttons img {
     aspect-ratio: 3 / 5;
+  }
+  .ads-container {
+    overflow-x: unset;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .ads-container img {
+    width: 200px;
+    height: auto;
+    margin-right: 10px;
+    margin-bottom: 10px;
   }
 }
