@@ -8,6 +8,7 @@ const volunteerRouter = require("./routes/volunteer");
 const roleRouter = require("./routes/role");
 const volunteerRolesRouter = require("./routes/volunteerRoleRouter");
 const postRouter = require("./routes/postRouter");
+const contactRouter = require("./routes/contactRouter");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
@@ -31,5 +32,6 @@ app.use("/api/volunteer", volunteerRouter);
 app.use("/api/role", roleRouter);
 app.use("/api/volunteerRole", volunteerRolesRouter);
 app.use("/api/post", postRouter);
+app.use("/api/contact", contactRouter);
 
 module.exports = app;

@@ -1,8 +1,48 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Contact.css";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
+import Alert from "@mui/material/Alert";
+import BaseURL from "../config";
+
 
 function ContactUs() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const [alert, setAlert] = useState({ message: "", type: "" });
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`${BaseURL}/api/contact/contact`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      if (response.ok) {
+        setAlert({ message: "Message sent successfully!", type: "success" });
+      } else {
+        setAlert({ message: "Failed to send message.", type: "error" });
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setAlert({ message: "An error occurred while sending the message.", type: "error" });
+    }
+  };
+
   return (
     <div className="contact-container">
       <h1>Contact us</h1>
@@ -24,21 +64,26 @@ function ContactUs() {
         </div>
       </div>
       <div className="contact-form">
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="input-box">
-            <label htmlFor="lastName">Name (required)</label>
-            <input type="text" id="name" placeholder="name" required />
+            <label htmlFor="name">Name (required)</label>
+            <input type="text" id="name" placeholder="name" required value={formData.name} onChange={handleChange} />
           </div>
           <div className="input-box">
             <label htmlFor="email">Email (required)</label>
-            <input type="email" id="email" placeholder="Email" required />
+            <input type="email" id="email" placeholder="Email" required value={formData.email} onChange={handleChange} />
           </div>
           <div className="input-box">
             <label htmlFor="message">Message (required)</label>
-            <textarea id="message" placeholder="Enter your message" required></textarea>
+            <textarea id="message" placeholder="Enter your message" required value={formData.message} onChange={handleChange}></textarea>
           </div>
           <button type="submit">Send</button>
         </form>
+        {alert.message && (
+          <Alert severity={alert.type} style={{ marginTop: "20px" }}>
+            {alert.message}
+          </Alert>
+        )}
       </div>
     </div>
   );
