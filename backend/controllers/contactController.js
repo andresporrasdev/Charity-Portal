@@ -11,8 +11,8 @@ exports.sendContactEmail = async (req, res) => {
   };
 
   const adminNotificationEmail = {
-    email: "ottawatamilsangam@gmail.com",
-    subject: "New Contact Us Form Submission",
+    email: process.env.SENDING_ADDRESS,
+    subject: `New Message from ${name} via Contact Form`,
     text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
     html: `<p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Message:</strong> ${message}</p>`,
   };
