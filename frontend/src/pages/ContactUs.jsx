@@ -3,7 +3,7 @@ import "./Contact.css";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
 import Alert from "@mui/material/Alert";
 import BaseURL from "../config";
-
+import { CircularProgress } from "@mui/material";
 
 function ContactUs() {
   const [formData, setFormData] = useState({
@@ -13,6 +13,7 @@ function ContactUs() {
   });
 
   const [alert, setAlert] = useState({ message: "", type: "" });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -24,8 +25,9 @@ function ContactUs() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      const response = await fetch(`${BaseURL}/api/contact/contact`, {
+      const response = await fetch(`${BaseURL}/api/contact/send-contact-email`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -40,6 +42,8 @@ function ContactUs() {
     } catch (error) {
       console.error("Error:", error);
       setAlert({ message: "An error occurred while sending the message.", type: "error" });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -71,13 +75,28 @@ function ContactUs() {
           </div>
           <div className="input-box">
             <label htmlFor="email">Email (required)</label>
-            <input type="email" id="email" placeholder="Email" required value={formData.email} onChange={handleChange} />
+            <input
+              type="email"
+              id="email"
+              placeholder="Email"
+              required
+              value={formData.email}
+              onChange={handleChange}
+            />
           </div>
           <div className="input-box">
             <label htmlFor="message">Message (required)</label>
-            <textarea id="message" placeholder="Enter your message" required value={formData.message} onChange={handleChange}></textarea>
+            <textarea
+              id="message"
+              placeholder="Enter your message"
+              required
+              value={formData.message}
+              onChange={handleChange}
+            ></textarea>
           </div>
-          <button type="submit">Send</button>
+          <button type="submit" disabled={loading}>
+            {loading ? <CircularProgress size={24} /> : "Send Email"}
+          </button>
         </form>
         {alert.message && (
           <Alert severity={alert.type} style={{ marginTop: "20px" }}>

@@ -1,6 +1,6 @@
 const { sendEmail } = require("../utils/email");
 
-exports.contact = async (req, res) => {
+exports.sendContactEmail = async (req, res) => {
   const { name, email, message } = req.body;
 
   const userConfirmationEmail = {
