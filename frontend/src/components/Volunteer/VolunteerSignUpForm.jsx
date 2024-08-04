@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import "./VolunteerSignUpForm.css";
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom"; //Use navigate to redirect to another page
+import { useLocation, useNavigate } from "react-router-dom";
 import OtpModal from "../Otp/OtpModal";
 import { UserContext } from "../../UserContext";
 import BaseURL from "../../config";
@@ -64,15 +63,10 @@ const VolunteerSignUpForm = () => {
       console.log("No token found, user not logged in");
     }
 
-    // Fetch voluntter Roles from the backend
-
     const fetchVolunteerRoles = async () => {
       try {
         const response = await axios.get(`${BaseURL}/api/volunteerRole/getAllVolunteerRoles`);
-        setRoles(response.data.data.roles); // Assuming the API response structure is { data: { roles: [...] } }
-        // ...prevFormData,
-        //   preferredRole: `${response.data.data.name}`,
-        // }));
+        setRoles(response.data.data.roles);
       } catch (error) {
         console.error("Error fetching volunteer roles:", error);
       }

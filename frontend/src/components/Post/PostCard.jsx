@@ -3,7 +3,7 @@ import "./Post.css";
 import { FaEllipsisV, FaTimes } from "react-icons/fa";
 import { UserContext, ROLES } from "../../UserContext";
 import FiberNewOutlinedIcon from "@mui/icons-material/FiberNewOutlined";
-import defaultImageSrc from "./defaultPic.png";
+import defaultImageSrc from "../../image/defaultPostPic.png";
 
 const getImageSrcFromContent = (content) => {
   const div = document.createElement("div");

@@ -62,22 +62,22 @@ const PostPage = () => {
     }
   };
 
-  const handleAddPost = () => {
+  const showAddPostModal = () => {
     setCurrentPost(null);
     setShowModal(true);
   };
 
-  const handleEditPost = (post) => {
+  const showEditPostModal = (post) => {
     setCurrentPost(post);
     setShowModal(true);
   };
 
-  const handleDeletePost = (id) => {
+  const showDeletePostConfirmModal = (id) => {
     setPostToDelete(id);
     setConfirmModalOpen(true);
   };
 
-  const handleCloseModal = () => {
+  const closePostModal = () => {
     setShowModal(false);
     setCurrentPost(null);
   };
@@ -88,7 +88,7 @@ const PostPage = () => {
       console.log("Post saved successfully:", response.data);
       setPosts([...posts, response.data]);
       fetchAndSetPosts(); // After adding a post, fetch the list of posts again
-      handleCloseModal();
+      closePostModal();
     } catch (error) {
       console.error("Error saving post:", error);
     }
@@ -101,7 +101,7 @@ const PostPage = () => {
       console.log("post", updatedPost);
       await axios.patch(updateUrl, updatedPost);
       setPosts(posts.map((p) => (p._id === updatedPost._id ? updatedPost : p)));
-      handleCloseModal();
+      closePostModal();
       console.log("post updated", updatedPost);
     } catch (error) {
       console.error("Error updating post:", error);
@@ -127,7 +127,7 @@ const PostPage = () => {
   return (
     <div className="post-page">
       {user?.roles.includes(ROLES.ADMIN) && (
-        <button className="add-post-button" onClick={handleAddPost}>
+        <button className="add-post-button" onClick={showAddPostModal}>
           Add News
         </button>
       )}
@@ -135,30 +135,30 @@ const PostPage = () => {
         <h2>Lastest News</h2>
         <PostList
           posts={upcomingPosts.map((post) => ({ ...post }))}
-          onEdit={handleEditPost}
-          onDelete={handleDeletePost}
+          onEdit={showEditPostModal}
+          onDelete={showDeletePostConfirmModal}
           user={user}
         />
       </section>
       {showModal && (
-        <div className="add_edit_post_modal" onClick={handleCloseModal}>
+        <div className="add_edit_post_modal" onClick={closePostModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <span className="close" onClick={handleCloseModal}>
+            <span className="close" onClick={closePostModal}>
               &times;
             </span>
             {currentPost ? (
               <UpdatePostForm
                 post={currentPost}
-                open={handleEditPost}
+                open={showEditPostModal}
                 onSave={handleUpdatePost}
-                onCancel={handleCloseModal}
+                onCancel={closePostModal}
                 roleOptions={roleOptions}
               />
             ) : (
               <AddPostForm
-                open={handleAddPost}
+                open={showAddPostModal}
                 onSave={handleSavePost}
-                onCancel={handleCloseModal}
+                onCancel={closePostModal}
                 roleOptions={roleOptions}
               />
             )}

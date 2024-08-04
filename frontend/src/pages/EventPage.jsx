@@ -19,21 +19,21 @@ const EventPage = () => {
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [eventToDelete, setEventToDelete] = useState(null);
 
-  useEffect(() => {
-    const fetchAndSetEvents = async () => {
-      const eventsData = await fetchEvents();
-      setEvents(eventsData);
-    };
+  const fetchAndSetEvents = async () => {
+    const eventsData = await fetchEvents();
+    setEvents(eventsData);
+  };
 
+  useEffect(() => {
     fetchAndSetEvents();
   }, []);
 
-  const handleAddEvent = () => {
+  const showAddEventModal = () => {
     setCurrentEvent(null);
     setShowModal(true);
   };
 
-  const handleEditEvent = (event) => {
+  const showEditEventModal = (event) => {
     setCurrentEvent(event);
     setShowModal(true);
   };
@@ -49,31 +49,30 @@ const EventPage = () => {
       if (currentEvent && currentEvent._id) {
         const updateUrl = `${BaseURL}/api/event/updateEvent/${currentEvent._id}`;
         await axios.patch(updateUrl, event);
-        setEvents(events.map((e) => (e._id === event._id ? event : e)));
       } else {
         await axios.post(`${BaseURL}/api/event/addEvent`, event);
-        setEvents([...events, event]);
       }
+      await fetchAndSetEvents();
       handleCloseModal();
     } catch (error) {
       console.error("Error saving event:", error);
     }
   };
 
-  const handleDeleteEvent = (id) => {
+  const showDeleteConfirmationModal = (id) => {
     setEventToDelete(id);
     setConfirmModalOpen(true);
   };
 
-  const handleViewDetails = (event) => {
+  const showEventDetailsModal = (event) => {
     setCurrentEvent(event);
     setShowDetailsModal(true);
   };
 
-  const confirmDeleteEvent = async () => {
+  const confirmEventDeletion = async () => {
     try {
       await axios.delete(`${BaseURL}/api/event/deleteEvent/${eventToDelete}`);
-      setEvents(events.filter((e) => e._id !== eventToDelete));
+      await fetchAndSetEvents();
       setConfirmModalOpen(false);
       setEventToDelete(null);
     } catch (error) {
@@ -93,7 +92,7 @@ const EventPage = () => {
   return (
     <div className="event-page">
       {user?.roles.includes(ROLES.ADMIN) && (
-        <button className="add-event-button" onClick={handleAddEvent}>
+        <button className="add-event-button" onClick={showAddEventModal}>
           Add Event
         </button>
       )}
@@ -101,18 +100,18 @@ const EventPage = () => {
         <h2>Upcoming Events</h2>
         <EventList
           events={upcomingEvents.map((event) => ({ ...event, time: event.time.toString() }))}
-          onEdit={handleEditEvent}
-          onDelete={handleDeleteEvent}
-          onViewDetails={handleViewDetails}
+          onEdit={showEditEventModal}
+          onDelete={showDeleteConfirmationModal}
+          onViewDetails={showEventDetailsModal}
         />
       </section>
       <section className="past-events-section">
         <h2>Past Events</h2>
         <EventList
           events={pastEvents.map((event) => ({ ...event, time: event.time.toString() }))}
-          onEdit={handleEditEvent}
-          onDelete={handleDeleteEvent}
-          onViewDetails={handleViewDetails}
+          onEdit={showEditEventModal}
+          onDelete={showDeleteConfirmationModal}
+          onViewDetails={showEventDetailsModal}
           hideActions={true}
         />
         <Link to="/past-events" className="more-link">
@@ -135,7 +134,7 @@ const EventPage = () => {
         title="Confirm Delete"
         text="Are you sure you want to delete this event? Please type 'DELETE' to confirm."
         open={confirmModalOpen}
-        onConfirm={confirmDeleteEvent}
+        onConfirm={confirmEventDeletion}
         onClose={() => setConfirmModalOpen(false)}
         confirmWord="DELETE"
       />

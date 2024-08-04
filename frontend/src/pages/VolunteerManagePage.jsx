@@ -20,7 +20,6 @@ const VolunteerManagePage = () => {
         Notify Volunteers
       </button>
       <VolunteerManageTable />
-
       {showModal && <NotifyVolunteerForm open={handleAddEvent} onClose={handleCloseModal} />}
     </div>
   );

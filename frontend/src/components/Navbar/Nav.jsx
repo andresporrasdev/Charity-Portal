@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./Nav.css";
-import logo from "./logo.png";
+import logo from "../../image/logo.jpg";
 import { FaFacebook, FaInstagram, FaBars } from "react-icons/fa";
 import { UserContext, ROLES } from "../../UserContext";
 

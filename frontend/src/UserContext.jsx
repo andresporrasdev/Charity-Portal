@@ -55,6 +55,7 @@ export const UserProvider = ({ children }) => {
   return <UserContext.Provider value={{ user, login, logout }}>{children}</UserContext.Provider>;
 };
 
+//Object IDs are hardcoded and should be updated according to the IDs defined in the database
 export const ROLES = {
   ADMIN: "66678417525bc55cbcd28a96",
   MEMBER: "66678416525bc55cbcd28a93",
