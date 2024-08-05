@@ -1,4 +1,4 @@
-// change it to your server localhost address
-const BaseURL = "http://localhost:3000";
+// change it to your server port in '.env' file
+const BaseURL = process.env.REACT_APP_BASE_URL;
 
 export default BaseURL;
