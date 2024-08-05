@@ -1,14 +1,6 @@
-const nodemailer = require("nodemailer");
 const Otp = require("../models/otp");
 const User = require("../models/user");
-
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
-  },
-});
+const { sendEmail } = require("./../utils/email");
 
 const generateNumericOTP = (length) => {
   let otp = "";
@@ -19,11 +11,10 @@ const generateNumericOTP = (length) => {
 };
 
 const sendOTPByEmail = async (email, otp) => {
+  console.log("Sending OTP to:", email);
   const mailOptions = {
-    from: "ottawa Sangam Tamil ",
-    to: email,
+    email: email,
     subject: "Verify your email address to register OTS",
-    //text: `Your OTP for registration is: ${otp}`,
     html: `
       <div>
         <img src="cid:logo" style="display:block; margin:auto; width:100px; height:auto;" />
@@ -43,38 +34,87 @@ const sendOTPByEmail = async (email, otp) => {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
-    console.log("OTP sent successfully to", email);
+    await sendEmail(mailOptions);
     return otp;
   } catch (error) {
-    console.error("Error sending OTP:", error);
-    throw error;
+    console.error("Error sending OTP by email:", error);
+    return res.status(500).json({
+      status: "error",
+      message: "An error occurred while processing the request",
+    });
   }
 };
 
 exports.sendOtp = async (req, res) => {
-  const { email } = req.body;
+  const { email, source } = req.body;
   try {
-    const existingUser = await User.findOne({ email });
+    //const existingUser = await User.findOne({ email });
+    let existingUser;
 
-    // if the user already signed up
-    if (existingUser) {
-      return res.status(200).json({
-        status: "fail",
-        message: "User already exists. Please login with your credential.",
-        data: existingUser,
-      });
-    } else {
+    const sendOtpAndRespond = async () => {
       const otp = generateNumericOTP(6);
       await Otp.create({ email, otp });
       await sendOTPByEmail(email, otp);
 
       return res.status(200).json({
         status: "success",
-        message: "Sent a verifiaction code successfully",
+        message: "Sent a verification code successfully",
         data: existingUser,
         otp: otp,
       });
+    };
+
+    if (source === "volunteer") {
+      // Logic specific to volunteer sign up page
+      existingUser = await User.findOne({ email });
+
+      if (existingUser && existingUser.isActive && existingUser.password) {
+        return res.status(200).json({
+          status: "fail",
+          message: "User already exists. Please login with your credential.",
+          data: existingUser,
+        });
+      } else {
+        return await sendOtpAndRespond();
+      }
+    } else if (source === "register") {
+      // Logic specific to register page
+      console.log("Register page");
+      const query = User.findOne({ email });
+      query._activeFilterDisabled = true;
+      existingUser = await query.lean();
+
+      if (existingUser && existingUser.isActive && existingUser.password) {
+        console.log("Register page2");
+
+        return res.status(200).json({
+          status: "fail",
+          message: "User already exists. Please login with your credential.",
+          data: existingUser,
+        });
+      } else if (existingUser && existingUser.isPaid === false) {
+        console.log("Register page3");
+
+        return res.status(200).json({
+          status: "fail",
+          message: "Please purchase membership again to renew your membership.",
+          data: existingUser,
+          link: "/membership",
+        });
+      } else if (!existingUser) {
+        console.log("Register page4");
+
+        return res.status(200).json({
+          status: "fail",
+          message: "Please purchase a membership to become a member before signing up.",
+          data: existingUser,
+          link: "/membership",
+        });
+      } else {
+        console.log("Register page5");
+
+        return await sendOtpAndRespond();
+      }
     }
   } catch (error) {
     console.error("An error occurred:", error);

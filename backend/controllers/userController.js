@@ -1,7 +1,8 @@
 const User = require("../models/user");
 const Role = require("../models/role");
-const { encryptPassword } = require("../utils/encryption");
 const mongoose = require("mongoose");
+const fs = require("fs");
+const path = require("path");
 
 // const getUserDataFromEventBrite = async (eventId, email) => {
 //   try {
@@ -22,71 +23,76 @@ const mongoose = require("mongoose");
 //   }
 // };
 
-exports.saveMemberToDB = async (userData) => {
+exports.updateUserStatuses = async () => {
   try {
+    const currentDate = new Date();
+
+    // find user who signed up more than a year ago and set their status to inactive
+    const users = await User.find({
+      created: { $lte: new Date(currentDate.getFullYear() - 1, currentDate.getMonth(), currentDate.getDate()) },
+    });
+
+    for (const user of users) {
+      user.isPaid = false;
+      user.isActive = false;
+      await user.save();
+    }
+
+    console.log("User statuses updated successfully.");
+  } catch (error) {
+    console.error("Error updating user statuses:", error);
+  }
+};
+
+exports.saveAllUsersToDBFromMockFile = async () => {
+  try {
+    const filePath = path.join(__dirname, "../data/tempUserData.json");
+    const tempUserData = JSON.parse(fs.readFileSync(filePath, "utf8"));
+    const users = tempUserData.orders;
     const role = await Role.findOne({ name: "Member" });
 
-    if (!role) {
-      throw new Error("Role not found");
-    }
-    const encryptedPassword = await encryptPassword(userData.password);
+    if (users.length > 0) {
+      for (const user of users) {
+        const query = User.findOne({ email: user.email });
+        query._activeFilterDisabled = true;
+        const existingUser = await query.exec();
 
-    const user = new User({
-      ...userData,
-      password: encryptedPassword,
-      roles: [role._id], // _id is Pk
-    });
-    await user.save();
-    console.log("user data saved in saveUserToDB method");
-  } catch (error) {
-    console.error("Error saving user to DB:", error);
-    throw error;
-  }
-};
-
-const getUserDataFromMockFile = async (email) => {
-  try {
-    //const tempUserData = fs.readFileSync('tempUserData.json', 'utf8');
-    // const orders = JSON.parse(tempUserData).orders;
-    const tempUserData = require("../data/tempUserData.json");
-    const foundUser = tempUserData.orders.find((order) => order.email === email);
-
-    if (foundUser) {
-      return foundUser;
+        if (!existingUser) {
+          // if user paid membership but not signed up before
+          const newUser = new User({
+            email: user.email,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            created: user.created,
+            event_id: user.event_id,
+            roles: [role._id],
+            isPaid: true,
+            isActive: false,
+          });
+          await newUser.save();
+          console.log(`User with email ${user.email} has been saved.`);
+        } else if (existingUser) {
+          // if user exists in db then update
+          if (!existingUser.isActive && !existingUser.isPaid) {
+            existingUser.created = user.created;
+            existingUser.event_id = user.event_id;
+            existingUser.isPaid = true;
+            await existingUser.save();
+            if (existingUser.password) {
+              // if the user has been singed up before and has a password
+              existingUser.isActive = true;
+              await existingUser.save();
+            }
+            console.log(`User with email ${user.email} has been updated.`);
+          }
+        }
+      }
     } else {
-      console.log("This email is not exist in mock file.");
-      return null;
+      console.log("No users found in mock file.");
     }
   } catch (error) {
-    console.error("Error fetching data from the mock file:", error);
+    console.error("Error saving users to DB:", error);
     throw error;
-  }
-};
-
-exports.checkMembershipUser = async (req, res) => {
-  const { email } = req.body;
-  try {
-    const userData = await getUserDataFromMockFile(email);
-    console.log("userData:", userData);
-
-    if (userData) {
-      return res.status(200).json({
-        status: "success",
-        message: "User data fetched from mock data/EventBrite and saved to the database",
-        data: userData,
-      });
-    } else {
-      return res.status(200).json({
-        status: "fail",
-        message: "User not found in mock data/EventBrite, please sign up as new user",
-      });
-    }
-  } catch (error) {
-    console.error("An error occurred:", error);
-    return res.status(500).json({
-      status: "error",
-      message: "An error occurred while processing the request",
-    });
   }
 };
 
@@ -98,7 +104,7 @@ exports.getUserInfo = async (req, res) => {
         user: req.user,
       },
     });
-    console.log("user:", req.user);
+    //console.log("user:", req.user);
   } catch (error) {
     res.status(500).json({
       status: "error",
@@ -110,12 +116,43 @@ exports.getUserInfo = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
   try {
     //Populate the roles field to fetch role names
-    const users = await User.find().populate("roles", "name");
+    const query = User.find().populate("roles", "name");
+    // Create the query and set the custom flag to disable the isActive filter
+    query._activeFilterDisabled = true;
 
+    // Execute the query and convert Mongoose documents to plain JavaScript objects
+    const users = await query.lean();
+
+    //const users = await User.find().populate("roles", "name");
+
+    const usersWithRoleNames = users.map((user) => ({
+      ...user,
+      roles: user.roles.map((role) => role.name),
+    }));
+
+    res.status(200).json({
+      status: "success",
+      results: usersWithRoleNames.length,
+      data: { users: usersWithRoleNames },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Failed to fetch users.",
+    });
+  }
+};
+
+// Route to get users by role ID
+exports.getUsersByRoleId = async (req, res) => {
+  try {
+    const users = await User.find({ roles: { $in: [req.params.roleId] } }).populate("roles", "name");
+    console.log("got it?");
     const usersWithRoleNames = users.map((user) => ({
       ...user.toObject(),
       roles: user.roles.map((role) => role.name),
     }));
+    console.log("usersWithRoleNames:", usersWithRoleNames);
 
     res.status(200).json({
       status: "success",
@@ -196,7 +233,7 @@ exports.updateUser = async (req, res) => {
 
 exports.deleteUser = async (req, res, next) => {
   try {
-    await User.findByIdAndDelete(req.params.id);
+    await User.findByIdAndUpdate(req.params.id, { isActive: false, $unset: { password: "" } });
     res.status(204).json({
       status: "success",
       data: null,

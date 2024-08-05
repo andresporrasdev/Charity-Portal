@@ -9,7 +9,7 @@ exports.getAllRoles = async (req, res) => {
       data: { roles: roles },
     });
 
-    console.log("roles:", roles);
+    //console.log("roles:", roles);
   } catch (error) {
     res.status(500).json({
       status: "error",

@@ -1,10 +1,8 @@
 const User = require("../models/user");
-const Role = require("../models/role");
 const jwt = require("jsonwebtoken");
 const util = require("util");
-const sendEmail = require("./../utils/email");
 const crypto = require("crypto");
-const { saveMemberToDB } = require("./userController");
+const { sendEmail } = require("./../utils/email");
 const { encryptPassword } = require("../utils/encryption");
 
 const signToken = (email) => {
@@ -15,15 +13,29 @@ const signToken = (email) => {
 };
 
 exports.signup = async (req, res) => {
-  const { email, first_name, last_name, created, event_id, isPaid, password } = req.body;
+  const { email, password } = req.body;
   try {
-    const userData = { email, first_name, last_name, created, event_id, isPaid, password };
-    await saveMemberToDB(userData);
+    const query = User.findOne({ email });
+    query._activeFilterDisabled = true;
+    const existingUser = await query.exec();
+
+    if (!existingUser) {
+      return res.status(404).json({
+        status: "fail",
+        message: "User not found.",
+      });
+    }
+
+    const encryptedPassword = await encryptPassword(password);
+
+    existingUser.isActive = true;
+    existingUser.password = encryptedPassword;
+    await existingUser.save();
 
     return res.status(200).json({
       status: "success",
-      message: "Member saved successfully.",
-      data: userData,
+      message: "Member's password saved successfully.",
+      data: existingUser,
       redirectUrl: "/login",
     });
   } catch (error) {
@@ -40,23 +52,41 @@ exports.login = async (req, res) => {
   }
 
   try {
-    const existingUser = await User.findOne({ email });
-    console.log("User found:", existingUser);
+    //const existingUser = await User.findOne({ email });
+    const query = User.findOne({ email });
+    query._activeFilterDisabled = true;
+    const existingUser = await query.exec();
 
     if (!existingUser) {
+      // user didn't buy membership, so doesn't exist in db
       return res.status(200).json({
         status: "fail",
-        message: "user doesn't exist. Please sign up.",
-        redirectUrl: "/",
+        message: "User doesn't exist. Please purchase a membership and sign up.",
+        link: "/membership",
       });
     }
 
-    const passwordMatch = await existingUser.comparePassword(password);
-    if (!passwordMatch) {
+    // Check if the user has a password before comparing
+    if (existingUser.password) {
+      const passwordMatch = await existingUser.comparePassword(password);
+      if (!passwordMatch) {
+        return res.status(200).json({
+          status: "fail",
+          message: "Password doesn't match. Please try again.",
+        });
+      }
+
+      if (!existingUser.isActive && !existingUser.isPaid) {
+        return res.status(200).json({
+          status: "fail",
+          message: "Your membership is expired. Please renew your membership to login.",
+          link: "/membership",
+        });
+      }
+    } else {
       return res.status(200).json({
         status: "fail",
-        message: "Password doesn't match. Please try again.",
-        redirectUrl: "/",
+        message: "You already paid for our membership. Please sign up before logging in.",
       });
     }
 
@@ -135,24 +165,12 @@ exports.protect = async (req, res, next) => {
   }
 };
 
-// exports.restrict = (role) => {
-//   return (req, res, next)=> {
-//     if(req.user.role !== role){
-//       return res.status(403).json({
-//         status: "fail",
-//         message: "You don't have permission to perform this action",
-//       });
-//     }
-//     next();
-//   }
-// };
-
 exports.restrict = (...allowedRoles) => {
   return async (req, res, next) => {
     const user = await User.findById(req.user._id).populate("roles", "name");
     const roleNames = user.roles.map((role) => role.name);
 
-    console.log("roleNames:", roleNames);
+    //console.log("roleNames:", roleNames);
 
     const hasPermission = allowedRoles.some((role) => roleNames.includes(role));
 
@@ -167,9 +185,11 @@ exports.restrict = (...allowedRoles) => {
 };
 
 exports.forgetPassword = async (req, res, next) => {
-  //1. get user based on posted email
+  //Remember, a pre-find middleware in the userSchema applies an isActive filter to all find queries,
+  //unless _activeFilterDisabled is set to true.
   const user = await User.findOne({ email: req.body.email });
 
+  //we don't want to send the reset password link to the user who is not active
   if (!user) {
     return res.status(401).json({
       status: "fail",
@@ -182,10 +202,7 @@ exports.forgetPassword = async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   //3. send the token back to the user email
-  const frontendPort = process.env.CLIENT_PORT;
-  const resetUrl = `http://localhost:${frontendPort}/reset-password/${resetToken}`; // currently we use this url for testing purpose
-  //const resetUrl = `${req.protocol}://${req.get("host")}/api/auth/resetPassword/${resetToken}`;
-
+  const resetUrl = `http://localhost:${process.env.CLIENT_PORT}/reset-password/${resetToken}`; // currently we use this url for testing purpose
   const message = `We have received a password reset request. Please use the below link to reset password\n\n${resetUrl}\n\nThis reset password link will be valid only for 10mins.`;
 
   try {
@@ -200,11 +217,10 @@ exports.forgetPassword = async (req, res, next) => {
       message: "Password reset link send to the user email",
     });
   } catch (error) {
+    console.error("Error sending reset password email:", error);
     user.passwordResetToken = undefined;
     user.passwordResetTokenExpire = undefined;
     user.save({ validateFromSave: false });
-
-    console.error("Error sending email:", error);
 
     return res.status(500).json({
       status: "fail",

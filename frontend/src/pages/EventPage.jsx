@@ -6,7 +6,9 @@ import { fetchEvents } from "../components/Event/FetchEvent";
 import "../components/Event/Event.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { UserContext } from "../UserContext";
+import { UserContext, ROLES } from "../UserContext";
+import ConfirmModal from "../components/ConfirmModal.jsx";
+import BaseURL from "../config";
 
 const EventPage = () => {
   const { user } = useContext(UserContext);
@@ -14,22 +16,24 @@ const EventPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [currentEvent, setCurrentEvent] = useState(null);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [eventToDelete, setEventToDelete] = useState(null);
+
+  const fetchAndSetEvents = async () => {
+    const eventsData = await fetchEvents();
+    setEvents(eventsData);
+  };
 
   useEffect(() => {
-    const fetchAndSetEvents = async () => {
-      const eventsData = await fetchEvents();
-      setEvents(eventsData);
-    };
-
     fetchAndSetEvents();
   }, []);
 
-  const handleAddEvent = () => {
+  const showAddEventModal = () => {
     setCurrentEvent(null);
     setShowModal(true);
   };
 
-  const handleEditEvent = (event) => {
+  const showEditEventModal = (event) => {
     setCurrentEvent(event);
     setShowModal(true);
   };
@@ -41,37 +45,39 @@ const EventPage = () => {
   };
 
   const handleSaveEvent = async (event) => {
-    console.log("Event in save event:", event);
-    // console.log("Current event in save event:", currentEvent);
     try {
       if (currentEvent && currentEvent._id) {
-        // Editing an existing event
-        const updateUrl = `http://localhost:3000/api/event/updateEvent/${currentEvent._id}`;
+        const updateUrl = `${BaseURL}/api/event/updateEvent/${currentEvent._id}`;
         await axios.patch(updateUrl, event);
-        setEvents(events.map((e) => (e._id === event._id ? event : e)));
       } else {
-        // Adding a new event
-        await axios.post("http://localhost:3000/api/event/addEvent", event);
-        setEvents([...events, event]);
+        await axios.post(`${BaseURL}/api/event/addEvent`, event);
       }
+      await fetchAndSetEvents();
       handleCloseModal();
     } catch (error) {
       console.error("Error saving event:", error);
     }
   };
 
-  const handleDeleteEvent = async (id) => {
+  const showDeleteConfirmationModal = (id) => {
+    setEventToDelete(id);
+    setConfirmModalOpen(true);
+  };
+
+  const showEventDetailsModal = (event) => {
+    setCurrentEvent(event);
+    setShowDetailsModal(true);
+  };
+
+  const confirmEventDeletion = async () => {
     try {
-      await axios.delete(`http://localhost:3000/api/event/deleteEvent/${id}`);
-      setEvents(events.filter((e) => e._id !== id));
+      await axios.delete(`${BaseURL}/api/event/deleteEvent/${eventToDelete}`);
+      await fetchAndSetEvents();
+      setConfirmModalOpen(false);
+      setEventToDelete(null);
     } catch (error) {
       console.error("Error deleting event:", error);
     }
-  };
-
-  const handleViewDetails = (event) => {
-    setCurrentEvent(event);
-    setShowDetailsModal(true);
   };
 
   const currentDate = new Date();
@@ -81,12 +87,12 @@ const EventPage = () => {
   const pastEvents = events
     .filter((event) => new Date(event.time) <= currentDate)
     .sort((a, b) => new Date(b.time) - new Date(a.time))
-    .slice(0, 3);
+    .slice(0, 4);
 
   return (
     <div className="event-page">
-      {user?.roles.includes("66678417525bc55cbcd28a96") && (
-        <button className="add-event-button" onClick={handleAddEvent}>
+      {user?.roles.includes(ROLES.ADMIN) && (
+        <button className="add-event-button" onClick={showAddEventModal}>
           Add Event
         </button>
       )}
@@ -94,21 +100,19 @@ const EventPage = () => {
         <h2>Upcoming Events</h2>
         <EventList
           events={upcomingEvents.map((event) => ({ ...event, time: event.time.toString() }))}
-          onEdit={handleEditEvent}
-          onDelete={handleDeleteEvent}
-          onViewDetails={handleViewDetails}
-          user={user}
+          onEdit={showEditEventModal}
+          onDelete={showDeleteConfirmationModal}
+          onViewDetails={showEventDetailsModal}
         />
       </section>
       <section className="past-events-section">
         <h2>Past Events</h2>
         <EventList
           events={pastEvents.map((event) => ({ ...event, time: event.time.toString() }))}
-          onEdit={handleEditEvent}
-          onDelete={handleDeleteEvent}
-          onViewDetails={handleViewDetails}
+          onEdit={showEditEventModal}
+          onDelete={showDeleteConfirmationModal}
+          onViewDetails={showEventDetailsModal}
           hideActions={true}
-          user={user}
         />
         <Link to="/past-events" className="more-link">
           See All Past Events
@@ -126,6 +130,14 @@ const EventPage = () => {
         </div>
       )}
       {showDetailsModal && <EventDetailModal event={currentEvent} onClose={handleCloseModal} />}
+      <ConfirmModal
+        title="Confirm Delete"
+        text="Are you sure you want to delete this event? Deleting this event will also delete all associated volunteers. Please type 'DELETE' to confirm."
+        open={confirmModalOpen}
+        onConfirm={confirmEventDeletion}
+        onClose={() => setConfirmModalOpen(false)}
+        confirmWord="DELETE"
+      />
     </div>
   );
 };

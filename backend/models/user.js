@@ -7,8 +7,9 @@ const userSchema = new mongoose.Schema({
   first_name: { type: String },
   last_name: { type: String },
   created: { type: Date, default: Date.now },
-  password: { type: String, required: true },
+  password: { type: String },
   isPaid: { type: Boolean, default: true },
+  isActive: { type: Boolean, default: true },
   event_id: { type: String },
   roles: [{ type: mongoose.Schema.Types.ObjectId, ref: "Role" }],
   passwordResetToken: String,
@@ -41,6 +42,37 @@ userSchema.methods.createResetPasswordToken = function () {
   console.log("resetToken:", resetToken, this.passwordResetTokenExpire);
   return resetToken; // user get reset token but it will be savea as encrypted in db
 };
+
+// Update 'isPaid' to false if one year has passed since 'created' date
+userSchema.pre("save", function (next) {
+  const currentDate = new Date();
+
+  const createdDate = this.created;
+  const oneYearLater = new Date(createdDate);
+  oneYearLater.setFullYear(createdDate.getFullYear() + 1);
+
+  // If the current date is greater than one year later, set 'isPaid' to false
+  if (currentDate > oneYearLater) {
+    this.isPaid = false;
+    this.isActive = false;
+  }
+  next();
+});
+
+//return only documents where the isActive is not false for all find-related queries
+userSchema.pre(/^find/, function (next) {
+  // only apply isActive filter if `this._activeFilter` is not set to false
+  if (!this._activeFilterDisabled) {
+    this.find({ isActive: { $ne: false } });
+  }
+  next();
+});
+
+//Ensure 'findOneAndUpdate' disables the 'isActive' filter
+userSchema.pre("findOneAndUpdate", function (next) {
+  this._activeFilterDisabled = true;
+  next();
+});
 
 const User = mongoose.model("User", userSchema);
 

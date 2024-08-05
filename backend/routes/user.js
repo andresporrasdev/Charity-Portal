@@ -3,8 +3,6 @@ const userController = require("../controllers/userController");
 const authController = require("../controllers/authController");
 const router = express.Router();
 
-router.post("/check", userController.checkMembershipUser);
-
 // To protect router, will use authController.protect as middleware
 router.get("/userinfo", authController.protect, userController.getUserInfo);
 
@@ -15,6 +13,13 @@ router.get(
   authController.protect,
   authController.restrict("Administrator"),
   userController.getAllUsers
+);
+
+router.get(
+  "/getUsersByRoleId/:roleId",
+  authController.protect,
+  authController.restrict("Administrator"),
+  userController.getUsersByRoleId
 );
 
 router.patch(

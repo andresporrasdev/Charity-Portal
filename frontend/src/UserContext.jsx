@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import BaseURL from "./config";
 
 export const UserContext = createContext();
 
@@ -17,7 +18,7 @@ export const UserProvider = ({ children }) => {
 
   const fetchUserInfo = async (token) => {
     try {
-      const response = await axios.get("http://localhost:3000/api/user/userinfo", {
+      const response = await axios.get(`${BaseURL}/api/user/userinfo`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -55,6 +56,9 @@ export const UserProvider = ({ children }) => {
 };
 
 export const ROLES = {
-  ADMIN: "66678417525bc55cbcd28a96",
-  MEMBER: "66678416525bc55cbcd28a93",
+  ADMIN: process.env.REACT_APP_ROLE_ADMIN,
+  MEMBER: process.env.REACT_APP_ROLE_MEMBER,
+  ORGANIZER: process.env.REACT_APP_ROLE_ORGANIZER,
+  VOLUNTEER: process.env.REACT_APP_ROLE_VOLUNTEER,
+  PERFORMER: process.env.REACT_APP_ROLE_PERFORMER,
 };
