@@ -1,12 +1,9 @@
-const express = require("express");
-const router = express.Router();
 const mongoose = require("mongoose");
 const postModel = require("../models/postModel");
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
 const { sendEmailWithImageAttachment } = require("./../utils/email");
-const config = require("../config"); // Import the config file
 
 //CRUD methods for post
 
