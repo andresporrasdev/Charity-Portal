@@ -2,7 +2,13 @@ import React from "react";
 import EventCard from "./EventCard";
 import "./Event.css";
 
-const EventList = ({ events, onEdit, onDelete, onViewDetails, hideActions }) => {
+const EventList = ({
+  events,
+  onEdit = () => {},
+  onDelete = () => {},
+  onViewDetails = () => {},
+  hideActions = false,
+}) => {
   return (
     <div className="event-list">
       {events.map((event) => (

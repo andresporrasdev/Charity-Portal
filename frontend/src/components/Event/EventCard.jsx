@@ -101,25 +101,28 @@ const EventCard = ({ event, onEdit, onDelete, onViewDetails, hideActions }) => {
       </div>
 
       {!hideActions && (
-        <div className="event-actions">
-          <button className="action-button" onClick={handlePurchaseTicket}>
-            Purchase Ticket
-          </button>
-          <button className="action-button" onClick={handleVolunteerClick}>
-            Volunteer
-          </button>
-        </div>
-      )}
-      {user?.roles.includes(ROLES.ADMIN) && (
-        <div className="menu-container" onClick={handleMenuToggle} ref={menuRef}>
-          <FaEllipsisV className="menu-icon" />
-          {showMenu && (
-            <div className="dropdown-menu">
-              <button onClick={handleEdit}>Edit</button>
-              <button onClick={handleDelete}>Delete</button>
+        <>
+          <div className="event-actions">
+            <button className="action-button" onClick={handlePurchaseTicket}>
+              Purchase Ticket
+            </button>
+            <button className="action-button" onClick={handleVolunteerClick}>
+              Volunteer
+            </button>
+          </div>
+
+          {user?.roles.includes(ROLES.ADMIN) && (
+            <div className="menu-container" onClick={handleMenuToggle} ref={menuRef}>
+              <FaEllipsisV className="menu-icon" />
+              {showMenu && (
+                <div className="dropdown-menu">
+                  <button onClick={handleEdit}>Edit</button>
+                  <button onClick={handleDelete}>Delete</button>
+                </div>
+              )}
             </div>
           )}
-        </div>
+        </>
       )}
     </div>
   );
