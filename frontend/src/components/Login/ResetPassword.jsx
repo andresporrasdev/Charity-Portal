@@ -87,7 +87,7 @@ const ResetPassword = ({ token }) => {
           setSuccessMessage("");
           setErrorMessage(response.data.message);
         }
-        console.log("Password reset successful:", response.data);
+        //console.log("Password reset successful:", response.data);
       } catch (err) {
         setErrorMessage(err.response.data.message);
         console.error("Password reset error:", err);

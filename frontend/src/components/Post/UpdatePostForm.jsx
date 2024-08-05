@@ -44,9 +44,6 @@ const UpdatePostForm = ({ post, open, onSave, onCancel, roleOptions }) => {
     }
   }, [post]);
 
-  console.log("post:", post);
-  console.log("selectedRoles:", selectedRoles);
-
   const isInvalidBody = () => {
     const trimmedText = newsBody.trim();
     const containsOnlyHtmlTags = /^(<p>(<br>|<br\/>|<br\s\/>|\s+|)<\/p>)*$/gm.test(trimmedText);
@@ -92,10 +89,10 @@ const UpdatePostForm = ({ post, open, onSave, onCancel, roleOptions }) => {
     formData.append("subject", subject);
     formData.append("roles", JSON.stringify(selectedRoles));
     // formData.append("updated", new Date.now());
-    console.log("Calling update post form");
-    console.log("formData content:", formData.get("content"));
-    console.log("formData subject:", formData.get("subject"));
-    console.log("formData roles:", formData.get("roles"));
+    // console.log("Calling update post form");
+    // console.log("formData content:", formData.get("content"));
+    // console.log("formData subject:", formData.get("subject"));
+    // console.log("formData roles:", formData.get("roles"));
 
     try {
       const response = await axios.patch(apiUrl, formData, { headers });

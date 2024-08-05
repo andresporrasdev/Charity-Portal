@@ -104,7 +104,7 @@ exports.getUserInfo = async (req, res) => {
         user: req.user,
       },
     });
-    console.log("user:", req.user);
+    //console.log("user:", req.user);
   } catch (error) {
     res.status(500).json({
       status: "error",

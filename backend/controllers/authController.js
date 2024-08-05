@@ -170,7 +170,7 @@ exports.restrict = (...allowedRoles) => {
     const user = await User.findById(req.user._id).populate("roles", "name");
     const roleNames = user.roles.map((role) => role.name);
 
-    console.log("roleNames:", roleNames);
+    //console.log("roleNames:", roleNames);
 
     const hasPermission = allowedRoles.some((role) => roleNames.includes(role));
 

@@ -36,7 +36,7 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
   };
 
   const handleSubmit = (e) => {
-    console.log("Saving Data in AddEditEventForm", formData);
+    //console.log("Saving Data in AddEditEventForm", formData);
     e.preventDefault();
 
     // Validate and update purchaseURL

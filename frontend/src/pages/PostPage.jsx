@@ -31,7 +31,7 @@ const PostPage = () => {
   const fetchPostsForNonMember = async () => {
     try {
       const response = await axios.get(`${BaseURL}/api/post/getPostsForNonMember`);
-      console.log("Posts:", response.data);
+      //console.log("Posts:", response.data);
       return response.data;
     } catch (error) {
       console.error("Error fetching posts:", error);
@@ -43,7 +43,7 @@ const PostPage = () => {
   const fetchPostsbyRole = async () => {
     try {
       const response = await axios.post(`${BaseURL}/api/post/getPostByRole`, { roles: user.roles });
-      console.log("Posts:", response.data);
+      //console.log("Posts:", response.data);
       return response.data;
     } catch (error) {
       console.error("Error fetching posts:", error);
@@ -85,7 +85,7 @@ const PostPage = () => {
   const handleSavePost = async (post) => {
     try {
       const response = await axios.post(`${BaseURL}/api/post/addPost`, post);
-      console.log("Post saved successfully:", response.data);
+      console.log("Post saved successfully");
       setPosts([...posts, response.data]);
       fetchAndSetPosts(); // After adding a post, fetch the list of posts again
       closePostModal();
@@ -97,12 +97,10 @@ const PostPage = () => {
   const handleUpdatePost = async (updatedPost) => {
     try {
       const updateUrl = `${BaseURL}/api/post/updatePost/${currentPost._id}`;
-      console.log("updateUrl", updateUrl);
-      console.log("post", updatedPost);
       await axios.patch(updateUrl, updatedPost);
       setPosts(posts.map((p) => (p._id === updatedPost._id ? updatedPost : p)));
       closePostModal();
-      console.log("post updated", updatedPost);
+      console.log("post updated");
     } catch (error) {
       console.error("Error updating post:", error);
     }

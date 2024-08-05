@@ -118,7 +118,7 @@ const AddPostForm = ({ open, onSave, onCancel, roleOptions }) => {
   const handleChange = async (e) => {
     const roleIds = e.target.value;
     setSelectedRoles(roleIds);
-    console.log("Selected Roles:", roleIds);
+    //console.log("Selected Roles:", roleIds);
 
     if (roleIds.length > 0) {
       try {
@@ -143,8 +143,7 @@ const AddPostForm = ({ open, onSave, onCancel, roleOptions }) => {
 
         setEmailList(memberEmails);
         setEmailListError("");
-
-        console.log("Member Emails:", memberEmails);
+        //console.log("Member Emails:", memberEmails);
       } catch (error) {
         console.error("Error fetching member emails:", error);
         toast.error("Failed to fetch emails");

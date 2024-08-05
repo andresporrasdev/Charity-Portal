@@ -113,7 +113,7 @@ exports.getPostByRole = async (req, res) => {
       return res.status(404).json({ message: "No posts found for these roles." });
     }
     res.status(200).json(posts);
-    console.log("Posts fetching by Roles:", posts);
+    // console.log("Posts fetching by Roles:", posts);
   } catch (error) {
     res.status(500).json({ message: "An error occurred while fetching the posts." });
   }

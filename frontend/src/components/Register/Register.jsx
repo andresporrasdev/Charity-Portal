@@ -80,7 +80,7 @@ const Register = () => {
     try {
       console.log("Sending OTP request to server...");
       const response = await axios.post(`${BaseURL}/api/otp/send-otp`, { email, source: "register" });
-      console.log("OTP response received:", response.data);
+      //console.log("OTP response received:", response.data);
 
       if (response.data.status === "success") {
         setShowOtpModal(true);
@@ -107,7 +107,6 @@ const Register = () => {
 
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
-    console.log("OTP submitted:", otp);
 
     try {
       const response = await axios.post(`${BaseURL}/api/otp/verify-otp`, { email, otp });

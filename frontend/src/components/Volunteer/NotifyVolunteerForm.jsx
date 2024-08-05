@@ -111,7 +111,7 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
 
     if (isBase64(formData.messageBody)) {
       const decodedMessageBody = Buffer.from(formData.messageBody, "base64").toString("utf-8");
-      console.log("Decoded Message Body:", decodedMessageBody);
+      //console.log("Decoded Message Body:", decodedMessageBody);
       formData.messageBody = decodedMessageBody;
     }
 
@@ -147,8 +147,8 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
   const handleChange = async (e) => {
     const eventId = e.target.value;
     setSelectedEvent(eventId);
+    //console.log("Selected Event:", eventId);
 
-    console.log("Selected Event:", eventId);
     // Fetch volunteers' emails for the selected event
     if (eventId) {
       setEventError("");

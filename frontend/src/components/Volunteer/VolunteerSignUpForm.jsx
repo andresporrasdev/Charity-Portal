@@ -204,7 +204,7 @@ const VolunteerSignUpForm = () => {
         email: formData.email,
         source: "volunteer",
       });
-      console.log("OTP response received:", response.data);
+      //console.log("OTP response received:", response.data);
 
       if (response.data.status === "success") {
         setShowOtpModal(true);
@@ -226,7 +226,7 @@ const VolunteerSignUpForm = () => {
     try {
       console.log("Submitting OTP to server...");
       const response = await axios.post(`${BaseURL}/api/otp/verify-otp`, { email: formData.email, otp });
-      console.log("OTP verification response:", response.data);
+      //console.log("OTP verification response:", response.data);
 
       if (response.data.status === "success") {
         setIsEmailVerified(true);
