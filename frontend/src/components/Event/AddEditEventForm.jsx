@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Event.css";
 import Alert from "@mui/material/Alert";
 import axios from "axios";
@@ -19,6 +19,12 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
       purchaseURL: "",
     }
   );
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [isFileUploaded, setIsFileUploaded] = useState(false);
+
+  useEffect(() => {
+    console.log("isFileUploaded:", isFileUploaded);
+  }, [isFileUploaded]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -36,9 +42,12 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
   };
 
   const handleSubmit = (e) => {
-    //console.log("Saving Data in AddEditEventForm", formData);
     e.preventDefault();
 
+    if (selectedFile && !isFileUploaded) {
+      setFailMessage("Please click upload button to upload image before submitting the form.");
+      return;
+    }
     // Validate and update purchaseURL
     const updatedPurchaseURL = validateURL(formData.purchaseURL);
 
@@ -49,8 +58,6 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
 
     onSave({ ...formData, purchaseURL: updatedPurchaseURL });
   };
-
-  const [selectedFile, setSelectedFile] = useState(null);
 
   // Function to handle file selection
   const handleFileChange = (e) => {
@@ -69,8 +76,10 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
 
       if (response.data.status === "success") {
         setFailMessage("");
+        setIsFileUploaded(true);
       } else {
         setFailMessage(response.data.message);
+        setIsFileUploaded(false);
       }
       if (response.data.imageUrl) {
         setFormData((prevFormData) => ({
@@ -84,6 +93,7 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
       } else {
         setFailMessage("An error occurred while uploading the file.");
       }
+      setIsFileUploaded(false);
     }
   };
 
@@ -120,12 +130,12 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
       </label>
       <label>
         Image URL:
-        <input type="text" name="imageUrl" value={formData.imageUrl} onChange={handleChange} required />
+        <input type="text" name="imageUrl" value={formData.imageUrl} onChange={handleChange} />
       </label>
       <label>
         Upload Image (Recommended Size: 1080 x 1350 pixels):
         <input type="file" onChange={handleFileChange} />
-        {failMessage && (
+        {failMessage && selectedFile && (
           <Alert severity="error" sx={{ mb: 2 }}>
             {failMessage}
           </Alert>

@@ -3,6 +3,7 @@ import "./Event.css";
 import { useNavigate } from "react-router-dom";
 import { FaEllipsisV } from "react-icons/fa";
 import { UserContext, ROLES } from "../../UserContext";
+import defaultImageSrc from "../../image/defaultPostPic.png";
 
 const EventCard = ({ event, onEdit, onDelete, onViewDetails, hideActions }) => {
   const { user } = useContext(UserContext);
@@ -87,7 +88,7 @@ const EventCard = ({ event, onEdit, onDelete, onViewDetails, hideActions }) => {
     <div className="event-card">
       {isMemberOnly && <div className="member-only-text">Member Only</div>}
       <div className="image-container">
-        <img src={imageUrl} alt={name} className="event-image" onClick={handleViewDetails} />
+        <img src={imageUrl || defaultImageSrc} alt={name} className="event-image" onClick={handleViewDetails} />
       </div>
       <div className="event-details">
         <h3>{name}</h3>
