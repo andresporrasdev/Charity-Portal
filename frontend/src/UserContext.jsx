@@ -55,11 +55,10 @@ export const UserProvider = ({ children }) => {
   return <UserContext.Provider value={{ user, login, logout }}>{children}</UserContext.Provider>;
 };
 
-//Object IDs are hardcoded and should be updated according to the IDs defined in the database
 export const ROLES = {
-  ADMIN: "66678417525bc55cbcd28a96",
-  MEMBER: "66678416525bc55cbcd28a93",
-  ORGANIZER: "66678417525bc55cbcd28a99",
-  VOLUNTEER: "66678417525bc55cbcd28a9c",
-  PERFORMER: "66678417525bc55cbcd28a9f",
+  ADMIN: process.env.REACT_APP_ROLE_ADMIN,
+  MEMBER: process.env.REACT_APP_ROLE_MEMBER,
+  ORGANIZER: process.env.REACT_APP_ROLE_ORGANIZER,
+  VOLUNTEER: process.env.REACT_APP_ROLE_VOLUNTEER,
+  PERFORMER: process.env.REACT_APP_ROLE_PERFORMER,
 };
