@@ -9,18 +9,16 @@ const Event = require("./models/event");
 const Post = require("./models/postModel");
 const { updateUserStatuses, saveAllUsersToDBFromMockFile } = require("./controllers/userController");
 
-console.log(process.env);
-
 mongoose
   .connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
   })
-  .then((conn) => {
+  .then(async (conn) => {
     console.log("DB Connection Successful");
-    initializeRoles();
-    initializeVolunteerRoles();
-    initializeDatabase(); // Call a function to initialize your database
-    createDummyPost(); // Call a function to create a dummy post
+    await initializeRoles();
+    await initializeVolunteerRoles();
+    await initializeDatabase(); // Call a function to initialize your database
+    await createDummyPost(); // Call a function to create a dummy post
   })
   .catch((error) => {
     console.log("Some error has occured");
@@ -28,11 +26,12 @@ mongoose
 
 async function initializeDatabase() {
   try {
-    // Example: Check if any events exist, if not, create a default one
-    const eventCount = await Event.countDocuments();
-    if (eventCount === 0) {
-      console.log("No events found, creating a default event...");
-      await createDummyEvent(); //saves a dummy event to the database
+    const collections = await mongoose.connection.db.listCollections().toArray();
+    const collectionNames = collections.map((col) => col.name);
+
+    if (!collectionNames.includes("events")) {
+      console.log("No events collection found, creating a default event...");
+      await createDummyEvent();
     }
   } catch (error) {
     console.error("Error initializing database:", error);
@@ -56,7 +55,6 @@ async function initializeRoles() {
       await newRole.save();
     }
   }
-
   console.log("Roles created successfully!");
 }
 
@@ -97,8 +95,6 @@ async function initializeVolunteerRoles() {
 
 //Creating model schemaif not exist
 async function createDummyEvent() {
-  // const eventCount = await Event.countDocuments();
-  // if (eventCount === 0) {
   const dummyEvent = new Event({
     name: "Sample Event",
     description: "This is a sample event.",
@@ -113,7 +109,6 @@ async function createDummyEvent() {
   await dummyEvent.save();
   console.log("Dummy event created successfully!");
 }
-// }
 
 // Create a dummy post only if there are no posts in the database
 async function createDummyPost() {
@@ -139,7 +134,7 @@ app.listen(port, async () => {
   try {
     await saveAllUsersToDBFromMockFile();
     await updateUserStatuses();
-    console.log("Initialization complete. The server is now ready to handle requests.");
+    console.log("Initialization complete. The server is now ready.");
   } catch (error) {
     console.error("Error during initialization:", error);
   }
