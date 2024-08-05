@@ -132,7 +132,7 @@ const EventPage = () => {
       {showDetailsModal && <EventDetailModal event={currentEvent} onClose={handleCloseModal} />}
       <ConfirmModal
         title="Confirm Delete"
-        text="Are you sure you want to delete this event? Please type 'DELETE' to confirm."
+        text="Are you sure you want to delete this event? Deleting this event will also delete all associated volunteers. Please type 'DELETE' to confirm."
         open={confirmModalOpen}
         onConfirm={confirmEventDeletion}
         onClose={() => setConfirmModalOpen(false)}

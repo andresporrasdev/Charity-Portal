@@ -1,6 +1,7 @@
 const Event = require("../models/event");
 const { upload, multerErrorHandling } = require("../utils/uploads"); // Import from uploads.js
 const path = require("path");
+const Volunteer = require("../models/volunteerModel");
 
 // Route to handle file upload
 async function handleFileUpload(req, res) {
@@ -27,11 +28,11 @@ async function handleFileUpload(req, res) {
 // CRUD methods for event
 // Insert an event
 exports.addEvent = async (req, res) => {
-  console.log("Request body in AddEvent", req.body);
+  //console.log("Request body in AddEvent", req.body);
   const event = new Event(req.body);
   try {
     const savedEvent = await event.save();
-    console.log("Event saved successfully", savedEvent);
+    //console.log("Event saved successfully", savedEvent);
     res.status(200).json(savedEvent);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -77,6 +78,9 @@ exports.deleteEvent = async (req, res) => {
     if (!deletedEvent) {
       return res.status(404).json({ message: "Event not found." });
     }
+
+    //delete all volunteers associated with the event
+    await Volunteer.deleteMany({ event: eventId });
 
     res.status(200).json({ message: "Event deleted successfully." });
   } catch (error) {
