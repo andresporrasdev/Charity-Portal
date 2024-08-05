@@ -1,12 +1,9 @@
 const User = require("../models/user");
-const Role = require("../models/role");
 const jwt = require("jsonwebtoken");
 const util = require("util");
-const { sendEmail } = require("./../utils/email");
 const crypto = require("crypto");
+const { sendEmail } = require("./../utils/email");
 const { encryptPassword } = require("../utils/encryption");
-const config = require("../config"); // Import the config file
-
 
 const signToken = (email) => {
   return jwt.sign({ email, iat: Math.floor(Date.now() / 1000) }, process.env.SECRET_STR, {
@@ -56,8 +53,6 @@ exports.login = async (req, res) => {
 
   try {
     //const existingUser = await User.findOne({ email });
-    //console.log("User found:", existingUser);
-
     const query = User.findOne({ email });
     query._activeFilterDisabled = true;
     const existingUser = await query.exec();
@@ -89,8 +84,6 @@ exports.login = async (req, res) => {
         });
       }
     } else {
-      // Handle the case where the user does not have a password
-      // if existingUser.isPaid && !existingUser.isActive
       return res.status(200).json({
         status: "fail",
         message: "You already paid for our membership. Please sign up before logging in.",
@@ -172,18 +165,6 @@ exports.protect = async (req, res, next) => {
   }
 };
 
-// exports.restrict = (role) => {
-//   return (req, res, next)=> {
-//     if(req.user.role !== role){
-//       return res.status(403).json({
-//         status: "fail",
-//         message: "You don't have permission to perform this action",
-//       });
-//     }
-//     next();
-//   }
-// };
-
 exports.restrict = (...allowedRoles) => {
   return async (req, res, next) => {
     const user = await User.findById(req.user._id).populate("roles", "name");
@@ -221,11 +202,7 @@ exports.forgetPassword = async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   //3. send the token back to the user email
-  const frontendPort = process.env.CLIENT_PORT;
-
-  const resetUrl = `${config.baseURL}/reset-password/${resetToken}`; // currently we use this url for testing purpose
-  //const resetUrl = `${req.protocol}://${req.get("host")}/api/auth/resetPassword/${resetToken}`;
-
+  const resetUrl = `http://localhost:${process.env.CLIENT_PORT}/reset-password/${resetToken}`; // currently we use this url for testing purpose
   const message = `We have received a password reset request. Please use the below link to reset password\n\n${resetUrl}\n\nThis reset password link will be valid only for 10mins.`;
 
   try {

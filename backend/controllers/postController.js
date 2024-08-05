@@ -8,7 +8,6 @@ const path = require("path");
 const { sendEmailWithImageAttachment } = require("./../utils/email");
 const config = require("../config"); // Import the config file
 
-
 //CRUD methods for post
 
 // Set up storage for uploaded files
@@ -179,8 +178,8 @@ async function handleFileUpload(req, res) {
     const filename = path.basename(req.file.path);
 
     // Construct the new URL
-    const imageUrl = `${config.baseURL}/images/${filename}`;
-    
+    const imageUrl = `http://localhost:${process.env.SERVER_PORT}/images/${filename}`;
+
     // Use the new imageUrl in the response
     res.status(200).json({
       status: "success",
@@ -246,8 +245,8 @@ const uploadDocuments = multer({
 async function handleDocumentUpload(req, res) {
   try {
     const filename = path.basename(req.file.path);
-    
-    const documentUrl = `${config.baseURL}/documents/${filename}`;
+
+    const documentUrl = `http://localhost:${process.env.SERVER_PORT}/documents/${filename}`;
     res.status(200).json({
       status: "success",
       message: "Document uploaded successfully",

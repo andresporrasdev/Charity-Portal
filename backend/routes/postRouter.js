@@ -15,7 +15,6 @@ router.post("/getPostByRole", postController.getPostByRole);
 router.post(
   "/notify-users",
   // authController.protect,
-  // //authController.restrict("Administrator"),
   // authController.restrict("Administrator", "Organizer"),
   postController.notifyUsersAboutPost
 );

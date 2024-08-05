@@ -1,8 +1,5 @@
 const express = require("express");
-const { get } = require("mongoose");
 const authController = require("../controllers/authController");
-
-// const eventController = require("../controllers/eventController");
 const volunteerController = require("../controllers/volunteerController");
 const router = express.Router();
 
@@ -42,7 +39,6 @@ router.delete(
 router.post(
   "/notify-volunteers",
   authController.protect,
-  //authController.restrict("Administrator"),
   authController.restrict("Administrator", "Organizer"),
   volunteerController.notifyVolunteers
 );
