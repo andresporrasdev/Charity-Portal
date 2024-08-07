@@ -6,14 +6,14 @@ const path = require("path");
 
 // Uncomment 'getUserDataFromEventBrite' to enable pulling data from live EventBrite API. 
 // Ensure that function 'saveAllUsersToDBFromMockFile' below has been commented out to prevent conflicts.  
-// const getUserDataFromEventBrite = async (eventId, email) => {
+// const getUserDataFromEventBrite = async (eventId) => {
 //   try {
-//     const response = await axios.get(`https://www.eventbriteapi.com/v3/events/${eventId}/orders?only_emails=${email}`, {
+//     const response = await axios.get(`https://www.eventbriteapi.com/v3/events/${eventId}/orders/`, {
 //       headers: {
 //         Authorization: `Bearer ${process.env.EVENTBRITE_API_KEY}`,
 //       },
 //     });
-//     const users = response.data.users;
+//     const users = response.data.orders;
 //     if (users && users.length > 0) {
 //       return users[0];
 //     } else {
@@ -53,6 +53,8 @@ exports.saveAllUsersToDBFromMockFile = async () => {
     const filePath = path.join(__dirname, "../data/tempUserData.json");
     const tempUserData = JSON.parse(fs.readFileSync(filePath, "utf8"));
     const users = tempUserData.orders;
+    // const eventId = 'your_event_id_here'; // change this to your event ID
+    // const users = await getUserDataFromEventBrite(eventId);
     const role = await Role.findOne({ name: "Member" });
 
     if (users.length > 0) {
