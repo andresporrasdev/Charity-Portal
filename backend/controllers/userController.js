@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const fs = require("fs");
 const path = require("path");
 
+// Uncomment 'getUserDataFromEventBrite' to enable pulling data from live EventBrite API. 
+// Ensure that function 'saveAllUsersToDBFromMockFile' below has been commented out to prevent conflicts.  
 // const getUserDataFromEventBrite = async (eventId) => {
 //   try {
 //     const response = await axios.get(`https://www.eventbriteapi.com/v3/events/${eventId}/orders/`, {
@@ -44,6 +46,8 @@ exports.updateUserStatuses = async () => {
   }
 };
 
+// This function is for development and testing and mocks reading data from the EventBrite API
+// Comment out 'saveAllUsersToDBFromMockFile' to prevent conflicts with 'getUserDataFromEventBrite' on a live environment to prevent conflicts. 
 exports.saveAllUsersToDBFromMockFile = async () => {
   try {
     const filePath = path.join(__dirname, "../data/tempUserData.json");
