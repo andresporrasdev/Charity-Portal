@@ -1,12 +1,16 @@
-# Ottawa Tamil Sangam Portal Development
+# Charity Organization Portal
+
 ## Installation Instructions
-For detailed installation and configuration instructions refer to the **Elaboration Report Final** document, section **Deployment Plan**. 
+
+For detailed installation and configuration instructions refer to the **Elaboration Report Final** document, section **Deployment Plan**.
 
 ## Testing and Validation
-For detailed reports on testing refer to the **Validation Report** document. 
+
+For detailed reports on testing refer to the **Validation Report** document.
 
 ## Folder Structure
-For details of the folder structure refer to the **Elaboration Report** document, section **Program Design / Folder Structure** and **Appendix A**. 
+
+For details of the folder structure refer to the **Elaboration Report** document, section **Program Design / Folder Structure** and **Appendix A**.
 
 | Reference | Folder Name  | Description                            |
 | --------- | ------------ | -------------------------------------- |
@@ -24,14 +28,10 @@ For details of the folder structure refer to the **Elaboration Report** document
 | 1.2.3     | src          | source code for HTML, CSS, and JSX     |
 
 ## Credits
-This project was developped for the Ottawa Tamil Sangam by Algonquin College Students in fulfillment of the course objectives of CST8319. 
 
-**Team 3 - Bright Brains**
 - Timothy Norman
 - Iseul Park
 - Parth Patel
 - Andres Camilo Porras Becerra
 - Binbin Yang
 - Dunxing Yu
-
-

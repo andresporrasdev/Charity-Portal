@@ -104,7 +104,7 @@ async function createDummyEvent() {
     priceMember: "5",
     isMemberOnly: false,
     imageUrl: "/image/EventImage/event1.png",
-    purchaseURL: "https://www.ottawatamilsangam.com/",
+    purchaseURL: "https://www.eventbrite.ca/",
   });
   await dummyEvent.save();
   console.log("Dummy event created successfully!");

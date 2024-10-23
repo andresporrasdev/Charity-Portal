@@ -26,8 +26,8 @@ const sendOTPByEmail = async (email, otp) => {
     `,
     attachments: [
       {
-        filename: "logo.jpg",
-        path: "../frontend/src/image/logo.jpg",
+        filename: "logo.png",
+        path: "../frontend/src/image/logo.png",
         cid: "logo",
       },
     ],

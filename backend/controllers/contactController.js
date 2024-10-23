@@ -6,8 +6,8 @@ exports.sendContactEmail = async (req, res) => {
   const userConfirmationEmail = {
     email,
     subject: "Thank you for contacting us!",
-    text: `Hi ${name},\n\nThank you for reaching out to us. We have received your message and will get back to you shortly.\n\nBest regards,\nOttawa Tamil Sangam`,
-    html: `<p>Hi ${name},</p><p>Thank you for reaching out to us. We have received your message and will get back to you shortly.</p><p>Best regards,<br>Ottawa Tamil Sangam</p>`,
+    text: `Hi ${name},\n\nThank you for reaching out to us. We have received your message and will get back to you shortly.\n\nBest regards,\nCharity Organization`,
+    html: `<p>Hi ${name},</p><p>Thank you for reaching out to us. We have received your message and will get back to you shortly.</p><p>Best regards,<br>Charity Organization</p>`,
   };
 
   const adminNotificationEmail = {

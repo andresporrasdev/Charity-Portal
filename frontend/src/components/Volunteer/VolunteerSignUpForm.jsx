@@ -342,7 +342,7 @@ const VolunteerSignUpForm = () => {
             />
             I agree to abide by the{" "}
             <a href="/policy" target="_blank" rel="noopener noreferrer">
-              policies and guidelines of Ottawa Tamil Sangam
+              policies and guidelines of Charity Organization Portal
             </a>
           </label>
           {errors.agreePolicies && <p className="error">{errors.agreePolicies}</p>}

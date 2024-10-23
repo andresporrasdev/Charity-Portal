@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./Nav.css";
-import logo from "../../image/logo.jpg";
+import logo from "../../image/logo.png";
 import { FaFacebook, FaInstagram, FaBars } from "react-icons/fa";
 import { UserContext, ROLES } from "../../UserContext";
 
@@ -27,7 +27,7 @@ function Nav() {
         </div>
         <div className="navbar-center">
           <div className="header-text">
-            <h1>Ottawa Tamil Sangam</h1>
+            <h1>Charity Organization</h1>
             <nav className={`nav-menu ${menuOpen ? "open" : ""}`}>
               <ul>
                 <li>
@@ -96,10 +96,10 @@ function Nav() {
               <h3>Welcome, {user.first_name}</h3>
               <div className="social-login-container">
                 <div className="social-icons">
-                  <a href="https://www.facebook.com/TamilSangamofOttawa" target="_blank" rel="noopener noreferrer">
+                  <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">
                     <FaFacebook />
                   </a>
-                  <a href="https://www.instagram.com/ottawatamilsangam/" target="_blank" rel="noopener noreferrer">
+                  <a href="https://www.instagram.com//" target="_blank" rel="noopener noreferrer">
                     <FaInstagram />
                   </a>
                 </div>
@@ -111,10 +111,10 @@ function Nav() {
           ) : (
             <div className="social-login-container">
               <div className="social-icons">
-                <a href="https://www.facebook.com/TamilSangamofOttawa" target="_blank" rel="noopener noreferrer">
+                <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">
                   <FaFacebook />
                 </a>
-                <a href="https://www.instagram.com/ottawatamilsangam/" target="_blank" rel="noopener noreferrer">
+                <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
                   <FaInstagram />
                 </a>
               </div>

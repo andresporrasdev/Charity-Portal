@@ -53,16 +53,16 @@ function ContactUs() {
       <div className="contact-info">
         <p>
           We would love to hear your thoughts and suggestions! Feel free to drop us an email at{" "}
-          <strong>ottawatamilsangam@gmail.com</strong>
+          <strong>CharityOrganization@gmail.com</strong>
         </p>
         <br />
         <p>-OR-</p>
         <p>Follow and chat with us on social media!</p>
         <div className="social-icons">
-          <a href="https://www.facebook.com/TamilSangamofOttawa" target="_blank" rel="noopener noreferrer">
+          <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">
             <FaFacebook />
           </a>
-          <a href="https://www.instagram.com/ottawatamilsangam/" target="_blank" rel="noopener noreferrer">
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
             <FaInstagram />
           </a>
         </div>

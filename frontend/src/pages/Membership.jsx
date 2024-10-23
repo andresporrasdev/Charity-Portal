@@ -13,24 +13,23 @@ function Membership() {
         <section>
           <h2>Benefits of Becoming a Member</h2>
           <p>
-            By becoming an Ottawa Tamil Sangam Member you could enjoy the following (but not limited to) privileges:
+            By becoming an Member you could enjoy the following (but not limited to) privileges:
           </p>
           <ul>
-            <li>Reduced Entry fee for the following Ottawa Tamil Sangam Events:</li>
+            <li>Reduced Entry fee for the following  Events:</li>
             <ul>
-              <li>January (Pongal)</li>
-              <li>April (Tamil New Year)</li>
+              <li>January (New Year)</li>
+              <li>April (New Year)</li>
               <li>July (Picnic)</li>
-              <li>October / November (Diwali)</li>
+              <li>December (Christmas)</li>
               <li>And many more to come</li>
             </ul>
             <li>
-              Up to 15% reduction in ticket costs for Tamil movies released in Ottawa if purchased through Ottawa Tamil
-              Sangam
+              Up to 15% reduction in ticket costs for movies activities released in Ottawa if purchased through the Charity Organization Portal
             </li>
             <li>
               Attend Annual General Body Meetings and hold Voting Rights to nominate/elect executive committee members
-              of Ottawa Tamil Sangam
+              of the charity Organization
             </li>
           </ul>
         </section>
@@ -51,13 +50,13 @@ function Membership() {
           </p>
           <p>
             <strong>Option 1:</strong> For annual membership purchase{" "}
-            <a href="https://www.eventbrite.ca/e/ottawa-tamil-sangam-membership-annual-tickets-738844412527?aff=oddtdtcreator">
+            <a href="https://www.eventbrite.ca">
               Click here
             </a>
             . The event ticket links will be sent through a separate email after the membership purchase.
           </p>
           <p>
-            <strong>Option 2:</strong> If you wish to purchase the Tamil New Year 2024 Event (20th April, 2024) ticket
+            <strong>Option 2:</strong> If you wish to purchase the New Year Event ticket
             alone, wait for few more days…
           </p>
         </section>
