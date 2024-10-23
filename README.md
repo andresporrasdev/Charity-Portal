@@ -2,7 +2,36 @@
 
 ## Installation Instructions
 
-For detailed installation and configuration instructions refer to the **Elaboration Report Final** document, section **Deployment Plan**.
+For detailed installation and configuration instructions refer to the File **User Guide Charity** document, folder in root **ReadmeFiles**.
+
+### Deploying the Website
+
+This will depend on the hosting provider chosen, as each company will have specific tools and procedures for their product. Please consult any guides and tutorials provided by the hosting provider. All source code has been provided in a zip file and this can be directly uploaded to a hosting provider, or to an online git service depending on the client’s choice. For details on the files included in the source code see the “Program Design/Folder Structure” and Appendix A in this document.
+Depending on the provider, you may need to build and start the portal – to do so;
+
+1. Navigate to the “backend/” folder, and type npm install to install or update any required dependencies;
+2. Type node server.js to start the backend service;
+3. Navigate to the “frontend/” folder and type npm install to install or update any required dependencies; and
+4. Type npm start to launch the front end / UI.
+
+### Creating the Database
+
+The database for the portal is MongoDB. There are two options for hosting the database, “self-hosting” using the same web-hosting service, or by using the MongoDB Atlas service. Official documentation for both options can be found at:
+
+1. Self-Hosted MongoDB: https://www.mongodb.com/products/self-managed/community-edition
+2. MongoDB Atlas: https://www.mongodb.com/atlas
+   For development and testing, a free-tier Atlas cluster was used.
+   Regardless of which hosting option is chosen, the following configuration steps should be the same:
+3. Create a database
+4. Find the MongoDB Connection String for your database (refer to MongoDB documentation for help: https://www.mongodb.com/docs/manual/reference/connection-string/)
+5. Open the .env file located at backend/.env and enter the Connection String in the “MONGODB_URI=” field
+6. Save the changes to the .env file.
+7. When server.js is started (see “Deploying the Website” step 4) an empty database will be created at the cluster specified by the connection string.
+8. When the database is created it will generate new, unique IDs for the roles. Navigate to the “roles” collection in the database and copy the unique IDs and paste them into frontend/.env by the corresponding variable.
+
+### Configuration of external services
+
+Setup of services as Everbrite API and Gmail API can be found in detail in the user guide in the ReadmeFiles folder
 
 ## Testing and Validation
 
