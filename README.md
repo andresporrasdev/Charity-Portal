@@ -2,27 +2,31 @@
 
 ## Overview
 
-The Charity Portal project aims to create an efficient and user-friendly platform to manage charitable organizations’ operations, including handling donations, events, and volunteer coordination. The portal is designed to streamline processes for both administrators and users, making it easier to track donations, participate in events, and engage with the organization.
+The Charity Portal project aims to create an efficient and user-friendly platform to manage charitable organizations’ operations, including handling donations, events, and volunteer coordination. The portal is designed to streamline processes for both administrators and users, making it easier to track volunteers, participate in events, and engage with the organization.
 
 The main objective of the project is to provide a robust and scalable platform for charities to manage their operations efficiently, improving donor engagement, and facilitating volunteer efforts while offering comprehensive reporting and transparency.
 
 Key Features:
 
-- User Management: Allows different types of users (e.g., administrators, donors, volunteers) to register and manage their profiles.
-- Donation Tracking: Facilitates the management of financial and material donations, enabling users to donate securely and track their contributions.
-- Event Management: Offers a system to create, manage, and sign up for events organized by the charity.
+- User Management: Allows different types of users (e.g., administrators, performers, organizer, volunteers) to register and manage their profiles.
+- Members Administration: Allow administrator to handle users in a table format
+- Event Management: Offers a system to create, manage, and sign up (Assist or volunteers) for events organized by the charity.
 - Volunteer Management: Enables the recruitment and management of volunteers, including tracking their involvement and contributions.
-- Reports & Analytics: Provides tools to generate reports on donations, events, and volunteer activities for better transparency and decision-making.
+- News portal: Allow to members and not members to get new filtered by role if logged
+- Contact Form: Visitors can send a message throught a form and get a copy by mail of the data submited.
+- 
 
 ![Charity-Portal](https://github.com/andresporrasdev/Charity-Portal/blob/main/ReadmeFiles/HomePageReadme.jpg)
 
 ## Architectural Design
 Technologies Used:
 
-- Back-End: Python, Django framework
-- Front-End: HTML, CSS, JavaScript, Bootstrap
-- Database: MySQL
+- Front-End: React, HTML, CSS, JavaScript
+- Back-End: Node.JS (Rest API for connecting Backend with FrontEnd with Express framework)
+- Database: MongoDB
 - Version Control: GitHub for version control and collaboration
+- Security: Uses OTP (One Time Password) for submision, crypto to store passwords in DB, JWT (Jason Web Token) in login sessions
+- PostMan: Test API request and responses and Token and auth validation.
 
 The backend also has logic for connecting to external services which OTS currently uses and would like to maintain. This includes EventBrite for creating events and collecting payment, and Gmail for sending and receiving emails to members. By connecting to these existing accounts for these services it will maintain a familiar experience for users.
 
