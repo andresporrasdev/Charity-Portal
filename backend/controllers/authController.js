@@ -4,6 +4,7 @@ const util = require("util");
 const crypto = require("crypto");
 const { sendEmail } = require("./../utils/email");
 const { encryptPassword } = require("../utils/encryption");
+const serverBaseUrl = process.env.SERVER_BASE_URL;
 
 const signToken = (email) => {
   return jwt.sign({ email, iat: Math.floor(Date.now() / 1000) }, process.env.SECRET_STR, {
@@ -202,7 +203,7 @@ exports.forgetPassword = async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   //3. send the token back to the user email
-  const resetUrl = `http://localhost:${process.env.CLIENT_PORT}/reset-password/${resetToken}`; // currently we use this url for testing purpose
+  const resetUrl = `${serverBaseUrl}:${process.env.CLIENT_PORT}/reset-password/${resetToken}`; // currently we use this url for testing purpose
   const message = `We have received a password reset request. Please use the below link to reset password\n\n${resetUrl}\n\nThis reset password link will be valid only for 10mins.`;
 
   try {

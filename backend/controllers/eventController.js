@@ -2,6 +2,8 @@ const Event = require("../models/event");
 const { upload, multerErrorHandling } = require("../utils/uploads"); // Import from uploads.js
 const path = require("path");
 const Volunteer = require("../models/volunteerModel");
+const serverBaseUrl = process.env.SERVER_BASE_URL;
+
 
 // Route to handle file upload
 async function handleFileUpload(req, res) {
@@ -10,7 +12,7 @@ async function handleFileUpload(req, res) {
     const filename = path.basename(req.file.path);
 
     // Construct the new URL
-    const imageUrl = `http://localhost:${process.env.SERVER_PORT}/images/${filename}`;
+    const imageUrl = `${serverBaseUrl}:${process.env.SERVER_PORT}/images/${filename}`;
 
     // Use the new imageUrl in the response
     res.status(200).json({

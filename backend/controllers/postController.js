@@ -4,6 +4,7 @@ const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
 const { sendEmailWithImageAttachment } = require("./../utils/email");
+const serverBaseUrl = process.env.SERVER_BASE_URL;
 
 //CRUD methods for post
 
@@ -69,6 +70,7 @@ exports.updatePost = async (req, res) => {
 //Delete a post
 
 exports.deletePost = async (req, res) => {
+  console.log("Request from delete API ", req);
   const postId = req.params.id;
 
   try {
@@ -175,7 +177,7 @@ async function handleFileUpload(req, res) {
     const filename = path.basename(req.file.path);
 
     // Construct the new URL
-    const imageUrl = `http://localhost:${process.env.SERVER_PORT}/images/${filename}`;
+    const imageUrl = `${serverBaseUrl}:${process.env.SERVER_PORT}/images/${filename}`;
 
     // Use the new imageUrl in the response
     res.status(200).json({
@@ -243,7 +245,7 @@ async function handleDocumentUpload(req, res) {
   try {
     const filename = path.basename(req.file.path);
 
-    const documentUrl = `http://localhost:${process.env.SERVER_PORT}/documents/${filename}`;
+    const documentUrl = `${serverBaseUrl}:${process.env.SERVER_PORT}/documents/${filename}`;
     res.status(200).json({
       status: "success",
       message: "Document uploaded successfully",
