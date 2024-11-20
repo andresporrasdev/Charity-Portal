@@ -1,12 +1,36 @@
 # Charity Organization Portal
 
-## Architectural Design
+## Overview
 
-![Charity-Portal](https://github.com/andresporrasdev/Traffic-Volumes-Provincial-Highway-System/blob/main/images/readme/Traffic_sequence.jpg)
+The Charity Portal project aims to create an efficient and user-friendly platform to manage charitable organizations’ operations, including handling donations, events, and volunteer coordination. The portal is designed to streamline processes for both administrators and users, making it easier to track donations, participate in events, and engage with the organization.
+
+The main objective of the project is to provide a robust and scalable platform for charities to manage their operations efficiently, improving donor engagement, and facilitating volunteer efforts while offering comprehensive reporting and transparency.
+
+Key Features:
+
+- User Management: Allows different types of users (e.g., administrators, donors, volunteers) to register and manage their profiles.
+- Donation Tracking: Facilitates the management of financial and material donations, enabling users to donate securely and track their contributions.
+- Event Management: Offers a system to create, manage, and sign up for events organized by the charity.
+- Volunteer Management: Enables the recruitment and management of volunteers, including tracking their involvement and contributions.
+- Reports & Analytics: Provides tools to generate reports on donations, events, and volunteer activities for better transparency and decision-making.
+
+![Charity-Portal](https://github.com/andresporrasdev/Charity-Portal/blob/main/ReadmeFiles/HomePageReadme.jpg)
+
+## Architectural Design
+Technologies Used:
+
+- Back-End: Python, Django framework
+- Front-End: HTML, CSS, JavaScript, Bootstrap
+- Database: MySQL
+- Version Control: GitHub for version control and collaboration
 
 The backend also has logic for connecting to external services which OTS currently uses and would like to maintain. This includes EventBrite for creating events and collecting payment, and Gmail for sending and receiving emails to members. By connecting to these existing accounts for these services it will maintain a familiar experience for users.
+
 Administrators and community organizers will also interact with the system primarily through the web portal as well, where they will have access to tools and dashboards allowing them access to the required database functionality. An administrator should not need to access the source code, or database directly except in the event of a system update or upgrade.
+
 Users will interact with the product through a web page built using standard web technologies using the React Framework and connected to the backend via Node.js modules. The business logic is contained in the back end and written using Node.js. Here, the users’ requests are processed and packaged for the database
+
+![Charity-Portal](https://github.com/andresporrasdev/Charity-Portal/blob/main/ReadmeFiles/Architectural_Design.jpg)
 
 ## Installation Instructions
 
@@ -23,8 +47,6 @@ Depending on the provider, you may need to build and start the portal – to do 
 4. Type npm start to launch the front end / UI.
 
 ### Creating the Database
-
-![Charity-Portal](https://github.com/andresporrasdev/Traffic-Volumes-Provincial-Highway-System/blob/main/images/readme/Traffic_sequence.jpg)
 
 The database for the portal is MongoDB. There are two options for hosting the database, “self-hosting” using the same web-hosting service, or by using the MongoDB Atlas service. Official documentation for both options can be found at:
 
@@ -46,10 +68,6 @@ Setup of services as Everbrite API and Gmail API can be found in detail in the u
 ## Testing and Validation
 
 For detailed reports on testing refer to the **Validation Report** document.
-
-## Navigation Map
-
-![Charity-Portal](https://github.com/andresporrasdev/Traffic-Volumes-Provincial-Highway-System/blob/main/images/readme/Traffic_sequence.jpg)
 
 ## Folder Structure
 
