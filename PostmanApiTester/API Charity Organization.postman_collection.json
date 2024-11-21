@@ -1,0 +1,306 @@
+{
+	"info": {
+		"_postman_id": "9e0ce196-3c0f-4c62-8ee7-47ccc84c1e46",
+		"name": "API Charity Organization",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34807241"
+	},
+	"item": [
+		{
+			"name": "Get events",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/event/readEvent",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"event",
+						"readEvent"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllVolunteerRoles",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/volunteerRole/getAllVolunteerRoles",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"volunteerRole",
+						"getAllVolunteerRoles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getPostsForNonMember",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/post/getPostsForNonMember",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"post",
+						"getPostsForNonMember"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllRoles",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/role/getAllRoles",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"role",
+						"getAllRoles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetEventById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/event/getEventById/671858f3e7fa0f24dcf77918",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"event",
+						"getEventById",
+						"671858f3e7fa0f24dcf77918"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getPostsForNonMember",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/post/getPostsForNonMember",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"post",
+						"getPostsForNonMember"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getPostById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/post/getPostById/6710780c91eaec4928b73cdd",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"post",
+						"getPostById",
+						"6710780c91eaec4928b73cdd"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updatePost",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "content",
+							"value": "Content-from-Post",
+							"type": "text"
+						},
+						{
+							"key": "subject",
+							"value": "Subject-from-Post",
+							"type": "text"
+						},
+						{
+							"key": "id",
+							"value": "673e29d75359475ddcd428e3",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/post/addPost",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"post",
+						"addPost"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updatePost",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "content",
+							"value": "Content-from-Post-updated",
+							"type": "text"
+						},
+						{
+							"key": "subject",
+							"value": "Subject-from-Post-updated",
+							"type": "text"
+						},
+						{
+							"key": "id",
+							"value": "673e29d75359475ddcd428e3",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/post/updatePost/673e29d75359475ddcd428e3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"post",
+						"updatePost",
+						"673e29d75359475ddcd428e3"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "673e29d75359475ddcd428e3",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deletePost",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/post/deletePost/673e3d335359475ddcd428eb",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"post",
+						"deletePost",
+						"673e3d335359475ddcd428eb"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "volunteerRole/getAllVolunteerRoles",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/volunteerRole/getAllVolunteerRoles",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"volunteerRole",
+						"getAllVolunteerRoles"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
