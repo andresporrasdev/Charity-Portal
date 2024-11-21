@@ -2,33 +2,29 @@
 
 ## Overview
 
-The Charity Portal project aims to create an efficient and user-friendly platform to manage charitable organizations’ operations, including handling donations, events, and volunteer coordination. The portal is designed to streamline processes for both administrators and users, making it easier to track donations, participate in events, and engage with the organization.
-
+The Charity Portal project aims to create an efficient and user-friendly platform to manage charitable organizations’ operations, including handling donations, events, and volunteer coordination. The portal is designed to streamline processes for both administrators and users, making it easier to track volunteers, participate in events, and engage with the organization.
 The main objective of the project is to provide a robust and scalable platform for charities to manage their operations efficiently, improving donor engagement, and facilitating volunteer efforts while offering comprehensive reporting and transparency.
 
 Key Features:
-
-- User Management: Allows different types of users (e.g., administrators, donors, volunteers) to register and manage their profiles.
-- Donation Tracking: Facilitates the management of financial and material donations, enabling users to donate securely and track their contributions.
-- Event Management: Offers a system to create, manage, and sign up for events organized by the charity.
+- User Management: Allows different types of users (e.g., administrators, performers, organizer, volunteers) to register and manage their profiles.
+- Members Administration: Allow administrator to handle users in a table format
+- Event Management: Offers a system to create, manage, and sign up (Assist or volunteers) for events organized by the charity.
 - Volunteer Management: Enables the recruitment and management of volunteers, including tracking their involvement and contributions.
-- Reports & Analytics: Provides tools to generate reports on donations, events, and volunteer activities for better transparency and decision-making.
+- News portal: Allow members and non members to get new filtered by role if logged
+- Contact Form: Visitors can send a message throught a form and get a copy by mail of the data submited.
 
 ![Charity-Portal](https://github.com/andresporrasdev/Charity-Portal/blob/main/ReadmeFiles/HomePageReadme.jpg)
 
 ## Architectural Design
+
 Technologies Used:
-
-- Back-End: Python, Django framework
-- Front-End: HTML, CSS, JavaScript, Bootstrap
-- Database: MySQL
+- Front-End: React, HTML, CSS, JavaScript
+- Back-End: Node.JS (Rest API for connecting Backend with FrontEnd with Express framework)
+- Database: MongoDB
 - Version Control: GitHub for version control and collaboration
-
-The backend also has logic for connecting to external services which OTS currently uses and would like to maintain. This includes EventBrite for creating events and collecting payment, and Gmail for sending and receiving emails to members. By connecting to these existing accounts for these services it will maintain a familiar experience for users.
-
-Administrators and community organizers will also interact with the system primarily through the web portal as well, where they will have access to tools and dashboards allowing them access to the required database functionality. An administrator should not need to access the source code, or database directly except in the event of a system update or upgrade.
-
-Users will interact with the product through a web page built using standard web technologies using the React Framework and connected to the backend via Node.js modules. The business logic is contained in the back end and written using Node.js. Here, the users’ requests are processed and packaged for the database
+- Security: Uses OTP (One Time Password) for submission, crypto to store passwords in DB, JWT (Jason Web Token) in login sessions
+- PostMan: Test API requests and responses and Token and auth validation.
+- External connections: EverBrite is used to create events and collect payment, Gmail used to send and receive emails to members.
 
 ![Charity-Portal](https://github.com/andresporrasdev/Charity-Portal/blob/main/ReadmeFiles/Architectural_Design.jpg)
 
@@ -44,7 +40,7 @@ Depending on the provider, you may need to build and start the portal – to do 
 1. Navigate to the “backend/” folder, and type npm install to install or update any required dependencies;
 2. Type node server.js to start the backend service;
 3. Navigate to the “frontend/” folder and type npm install to install or update any required dependencies; and
-4. Type npm start to launch the front end / UI.
+4. Type npm start to launching the front end / UI.
 
 ### Creating the Database
 
