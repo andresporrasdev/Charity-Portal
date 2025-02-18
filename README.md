@@ -14,7 +14,7 @@ Key Features:
 - News portal: Allow members and non members to get new filtered by role if logged
 - Contact Form: Visitors can send a message throught a form and get a copy by mail of the data submited.
 
-![Charity-Portal](https://github.com/andresporrasdev/Charity-Portal/blob/main/ReadmeFiles/HomePageReadme.jpg)
+![Charity-Portal](https://raw.githubusercontent.com/andresporrasdev/Charity-Portal/main/ReadmeFiles/HomePageReadme.jpg)
 
 ## Architectural Design
 
@@ -27,7 +27,7 @@ Technologies Used:
 - PostMan: Test API requests and responses and Token and auth validation.
 - External connections: EverBrite is used to create events and collect payment, Gmail used to send and receive emails to members.
 
-![Charity-Portal](https://github.com/andresporrasdev/Charity-Portal/blob/main/ReadmeFiles/Architectural_Design.jpg)
+![Charity-Portal](https://raw.githubusercontent.com/andresporrasdev/Charity-Portal/main/ReadmeFiles/Architectural_Design.jpg)
 
 ## Installation Instructions
 
