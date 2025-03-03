@@ -1,5 +1,6 @@
 # Charity Organization Portal
-
+## Live website link:
+[Live functional website](https://charity-portal.onrender.com)
 ## Overview
 
 The Charity Portal project aims to create an efficient and user-friendly platform to manage charitable organizations’ operations, including handling donations, events, and volunteer coordination. The portal is designed to streamline processes for both administrators and users, making it easier to track volunteers, participate in events, and engage with the organization.
@@ -13,7 +14,7 @@ Key Features:
 - News portal: Allow members and non members to get new filtered by role if logged
 - Contact Form: Visitors can send a message throught a form and get a copy by mail of the data submited.
 
-![Charity-Portal](https://github.com/andresporrasdev/Charity-Portal/blob/main/ReadmeFiles/HomePageReadme.jpg)
+![Charity-Portal](https://raw.githubusercontent.com/andresporrasdev/Charity-Portal/main/ReadmeFiles/HomePageReadme.jpg)
 
 ## Architectural Design
 
@@ -26,7 +27,7 @@ Technologies Used:
 - PostMan: Test API requests and responses and Token and auth validation.
 - External connections: EverBrite is used to create events and collect payment, Gmail used to send and receive emails to members.
 
-![Charity-Portal](https://github.com/andresporrasdev/Charity-Portal/blob/main/ReadmeFiles/Architectural_Design.jpg)
+![Charity-Portal](https://raw.githubusercontent.com/andresporrasdev/Charity-Portal/main/ReadmeFiles/Architectural_Design.jpg)
 
 ## Installation Instructions
 
