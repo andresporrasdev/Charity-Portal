@@ -6,6 +6,39 @@ const { sendEmail } = require("./../utils/email");
 const { encryptPassword } = require("../utils/encryption");
 const serverBaseUrl = process.env.SERVER_BASE_URL;
 
+/**
+ * Validates if a redirect URL is safe
+ * Only allows relative paths starting with '/'
+ * Rejects external URLs, javascript:, data:, and other dangerous protocols
+ * 
+ * @param {string} url - The URL to validate
+ * @returns {string} - Safe redirect URL or '/' as fallback
+ */
+const getSafeRedirectUrl = (url) => {
+  // Return default if null, undefined, or empty
+  if (!url || typeof url !== 'string' || url.trim() === '') {
+    return '/';
+  }
+
+  const trimmedUrl = url.trim();
+
+  // Only allow relative paths starting with '/' and not '//'
+  if (trimmedUrl.startsWith('/') && !trimmedUrl.startsWith('//')) {
+    // Reject paths with protocol-like patterns
+    if (trimmedUrl.includes('://')) {
+      return '/';
+    }
+    // Reject paths with dangerous protocol patterns
+    if (/^(javascript|data|vbscript|file):/i.test(trimmedUrl)) {
+      return '/';
+    }
+    return trimmedUrl;
+  }
+
+  // Reject all absolute URLs (external URLs are not allowed)
+  return '/';
+};
+
 const signToken = (email) => {
   return jwt.sign({ email, iat: Math.floor(Date.now() / 1000) }, process.env.SECRET_STR, {
     // payload, secret string
@@ -37,7 +70,7 @@ exports.signup = async (req, res) => {
       status: "success",
       message: "Member's password saved successfully.",
       data: existingUser,
-      redirectUrl: "/login",
+      redirectUrl: getSafeRedirectUrl("/login"),
     });
   } catch (error) {
     console.error("Error saving member:", error);
@@ -99,7 +132,7 @@ exports.login = async (req, res) => {
       message: "Login successful",
       token,
       existingUser,
-      redirectUrl: "/",
+      redirectUrl: getSafeRedirectUrl("/"),
     });
   } catch (error) {
     console.error("Login error:", error);
@@ -257,6 +290,6 @@ exports.resetPassword = async (req, res, next) => {
     status: "success",
     message: "Your password changed successfully!",
     token: loginToken,
-    redirectUrl: "/login",
+    redirectUrl: getSafeRedirectUrl("/login"),
   });
 };

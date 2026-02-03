@@ -10,7 +10,7 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "axios": "^1.7.2",
+    "axios": "^1.7.7",
     "dependencies": "^0.0.1",
     "material-react-table": "^2.13.0",
     "quill-image-resize-module-react": "^3.0.0",
@@ -18,7 +18,7 @@
     "react-dom": "^18.3.1",
     "react-icons": "^5.2.1",
     "react-quill": "^2.0.0",
-    "react-router-dom": "^6.23.1",
+    "react-router-dom": "^6.30.2",
     "react-scripts": "5.0.1",
     "react-toastify": "^10.0.5",
     "web-vitals": "^2.1.4"
@@ -49,5 +49,21 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+  },
+  "overrides": {
+    "follow-redirects": "^1.15.8",
+    "minimist": "^1.2.9",
+    "ansi-html-community": "^0.0.8",
+    "ansi-html": "npm:ansi-html-community@^0.0.8",
+    "loader-utils": "^3.2.1",
+    "url-parse": "^1.5.11",
+    "json-schema": "^0.4.0",
+    "browserslist": "^4.24.5",
+    "postcss-value-parser": "^4.2.1",
+    "path-parse": "^1.0.7",
+    "normalize-url": "^7.0.0",
+    "terser": "^5.39.1",
+    "css-what": "^6.1.1",
+    "nth-check": "^2.1.2"
   }
 }

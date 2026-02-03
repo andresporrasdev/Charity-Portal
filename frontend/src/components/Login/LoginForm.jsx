@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Alert from "@mui/material/Alert";
+import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import { FaEnvelope, FaLock, FaUser, FaEye, FaEyeSlash } from "react-icons/fa";
 import BaseURL from "../../config";
+import { getSafeRedirectUrl } from "../../utils/urlValidation";
 
 const LoginForm = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [modalEmail, setModalEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -132,10 +135,14 @@ const LoginForm = () => {
   useEffect(() => {
     if (redirectUrl) {
       setTimeout(() => {
-        window.location.href = redirectUrl;
+        const safeUrl = getSafeRedirectUrl(redirectUrl);
+        if (safeUrl !== redirectUrl) {
+          console.warn("Unsafe redirect URL blocked:", redirectUrl, "Redirecting to:", safeUrl);
+        }
+        navigate(safeUrl);
       }, 3000); // redirect after 3 seconds
     }
-  }, [redirectUrl]);
+  }, [redirectUrl, navigate]);
 
   return (
     <div className="wrapper">

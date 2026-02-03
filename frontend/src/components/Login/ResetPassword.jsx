@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import axios from "axios";
 import { FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import Alert from "@mui/material/Alert";
 import BaseURL from "../../config";
+import { getSafeRedirectUrl } from "../../utils/urlValidation";
 
 const ResetPassword = ({ token }) => {
+  const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -98,10 +101,14 @@ const ResetPassword = ({ token }) => {
   useEffect(() => {
     if (redirectUrl) {
       setTimeout(() => {
-        window.location.href = redirectUrl;
+        const safeUrl = getSafeRedirectUrl(redirectUrl);
+        if (safeUrl !== redirectUrl) {
+          console.warn("Unsafe redirect URL blocked:", redirectUrl, "Redirecting to:", safeUrl);
+        }
+        navigate(safeUrl);
       }, 3000);
     }
-  }, [redirectUrl]);
+  }, [redirectUrl, navigate]);
 
   return (
     <div className="reset-password-wrapper">

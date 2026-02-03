@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Register.css";
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import Alert from "@mui/material/Alert";
 import OtpModal from "../Otp/OtpModal";
 import BaseURL from "../../config";
+import { getSafeRedirectUrl } from "../../utils/urlValidation";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -175,10 +178,14 @@ const Register = () => {
   useEffect(() => {
     if (redirectUrl) {
       setTimeout(() => {
-        window.location.href = redirectUrl;
+        const safeUrl = getSafeRedirectUrl(redirectUrl);
+        if (safeUrl !== redirectUrl) {
+          console.warn("Unsafe redirect URL blocked:", redirectUrl, "Redirecting to:", safeUrl);
+        }
+        navigate(safeUrl);
       }, 3000); // redirect after 3 seconds
     }
-  }, [redirectUrl]);
+  }, [redirectUrl, navigate]);
 
   return (
     <div className="wrapper">
