@@ -2,13 +2,6 @@
 
 > A full-stack web application for managing charitable organizations — events, volunteers, members, news, and communications — built with Node.js, React 19, and MongoDB.
 
-[![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org)
-[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev)
-[![MongoDB](https://img.shields.io/badge/MongoDB-8.x-47A248?logo=mongodb&logoColor=white)](https://mongodb.com)
-[![MUI](https://img.shields.io/badge/MUI-v7-007FFF?logo=mui&logoColor=white)](https://mui.com)
-[![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)](https://vitejs.dev)
-[![JWT](https://img.shields.io/badge/Auth-JWT-000000?logo=jsonwebtokens&logoColor=white)](https://jwt.io)
-[![Deployed on Render](https://img.shields.io/badge/Deployed-Render-46E3B7?logo=render&logoColor=white)](https://charity-portal.onrender.com)
 
 **Live demo:** [https://charity-portal.onrender.com](https://charity-portal.onrender.com)
 
@@ -59,15 +52,23 @@ The project began as a Create React App (CRA) monolith and has since been modern
 
 ### Login Page
 
-<!-- TODO: screenshot — add ReadmeFiles/LoginForm.jpg -->
+![Login Page](https://raw.githubusercontent.com/andresporrasdev/Charity-Portal/main/ReadmeFiles/LoginForm.jpg)
 
 ### Mobile View (375px)
 
-<!-- TODO: screenshot — add ReadmeFiles/MobileView.jpg showing responsive homepage/nav -->
+![Mobile View (375px)](https://raw.githubusercontent.com/andresporrasdev/Charity-Portal/main/ReadmeFiles/MobileView.jpg)
 
 ---
 
 ## Tech Stack
+
+[![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev)
+[![MongoDB](https://img.shields.io/badge/MongoDB-8.x-47A248?logo=mongodb&logoColor=white)](https://mongodb.com)
+[![MUI](https://img.shields.io/badge/MUI-v7-007FFF?logo=mui&logoColor=white)](https://mui.com)
+[![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)](https://vitejs.dev)
+[![JWT](https://img.shields.io/badge/Auth-JWT-000000?logo=jsonwebtokens&logoColor=white)](https://jwt.io)
+[![Deployed on Render](https://img.shields.io/badge/Deployed-Render-46E3B7?logo=render&logoColor=white)](https://charity-portal.onrender.com)
 
 ### Backend
 
