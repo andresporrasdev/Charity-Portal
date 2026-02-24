@@ -40,7 +40,7 @@ The project began as a Create React App (CRA) monolith and has since been modern
 
 ### Event Listings
 
-<!-- TODO: screenshot — add ReadmeFiles/EventPage.jpg showing event cards with images -->
+![Login Page](https://raw.githubusercontent.com/andresporrasdev/Charity-Portal/main/ReadmeFiles/EventPage.jpg)
 
 ### Admin Dashboard (Member/Volunteer Management Table)
 
