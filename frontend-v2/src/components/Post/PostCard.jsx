@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
+import DOMPurify from "dompurify";
 import {
   Card,
   CardMedia,
@@ -100,7 +101,7 @@ const PostCard = ({ post, onEdit, onDelete }) => {
           <IconButton onClick={() => setShowModal(false)}><CloseIcon /></IconButton>
         </DialogTitle>
         <DialogContent>
-          <div dangerouslySetInnerHTML={{ __html: content }} />
+          <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }} />
           <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: "block" }}>
             Updated: {formattedTime}
           </Typography>
