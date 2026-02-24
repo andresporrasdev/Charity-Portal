@@ -1,89 +1,318 @@
 # Charity Organization Portal
-## Live website link:
-[Live functional website](https://charity-portal.onrender.com)
+
+> A full-stack web application for managing charitable organizations — events, volunteers, members, news, and communications — built with Node.js, React 19, and MongoDB.
+
+[![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev)
+[![MongoDB](https://img.shields.io/badge/MongoDB-8.x-47A248?logo=mongodb&logoColor=white)](https://mongodb.com)
+[![MUI](https://img.shields.io/badge/MUI-v7-007FFF?logo=mui&logoColor=white)](https://mui.com)
+[![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)](https://vitejs.dev)
+[![JWT](https://img.shields.io/badge/Auth-JWT-000000?logo=jsonwebtokens&logoColor=white)](https://jwt.io)
+[![Deployed on Render](https://img.shields.io/badge/Deployed-Render-46E3B7?logo=render&logoColor=white)](https://charity-portal.onrender.com)
+
+**Live demo:** [https://charity-portal.onrender.com](https://charity-portal.onrender.com)
+
+---
+
+## Table of Contents
+
+1. [Overview](#overview)
+2. [Screenshots](#screenshots)
+3. [Tech Stack](#tech-stack)
+4. [Architecture](#architecture)
+5. [Key Features](#key-features)
+6. [API Reference](#api-reference)
+7. [Database Schema](#database-schema)
+8. [Application Map](#application-map)
+9. [Project Structure](#project-structure)
+10. [Getting Started](#getting-started)
+11. [Security Highlights](#security-highlights)
+12. [Credits](#credits)
+
+---
+
 ## Overview
 
-The Charity Portal project aims to create an efficient and user-friendly platform to manage charitable organizations’ operations, including handling donations, events, and volunteer coordination. The portal is designed to streamline processes for both administrators and users, making it easier to track volunteers, participate in events, and engage with the organization.
-The main objective of the project is to provide a robust and scalable platform for charities to manage their operations efficiently, improving donor engagement, and facilitating volunteer efforts while offering comprehensive reporting and transparency.
+The Charity Portal is a role-aware web application that centralizes the day-to-day operations of a charitable organization. It supports five user roles — **Member, Administrator, Organizer, Volunteer, and Performer** — each with tailored access to events, news, volunteer coordination, and administrative tools.
 
-Key Features:
-- User Management: Allows different types of users (e.g., administrators, performers, organizer, volunteers) to register and manage their profiles.
-- Members Administration: Allow administrator to handle users in a table format
-- Event Management: Offers a system to create, manage, and sign up (Assist or volunteers) for events organized by the charity.
-- Volunteer Management: Enables the recruitment and management of volunteers, including tracking their involvement and contributions.
-- News portal: Allow members and non members to get new filtered by role if logged
-- Contact Form: Visitors can send a message throught a form and get a copy by mail of the data submited.
+The project began as a Create React App (CRA) monolith and has since been modernized: `frontend-v2/` replaces the legacy `frontend/` with **Vite + React 19 + MUI v7**, resolving all previously reported audit vulnerabilities and cutting cold-start build times significantly.
 
-![Charity-Portal](https://raw.githubusercontent.com/andresporrasdev/Charity-Portal/main/ReadmeFiles/HomePageReadme.jpg)
+---
 
-## Architectural Design
+## Screenshots
 
-Technologies Used:
-- Front-End: React, HTML, CSS, JavaScript
-- Back-End: Node.JS (Rest API for connecting Backend with FrontEnd with Express framework)
-- Database: MongoDB
-- Version Control: GitHub for version control and collaboration
-- Security: Uses OTP (One Time Password) for submission, crypto to store passwords in DB, JWT (Jason Web Token) in login sessions
-- PostMan: Test API requests and responses and Token and auth validation.
-- External connections: EverBrite is used to create events and collect payment, Gmail used to send and receive emails to members.
+### Home Page
 
-![Charity-Portal](https://raw.githubusercontent.com/andresporrasdev/Charity-Portal/main/ReadmeFiles/Architectural_Design.jpg)
+![Home Page](https://raw.githubusercontent.com/andresporrasdev/Charity-Portal/main/ReadmeFiles/HomePageReadme.jpg)
 
-## Installation Instructions
+### Event Listings
 
-For detailed installation and configuration instructions refer to the File **User Guide Charity** document, folder in root **ReadmeFiles**.
+<!-- TODO: screenshot — add ReadmeFiles/EventPage.jpg showing event cards with images -->
 
-### Deploying the Website
+### Admin Dashboard (Member/Volunteer Management Table)
 
-This will depend on the hosting provider chosen, as each company will have specific tools and procedures for their product. Please consult any guides and tutorials provided by the hosting provider. All source code has been provided in a zip file and this can be directly uploaded to a hosting provider, or to an online git service depending on the client’s choice. For details on the files included in the source code see the “Program Design/Folder Structure” and Appendix A in this document.
-Depending on the provider, you may need to build and start the portal – to do so;
+<!-- TODO: screenshot — add ReadmeFiles/AdminDashboard.jpg showing Material-React-Table -->
 
-1. Navigate to the “backend/” folder, and type npm install to install or update any required dependencies;
-2. Type node server.js to start the backend service;
-3. Navigate to the “frontend/” folder and type npm install to install or update any required dependencies; and
-4. Type npm start to launching the front end / UI.
+### News Portal
 
-### Creating the Database
+<!-- TODO: screenshot — add ReadmeFiles/NewsPortal.jpg showing role-filtered post cards -->
 
-The database for the portal is MongoDB. There are two options for hosting the database, “self-hosting” using the same web-hosting service, or by using the MongoDB Atlas service. Official documentation for both options can be found at:
+### Login Page
 
-1. Self-Hosted MongoDB: https://www.mongodb.com/products/self-managed/community-edition
-2. MongoDB Atlas: https://www.mongodb.com/atlas
-   For development and testing, a free-tier Atlas cluster was used.
-   Regardless of which hosting option is chosen, the following configuration steps should be the same:
-3. Create a database
-4. Find the MongoDB Connection String for your database (refer to MongoDB documentation for help: https://www.mongodb.com/docs/manual/reference/connection-string/)
-5. Open the .env file located at backend/.env and enter the Connection String in the “MONGODB_URI=” field
-6. Save the changes to the .env file.
-7. When server.js is started (see “Deploying the Website” step 4) an empty database will be created at the cluster specified by the connection string.
-8. When the database is created it will generate new, unique IDs for the roles. Navigate to the “roles” collection in the database and copy the unique IDs and paste them into frontend/.env by the corresponding variable.
+<!-- TODO: screenshot — add ReadmeFiles/LoginForm.jpg -->
 
-### Configuration of external services
+### Mobile View (375px)
 
-Setup of services as Everbrite API and Gmail API can be found in detail in the user guide in the ReadmeFiles folder
+<!-- TODO: screenshot — add ReadmeFiles/MobileView.jpg showing responsive homepage/nav -->
 
-## Testing and Validation
+---
 
-For detailed reports on testing refer to the **Validation Report** document.
+## Tech Stack
 
-## Folder Structure
+### Backend
 
-For details of the folder structure refer to the **Elaboration Report** document, section **Program Design / Folder Structure** and **Appendix A**.
+| Layer | Technology |
+|---|---|
+| Runtime | Node.js 18+ |
+| Framework | Express.js 4.21 |
+| Database | MongoDB 8.x + Mongoose ODM |
+| Auth | JWT (`jsonwebtoken` 9) + `bcryptjs` |
+| File Storage | Multer + Cloudinary |
+| Email | Nodemailer + Gmail API (`googleapis`) |
+| OTP | Custom OTP model + email delivery |
+| Dev | Nodemon |
 
-| Reference | Folder Name  | Description                            |
-| --------- | ------------ | -------------------------------------- |
-| 1         | Project Root | Project Root                           |
-| 1.1       | backend      | Backend, server code                   |
-| 1.1.1     | controllers  | Logic for entities                     |
-| 1.1.2     | data         | Sameple data for testing and debugging |
-| 1.1.3     | models       | Entity models                          |
-| 1.1.4     | node_modules | Auto-generated files from NodeJS       |
-| 1.1.5     | routes       | React routers for fetching data.       |
-| 1.1.6     | utils        | Utilities and helper files.            |
-| 1.2       | frontend     | Frontend, user interface components    |
-| 1.2.1     | node_modules | Auto-generated files from NodeJS       |
-| 1.2.2     | public       | Images and media for main pages        |
-| 1.2.3     | src          | source code for HTML, CSS, and JSX     |
+### Frontend-v2 (active)
+
+| Layer | Technology |
+|---|---|
+| Bundler | Vite 7 |
+| Framework | React 19 |
+| UI Library | MUI v7 (Material-UI) |
+| Routing | react-router-dom 7 |
+| HTTP | Axios |
+| Rich Text | React-Quill 2 |
+| Data Tables | Material-React-Table 3 |
+| Toasts | react-toastify |
+
+> `frontend/` (CRA) is archived in-place. All active development targets `frontend-v2/`.
+
+---
+
+## Architecture
+
+![Architectural Design](https://raw.githubusercontent.com/andresporrasdev/Charity-Portal/main/ReadmeFiles/Architectural_Design.jpg)
+
+The application follows a classic three-tier architecture:
+
+- **Presentation layer** — React 19 SPA served via Vite dev server or static hosting. MUI v7 components provide a consistent Material Design UI with a custom amber/green theme.
+- **Application layer** — Express.js REST API handles business logic, RBAC enforcement via JWT middleware, file uploads via Multer/Cloudinary, and email dispatch via Gmail API.
+- **Data layer** — MongoDB Atlas stores all application data. Mongoose schemas enforce structure and relationships across 7 collections.
+
+---
+
+## Key Features
+
+### Multi-Role RBAC (5 roles)
+- Roles: **Member, Administrator, Organizer, Volunteer, Performer**
+- JWT-based session with role ID stored in token payload
+- `ProtectedRoute` component in React guards client-side navigation
+- Middleware on every sensitive API endpoint verifies token and role before processing
+
+### Event Management
+- Full CRUD for events (create, read, update, delete)
+- Image uploads via Multer (multipart) → Cloudinary CDN
+- Events displayed as responsive MUI cards with images, dates, and descriptions
+- Past-events view separates upcoming from historical events
+
+### Volunteer Coordination
+- Public volunteer sign-up form with OTP verification before submission
+- Admin table (Material-React-Table) for viewing and managing all volunteers
+- Bulk email notifications to volunteers via Gmail API
+
+### News / Posts Portal
+- Role-filtered content: non-members see public posts; logged-in users see role-specific posts
+- Rich text authoring via React-Quill 2 (WYSIWYG with image resize support)
+- Post notification emails sent to relevant users on publish
+
+### User Management
+- Admin-only table (Material-React-Table) listing all registered users
+- Inline edit and delete with confirmation
+- Filter and sort by role, name, or email
+
+### Contact Form
+- Public contact form delivers submissions to the admin inbox via Gmail API
+- Sender receives a confirmation copy of their submitted message
+
+### Password Reset
+- "Forgot password" initiates a secure time-limited token sent by email
+- Token-based reset route (`/reset-password/:token`) validates and updates the hashed password
+
+### Responsive Design
+- MUI `Grid` container with `xs=12 sm=6 md=4` breakpoints throughout
+- Mobile-first layout tested at 375px, 768px, and 1280px viewports
+- Consistent `<Container maxWidth="lg">` wrapper on all pages
+
+---
+
+## API Reference
+
+| Resource | Method | Endpoint | Auth |
+|---|---|---|---|
+| Auth | POST | `/api/auth/login` | Public |
+| Auth | POST | `/api/auth/signup` | Public |
+| Auth | POST | `/api/auth/forgetPassword` | Public |
+| Auth | PATCH | `/api/auth/resetPassword/:token` | Public |
+| Users | GET | `/api/user/getAllUsers` | Admin |
+| Users | PATCH | `/api/user/updateUser/:id` | Admin |
+| Users | DELETE | `/api/user/deleteUser/:id` | Admin |
+| Events | GET | `/api/event/readEvent` | Public |
+| Events | POST | `/api/event/addEvent` | Auth |
+| Events | PATCH | `/api/event/updateEvent/:id` | Auth |
+| Events | DELETE | `/api/event/deleteEvent/:id` | Auth |
+| Events | POST | `/api/event/upload` | Auth |
+| Volunteers | POST | `/api/volunteer/volunteerSignUp` | Auth |
+| Volunteers | GET | `/api/volunteer/getAllVolunteers` | Admin |
+| Volunteers | POST | `/api/volunteer/notify-volunteers` | Admin / Organizer |
+| Posts | GET | `/api/post/getPostsForNonMember` | Public |
+| Posts | POST | `/api/post/getPostByRole` | Auth |
+| Posts | POST | `/api/post/addPost` | Auth |
+| Posts | POST | `/api/post/notify-users` | Auth |
+| OTP | POST | `/api/otp/send-otp` | Public |
+| OTP | POST | `/api/otp/verify-otp` | Public |
+| Contact | POST | `/api/contact/send-contact-email` | Public |
+
+---
+
+## Database Schema
+
+![Database Schema](https://raw.githubusercontent.com/andresporrasdev/Charity-Portal/main/ReadmeFiles/Database.jpg)
+
+The application uses **7 MongoDB collections**:
+
+| Collection | Purpose |
+|---|---|
+| `User` | Registered accounts; stores hashed password, role reference, profile data |
+| `Event` | Event records with title, description, date, image URL |
+| `Post` | News/blog posts with rich-text body, target role, author |
+| `Volunteer` | Volunteer sign-up records linked to events and users |
+| `Role` | Role definitions (Member, Admin, Organizer, Volunteer, Performer) |
+| `VolunteerRole` | Junction collection mapping volunteers to specific roles per event |
+| `OTP` | Time-limited one-time passwords for volunteer sign-up verification |
+
+---
+
+## Application Map
+
+![Site Map](https://raw.githubusercontent.com/andresporrasdev/Charity-Portal/main/ReadmeFiles/SiteMap.jpg)
+
+| Public Routes | Protected Routes (Admin) |
+|---|---|
+| `/` — Home | `/member-manage` — User management table |
+| `/event` — Upcoming events | `/volunteer-manage` — Volunteer management table |
+| `/past-events` — Past events | `/add-news` — Create/publish posts |
+| `/membership` — Membership info | |
+| `/volunteer` — Volunteer sign-up | |
+| `/news` — News portal | |
+| `/gallery` — Photo gallery | |
+| `/contact-us` — Contact form | |
+| `/login` — Login | |
+| `/register` — Sign up | |
+| `/reset-password/:token` — Password reset | |
+| `/policy` — Privacy policy | |
+
+---
+
+## Project Structure
+
+```
+Charity-Portal/
+├── backend/
+│   ├── controllers/         # Business logic per entity
+│   ├── models/              # Mongoose schemas (User, Event, Post, …)
+│   ├── routes/              # Express route definitions
+│   └── utils/               # JWT helpers, email dispatch, OTP utilities
+├── frontend/                # Legacy CRA app (archived, not actively maintained)
+├── frontend-v2/             # Active: Vite + React 19 + MUI v7
+│   └── src/
+│       ├── components/      # Navbar, Footer, EventCard, PostCard, Auth forms…
+│       ├── pages/           # Route-level page components (Home, Events, News…)
+│       ├── router/          # ProtectedRoute RBAC guard
+│       ├── utils/           # URL validation helpers
+│       ├── UserContext.jsx  # Auth context (user, login, logout)
+│       └── theme.js         # MUI createTheme — amber (#e88a1d) + green (#2e5d4b)
+└── ReadmeFiles/             # Documentation assets (screenshots, diagrams)
+```
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js ≥ 18, npm ≥ 9
+- [MongoDB Atlas](https://mongodb.com/atlas) account (free tier is sufficient)
+- [Cloudinary](https://cloudinary.com) account (free tier)
+- Gmail account with [App Password](https://support.google.com/accounts/answer/185833) enabled
+
+### Backend Setup
+
+```bash
+cd backend
+npm install
+cp .env.example .env   # fill in the values below
+node server.js         # http://localhost:<SERVER_PORT>
+```
+
+### Frontend Setup (frontend-v2)
+
+```bash
+cd frontend-v2
+npm install
+cp .env.example .env   # fill in VITE_* values below
+npm run dev            # http://localhost:5173
+```
+
+### Environment Variables
+
+**`backend/.env`**
+
+| Variable | Description |
+|---|---|
+| `MONGODB_URI` | MongoDB Atlas connection string |
+| `JWT_SECRET` | Secret key used for JWT signing |
+| `SERVER_PORT` | Express server port (e.g. `5000`) |
+| `EMAIL_USER` | Gmail address used for notifications |
+| `EMAIL_PASSWORD` | Gmail App Password |
+| `CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name |
+| `CLOUDINARY_API_KEY` | Cloudinary API key |
+| `CLOUDINARY_API_SECRET` | Cloudinary API secret |
+
+**`frontend-v2/.env`**
+
+| Variable | Description |
+|---|---|
+| `VITE_BASE_URL` | Backend API base URL (e.g. `http://localhost:5000`) |
+| `VITE_ROLE_ADMIN` | MongoDB ObjectId of the Admin role |
+| `VITE_ROLE_MEMBER` | MongoDB ObjectId of the Member role |
+| `VITE_ROLE_ORGANIZER` | MongoDB ObjectId of the Organizer role |
+| `VITE_ROLE_VOLUNTEER` | MongoDB ObjectId of the Volunteer role |
+| `VITE_ROLE_PERFORMER` | MongoDB ObjectId of the Performer role |
+
+> Role ObjectIds are generated by MongoDB on first server start. Check the `roles` collection in Atlas and copy the `_id` values into your `.env`.
+
+---
+
+## Security Highlights
+
+- **Password hashing** — `bcryptjs` with salted rounds; plaintext passwords are never stored
+- **JWT sessions** — Signed tokens with role payload; verified by Express middleware on every protected route
+- **Role-Based Access Control** — Five distinct roles enforced at both the API and client-router level
+- **OTP verification** — Time-limited one-time passwords guard volunteer sign-up submissions
+- **Secure password reset** — Token-based email flow with expiry; token invalidated after use
+- **CORS policy** — Restricted to known frontend origins in production
+
+---
 
 ## Credits
 
