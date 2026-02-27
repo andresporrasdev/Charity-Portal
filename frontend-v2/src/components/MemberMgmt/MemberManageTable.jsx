@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import axios from "axios";
-import BaseURL from "../../config";
+import axiosInstance from "../../utils/axiosInstance";
+import useTableData from "../../hooks/useTableData";
 import { MaterialReactTable, useMaterialReactTable, MRT_ActionMenuItem } from "material-react-table";
 import { Edit, Delete } from "@mui/icons-material";
 import { Box, Container } from "@mui/material";
@@ -8,59 +8,45 @@ import ConfirmModal from "../ConfirmModal.jsx";
 import EditUserForm from "./EditUserForm.jsx";
 
 const MemberManageTable = () => {
-  const [columns, setColumns] = useState([]);
   const [userData, setUserData] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditUserModal, setShowEditUserModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
-  const [roleOptions, setRoleOptions] = useState([]);
-  const apiUrl = `${BaseURL}/api/user/getAllUsers`;
+
+  const { rows: rawUsers, roleOptions } = useTableData(
+    "/api/user/getAllUsers",
+    "users",
+    "/api/role/getAllRoles"
+  );
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(apiUrl, {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        });
-        const data = response.data;
-        const fetchedData = data.data.users.map((user) => ({
-          id: user._id,
-          email: user.email,
-          firstName: user.first_name,
-          lastName: user.last_name,
-          isActive: user.isActive ? "Active" : "Inactive",
-          roles: user.roles.join(", "),
-          created: new Date(user.created).toISOString().split("T")[0],
-        }));
-        const cols = [
-          { accessorKey: "id", header: "User ID" },
-          { accessorKey: "email", header: "Email" },
-          { accessorKey: "firstName", header: "First Name" },
-          { accessorKey: "lastName", header: "Last Name" },
-          { accessorKey: "roles", header: "Roles" },
-          { accessorKey: "created", header: "Created", size: 50 },
-          { accessorKey: "isActive", header: "Active Status" },
-        ];
-        setColumns(cols);
-        setUserData(fetchedData);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-    fetchData();
-  }, [apiUrl]);
+    if (rawUsers.length === 0) return;
+    setUserData(
+      rawUsers.map((user) => ({
+        id: user._id,
+        email: user.email,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        isActive: user.isActive ? "Active" : "Inactive",
+        roles: user.roles.join(", "),
+        created: new Date(user.created).toISOString().split("T")[0],
+      }))
+    );
+  }, [rawUsers]);
 
-  useEffect(() => {
-    axios.get(`${BaseURL}/api/role/getAllRoles`)
-      .then((r) => setRoleOptions(r.data.data.roles))
-      .catch((e) => console.error("Error fetching roles:", e));
-  }, []);
+  const columns = useMemo(() => [
+    { accessorKey: "id", header: "User ID" },
+    { accessorKey: "email", header: "Email" },
+    { accessorKey: "firstName", header: "First Name" },
+    { accessorKey: "lastName", header: "Last Name" },
+    { accessorKey: "roles", header: "Roles" },
+    { accessorKey: "created", header: "Created", size: 50 },
+    { accessorKey: "isActive", header: "Active Status" },
+  ], []);
 
   const handleUpdateUser = async (editedUser) => {
     try {
-      const response = await axios.patch(`${BaseURL}/api/user/updateUser/${editedUser.id}`, editedUser, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const response = await axiosInstance.patch(`/api/user/updateUser/${editedUser.id}`, editedUser);
       if (response.status === 200) {
         const updatedUserData = {
           ...editedUser,
@@ -84,9 +70,7 @@ const MemberManageTable = () => {
 
   const handleDeleteConfirm = async () => {
     try {
-      const response = await axios.delete(`${BaseURL}/api/user/deleteUser/${selectedUserId}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const response = await axiosInstance.delete(`/api/user/deleteUser/${selectedUserId}`);
       if (response.status === 204) {
         setUserData((prev) => prev.filter((u) => u.id !== selectedUserId));
         window.location.reload();
@@ -101,7 +85,7 @@ const MemberManageTable = () => {
   };
 
   const table = useMaterialReactTable({
-    columns: useMemo(() => columns, [columns]),
+    columns,
     data: useMemo(() => userData, [userData]),
     enableRowActions: true,
     displayColumnDefOptions: { "mrt-row-actions": { header: "Actions", size: 30 } },

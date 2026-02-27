@@ -1,7 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "./utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
-import BaseURL from "./config";
 
 export const UserContext = createContext();
 
@@ -12,17 +11,13 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      fetchUserInfo(token);
+      fetchUserInfo();
     }
   }, []);
 
-  const fetchUserInfo = async (token) => {
+  const fetchUserInfo = async () => {
     try {
-      const response = await axios.get(`${BaseURL}/api/user/userinfo`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axiosInstance.get("/api/user/userinfo");
       if (response.data.status === "success") {
         const userData = response.data.data.user;
         setUser(userData);

@@ -46,7 +46,7 @@ exports.sendContactEmail = async (req, res) => {
 
   try {
     await sendEmail([userConfirmationEmail, adminNotificationEmail]);
-    res.status(200).json({ status: "Success", message: "Emails sent successfully" });
+    res.status(200).json({ status: "success", message: "Emails sent successfully" });
   } catch (error) {
     console.error("Error sending emails:", error);
     res.status(500).json({ status: "error", message: "Error sending emails." });

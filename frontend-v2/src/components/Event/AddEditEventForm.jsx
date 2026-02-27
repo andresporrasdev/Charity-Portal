@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import BaseURL from "../../config";
+import axiosInstance from "../../utils/axiosInstance";
 import {
   TextField,
   Button,
@@ -62,7 +61,7 @@ const AddEditEventForm = ({ event, onSave, onCancel }) => {
     const uploadFormData = new FormData();
     uploadFormData.append("file", selectedFile);
     try {
-      const response = await axios.post(`${BaseURL}/api/event/upload`, uploadFormData);
+      const response = await axiosInstance.post("/api/event/upload", uploadFormData);
       if (response.data.status === "success") {
         setFailMessage("");
         setIsFileUploaded(true);

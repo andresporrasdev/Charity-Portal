@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 import {
   Box,
   Button,
@@ -18,7 +18,6 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff, Email, Lock, Person } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
-import BaseURL from "../../config";
 import { getSafeRedirectUrl } from "../../utils/urlValidation";
 import { UserContext } from "../../UserContext";
 
@@ -47,14 +46,12 @@ const LoginForm = () => {
     if (!isValidEmail(email)) { setEmailError("Please enter a valid email address."); return; }
     setEmailError("");
     try {
-      const response = await axios.post(`${BaseURL}/api/auth/login`, { email, password });
+      const response = await axiosInstance.post("/api/auth/login", { email, password });
       if (response.data.status === "success") {
         const token = response.data.token;
         localStorage.setItem("token", token);
         // Fetch user info and set context
-        const userRes = await axios.get(`${BaseURL}/api/user/userinfo`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const userRes = await axiosInstance.get("/api/user/userinfo");
         if (userRes.data.status === "success") {
           login({ ...userRes.data.data.user, token });
         }
@@ -74,7 +71,7 @@ const LoginForm = () => {
     e.preventDefault();
     if (!isValidEmail(modalEmail)) { setModalEmailError("Please enter a valid email address."); return; }
     try {
-      const response = await axios.post(`${BaseURL}/api/auth/forgetPassword`, { email: modalEmail });
+      const response = await axiosInstance.post("/api/auth/forgetPassword", { email: modalEmail });
       if (response.data.status === "success") {
         setFailMessage(""); setSuccessMessage(response.data.message);
       } else {

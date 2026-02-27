@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-quill/dist/quill.snow.css";
-import BaseURL from "../../config";
 import Editor from "../Editor/Editor";
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 import {
   TextField,
   Grid,
@@ -39,8 +38,8 @@ const AddPostForm = ({ open, onSave, onCancel, roleOptions: propRoleOptions, sta
 
   useEffect(() => {
     if (standalone) {
-      axios
-        .get(`${BaseURL}/api/role/getAllRoles`)
+      axiosInstance
+        .get("/api/role/getAllRoles")
         .then((res) => setRoleOptions(res.data.data.roles))
         .catch(() => {});
     }
@@ -76,23 +75,21 @@ const AddPostForm = ({ open, onSave, onCancel, roleOptions: propRoleOptions, sta
     try {
       if (selectedRoles.length > 0) {
         const emailArray = emailList.split(",").map((e) => e.trim()).filter(Boolean);
-        const emailResponse = await axios.post(
-          `${BaseURL}/api/post/notify-users`,
-          { emails: emailArray, subject, messageBody: newsBody },
-          { headers: { Authorization: `Bearer ${localStorage.getItem("token")}`, "Content-Type": "application/json" } }
+        const emailResponse = await axiosInstance.post(
+          "/api/post/notify-users",
+          { emails: emailArray, subject, messageBody: newsBody }
         );
         if (emailResponse.status === 200) {
           toast.success("Email sent successfully");
-          setTimeout(async () => {
-            if (onSave) await onSave(formData);
-            else await axios.post(`${BaseURL}/api/post/addPost`, formData);
-          }, 2000);
+          if (onSave) await onSave(formData);
+          else await axiosInstance.post("/api/post/addPost", formData);
+          toast.success("News published!");
         } else {
           toast.error("Failed to send email");
         }
       } else {
         if (onSave) await onSave(formData);
-        else await axios.post(`${BaseURL}/api/post/addPost`, formData);
+        else await axiosInstance.post("/api/post/addPost", formData);
         toast.success("News published!");
       }
     } catch (error) {
@@ -108,11 +105,7 @@ const AddPostForm = ({ open, onSave, onCancel, roleOptions: propRoleOptions, sta
     if (roleIds.length > 0) {
       try {
         const responses = await Promise.all(
-          roleIds.map((roleId) =>
-            axios.get(`${BaseURL}/api/user/getUsersByRoleId/${roleId}`, {
-              headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-            })
-          )
+          roleIds.map((roleId) => axiosInstance.get(`/api/user/getUsersByRoleId/${roleId}`))
         );
         const emails = responses
           .flatMap((r) => r.data?.data?.users?.map((m) => m.email) || [])

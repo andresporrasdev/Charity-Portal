@@ -3,6 +3,7 @@ const Role = require("../models/role");
 const mongoose = require("mongoose");
 const fs = require("fs");
 const path = require("path");
+const filterObj = require("../utils/filterObj");
 
 // Uncomment 'getUserDataFromEventBrite' to enable pulling data from live EventBrite API. 
 // Ensure that function 'saveAllUsersToDBFromMockFile' below has been commented out to prevent conflicts.  
@@ -184,16 +185,6 @@ exports.updateUser = async (req, res) => {
   }
   //update user detail
   try {
-    const filterObj = (obj, ...allowedFields) => {
-      const newObj = {};
-      Object.keys(obj).forEach((key) => {
-        if (allowedFields.includes(key)) {
-          newObj[key] = obj[key];
-        }
-      });
-      return newObj;
-    };
-
     const filteredBody = filterObj(req.body, "roles");
 
     //Convert Roles to ObjectIds
@@ -224,7 +215,7 @@ exports.updateUser = async (req, res) => {
     }
 
     res.status(200).json({
-      status: "Success",
+      status: "success",
       data: {
         user: updateUser,
       },
@@ -240,7 +231,7 @@ exports.updateUser = async (req, res) => {
 
 exports.deleteUser = async (req, res, next) => {
   try {
-    await User.findByIdAndUpdate(req.params.id, { isActive: false, $unset: { password: "" } });
+    await User.findByIdAndUpdate(req.params.id, { isActive: false, $unset: { password: 1 } });
     res.status(204).json({
       status: "success",
       data: null,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   Box,
@@ -21,7 +21,6 @@ import {
 } from "@mui/material";
 import OtpModal from "../Otp/OtpModal";
 import { UserContext } from "../../UserContext";
-import BaseURL from "../../config";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -46,11 +45,9 @@ const VolunteerSignUpForm = () => {
   const location = useLocation();
   const [roles, setRoles] = useState([]);
 
-  const fetchUserInfo = async (token) => {
+  const fetchUserInfo = async () => {
     try {
-      const response = await axios.get(`${BaseURL}/api/user/userinfo`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axiosInstance.get("/api/user/userinfo");
       if (user) {
         setFormData((prev) => ({
           ...prev,
@@ -66,15 +63,15 @@ const VolunteerSignUpForm = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) fetchUserInfo(token);
+    if (token) fetchUserInfo();
 
-    axios.get(`${BaseURL}/api/volunteerRole/getAllVolunteerRoles`)
+    axiosInstance.get("/api/volunteerRole/getAllVolunteerRoles")
       .then((r) => setRoles(r.data.data.roles))
       .catch((e) => console.error("Error fetching volunteer roles:", e));
 
-    axios.get(`${BaseURL}/api/event/readEvent`)
+    axiosInstance.get("/api/event/readEvent")
       .then((r) => {
-        const futureEvents = r.data
+        const futureEvents = r.data.data.events
           .filter((e) => new Date(e.time) >= new Date())
           .sort((a, b) => new Date(b.time) - new Date(a.time));
         setEvents(futureEvents);
@@ -119,7 +116,7 @@ const VolunteerSignUpForm = () => {
     if (!isEmailVerified) { setVerifyError("Please verify your email before submitting."); return; }
     if (validateForm()) {
       try {
-        await axios.post(`${BaseURL}/api/volunteer/volunteerSignUp`, formData);
+        await axiosInstance.post("/api/volunteer/volunteerSignUp", formData);
         alert("Volunteer signed up successfully!\nPress OK to return to the events page");
         setSubmissionStatus("success");
         navigate("/event");
@@ -140,7 +137,7 @@ const VolunteerSignUpForm = () => {
     e.preventDefault();
     setLoading(true); setVerifyError("");
     try {
-      const response = await axios.post(`${BaseURL}/api/otp/send-otp`, { email: formData.email, source: "volunteer" });
+      const response = await axiosInstance.post("/api/otp/send-otp", { email: formData.email, source: "volunteer" });
       if (response.data.status === "success") setShowOtpModal(true);
       else toast.error(response.data.message);
     } catch (error) {
@@ -153,7 +150,7 @@ const VolunteerSignUpForm = () => {
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${BaseURL}/api/otp/verify-otp`, { email: formData.email, otp });
+      const response = await axiosInstance.post("/api/otp/verify-otp", { email: formData.email, otp });
       if (response.data.status === "success") {
         setIsEmailVerified(true); setShowOtpModal(false); setOtpError("");
         alert("OTP verified successfully!");

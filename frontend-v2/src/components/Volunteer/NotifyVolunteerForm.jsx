@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-quill/dist/quill.snow.css";
-import BaseURL from "../../config";
 import Editor from "../Editor/Editor";
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 import {
   TextField,
   Grid,
@@ -36,9 +35,9 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
   const [eventError, setEventError] = useState("");
 
   useEffect(() => {
-    axios.get(`${BaseURL}/api/event/readEvent`)
+    axiosInstance.get("/api/event/readEvent")
       .then((r) => {
-        const futureEvents = r.data
+        const futureEvents = r.data.data.events
           .filter((e) => new Date(e.time) >= new Date())
           .sort((a, b) => new Date(b.time) - new Date(a.time));
         setEvents(futureEvents);
@@ -66,10 +65,9 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
     const emailArray = emailList.split(",").map((e) => e.trim()).filter(Boolean);
 
     try {
-      const response = await axios.post(
-        `${BaseURL}/api/volunteer/notify-volunteers`,
-        { subject, messageBody, emails: emailArray },
-        { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+      const response = await axiosInstance.post(
+        "/api/volunteer/notify-volunteers",
+        { subject, messageBody, emails: emailArray }
       );
       if (response.status === 200) {
         toast.success("Notification published successfully");
@@ -92,9 +90,7 @@ const NotifyVolunteerForm = ({ open, onClose }) => {
     if (eventId) {
       setEventError("");
       try {
-        const response = await axios.get(`${BaseURL}/api/volunteer/getVolunteersByEventId/${eventId}`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        });
+        const response = await axiosInstance.get(`/api/volunteer/getVolunteersByEventId/${eventId}`);
         const emails = [...new Set(response.data.data.volunteers.map((v) => v.email))].join(", ");
         setEmailList(emails);
         setEmailListError("");

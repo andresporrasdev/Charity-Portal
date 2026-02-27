@@ -10,14 +10,13 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 import EventList from "../components/Event/EventList";
 import AddEditEventForm from "../components/Event/AddEditEventForm";
 import EventDetailModal from "../components/Event/EventDetailModal";
 import { fetchEvents } from "../components/Event/FetchEvent";
 import { UserContext, ROLES } from "../UserContext";
 import ConfirmModal from "../components/ConfirmModal.jsx";
-import BaseURL from "../config";
 
 const EventPage = () => {
   const { user } = useContext(UserContext);
@@ -38,9 +37,9 @@ const EventPage = () => {
   const handleSaveEvent = async (event) => {
     try {
       if (currentEvent?._id) {
-        await axios.patch(`${BaseURL}/api/event/updateEvent/${currentEvent._id}`, event);
+        await axiosInstance.patch(`/api/event/updateEvent/${currentEvent._id}`, event);
       } else {
-        await axios.post(`${BaseURL}/api/event/addEvent`, event);
+        await axiosInstance.post("/api/event/addEvent", event);
       }
       await fetchAndSetEvents();
       setShowModal(false);
@@ -52,7 +51,7 @@ const EventPage = () => {
 
   const confirmEventDeletion = async () => {
     try {
-      await axios.delete(`${BaseURL}/api/event/deleteEvent/${eventToDelete}`);
+      await axiosInstance.delete(`/api/event/deleteEvent/${eventToDelete}`);
       await fetchAndSetEvents();
       setConfirmModalOpen(false);
       setEventToDelete(null);

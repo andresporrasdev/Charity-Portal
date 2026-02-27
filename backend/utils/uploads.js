@@ -1,53 +1,61 @@
 const multer = require("multer");
 const fs = require("fs");
-const path = require("path");
 
-// Directory where files will be uploaded
-const uploadDir = "public/images";
+// ── Image upload (events) ────────────────────────────────────────────────────
+const imageDest = "public/images/events";
+if (!fs.existsSync(imageDest)) fs.mkdirSync(imageDest, { recursive: true });
 
-// Check if the directory exists, if not, create it
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-// Set up storage for uploaded files
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    cb(null, new Date().toISOString().replace(/:/g, "-") + "-" + file.originalname);
-  },
+const imageStorage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, imageDest),
+  filename: (req, file, cb) => cb(null, new Date().toISOString().replace(/:/g, "-") + "-" + file.originalname),
 });
 
-const fileFilter = (req, file, cb) => {
-  // Accept images only
-  if (file.mimetype.startsWith("image")) {
-    cb(null, true);
-  } else {
-    cb(new Error("Not an image! Please upload only images."), false);
-  }
+const imageFileFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith("image")) cb(null, true);
+  else cb(new Error("Not an image! Please upload only images."), false);
 };
 
-// Set up the multer object for filtering file size
-const upload = multer({
-  storage: storage,
-  limits: {
-    fileSize: 1024 * 1024 * 5, // 5MB max file size
-  },
-  fileFilter: fileFilter,
+const uploadImage = multer({
+  storage: imageStorage,
+  limits: { fileSize: 1024 * 1024 * 5 }, // 5 MB
+  fileFilter: imageFileFilter,
 });
 
-// Multer error handling middleware
+// ── Document upload (posts) ──────────────────────────────────────────────────
+const docDest = "public/files/posts";
+if (!fs.existsSync(docDest)) fs.mkdirSync(docDest, { recursive: true });
+
+const docStorage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, docDest),
+  filename: (req, file, cb) => cb(null, new Date().toISOString().replace(/:/g, "-") + "-" + file.originalname),
+});
+
+const docFileFilter = (req, file, cb) => {
+  const allowed = [
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ];
+  if (allowed.includes(file.mimetype)) cb(null, true);
+  else cb(new Error("Not a document! Please upload only PDF, DOC, or DOCX files."), false);
+};
+
+const uploadDocument = multer({
+  storage: docStorage,
+  limits: { fileSize: 1024 * 1024 * 10 }, // 10 MB
+  fileFilter: docFileFilter,
+});
+
+// ── No-file form-data parser ─────────────────────────────────────────────────
+const uploadNone = multer({ storage: multer.memoryStorage() });
+
+// ── Shared error handler ─────────────────────────────────────────────────────
 const multerErrorHandling = (err, req, res, next) => {
   if (err instanceof multer.MulterError) {
-    res.status(400).json({ status: "fail", message: "File size exceeds limit. Max 5MB allowed." });
+    res.status(400).json({ status: "fail", message: "File size exceeds limit." });
   } else {
     next(err);
   }
 };
 
-module.exports = {
-  upload,
-  multerErrorHandling,
-};
+module.exports = { uploadImage, uploadDocument, uploadNone, multerErrorHandling };

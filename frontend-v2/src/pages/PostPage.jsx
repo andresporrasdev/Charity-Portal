@@ -3,9 +3,8 @@ import { Container, Typography, Box, Button } from "@mui/material";
 import PostList from "../components/Post/PostList";
 import AddPostForm from "../components/Post/AddPostForm";
 import UpdatePostForm from "../components/Post/UpdatePostForm";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 import { UserContext, ROLES } from "../UserContext";
-import BaseURL from "../config";
 import ConfirmModal from "../components/ConfirmModal.jsx";
 
 const PostPage = () => {
@@ -18,17 +17,17 @@ const PostPage = () => {
   const [postToDelete, setPostToDelete] = useState(null);
 
   const fetchPostsForNonMember = async () => {
-    const r = await axios.get(`${BaseURL}/api/post/getPostsForNonMember`);
-    return r.data;
+    const r = await axiosInstance.get("/api/post/getPostsForNonMember");
+    return r.data.data.posts;
   };
 
   const fetchPostsByRole = async () => {
-    const r = await axios.post(`${BaseURL}/api/post/getPostByRole`, { roles: user.roles });
-    return r.data;
+    const r = await axiosInstance.post("/api/post/getPostByRole", { roles: user.roles });
+    return r.data.data.posts;
   };
 
   const fetchRoles = async () => {
-    const r = await axios.get(`${BaseURL}/api/role/getAllRoles`);
+    const r = await axiosInstance.get("/api/role/getAllRoles");
     setRoleOptions(r.data.data.roles);
   };
 
@@ -47,8 +46,8 @@ const PostPage = () => {
 
   const handleSavePost = async (post) => {
     try {
-      const response = await axios.post(`${BaseURL}/api/post/addPost`, post);
-      setPosts((prev) => [...prev, response.data]);
+      const response = await axiosInstance.post("/api/post/addPost", post);
+      setPosts((prev) => [...prev, response.data.data.post]);
       await fetchAndSetPosts();
       setShowModal(false);
       setCurrentPost(null);
@@ -59,7 +58,7 @@ const PostPage = () => {
 
   const handleUpdatePost = async (updatedPost) => {
     try {
-      await axios.patch(`${BaseURL}/api/post/updatePost/${currentPost._id}`, updatedPost);
+      await axiosInstance.patch(`/api/post/updatePost/${currentPost._id}`, updatedPost);
       setPosts((prev) => prev.map((p) => (p._id === updatedPost._id ? updatedPost : p)));
       setShowModal(false);
       setCurrentPost(null);
@@ -70,7 +69,7 @@ const PostPage = () => {
 
   const confirmDeletePost = async () => {
     try {
-      await axios.delete(`${BaseURL}/api/post/deletePost/${postToDelete}`);
+      await axiosInstance.delete(`/api/post/deletePost/${postToDelete}`);
       setPosts((prev) => prev.filter((p) => p._id !== postToDelete));
       setConfirmModalOpen(false);
       setPostToDelete(null);

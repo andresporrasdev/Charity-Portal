@@ -12,7 +12,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
-import BaseURL from "../config";
+import axiosInstance from "../utils/axiosInstance";
 
 function ContactUs() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
@@ -27,16 +27,8 @@ function ContactUs() {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await fetch(`${BaseURL}/api/contact/send-contact-email`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      if (response.ok) {
-        setAlert({ message: "Message sent successfully!", type: "success" });
-      } else {
-        setAlert({ message: "Failed to send message.", type: "error" });
-      }
+      await axiosInstance.post("/api/contact/send-contact-email", formData);
+      setAlert({ message: "Message sent successfully!", type: "success" });
     } catch (error) {
       setAlert({ message: "An error occurred while sending the message.", type: "error" });
     } finally {

@@ -3,6 +3,7 @@ const Volunteer = require("../models/volunteerModel");
 const VolunteerRole = require("../models/volunteerRole");
 const { sendEmailWithImageAttachment } = require("./../utils/email");
 const Event = require("../models/event");
+const filterObj = require("../utils/filterObj");
 
 // Mock database for demonstration purposes
 let volunteers = [];
@@ -96,16 +97,6 @@ const getVolunteersByEventId = async (req, res) => {
 // Update volunteer
 const updateVolunteer = async (req, res) => {
   try {
-    const filterObj = (obj, ...allowedFields) => {
-      const newObj = {};
-      Object.keys(obj).forEach((key) => {
-        if (allowedFields.includes(key)) {
-          newObj[key] = obj[key];
-        }
-      });
-      return newObj;
-    };
-
     const filteredBody = filterObj(req.body, "preferredRole");
     const volunteerRole = await VolunteerRole.findOne({ name: filteredBody.preferredRole });
 
@@ -129,7 +120,7 @@ const updateVolunteer = async (req, res) => {
     }
 
     res.status(200).json({
-      status: "Success",
+      status: "success",
       data: {
         user: volunteer,
       },
@@ -154,7 +145,7 @@ const deleteVolunteer = async (req, res) => {
       });
     }
     res.status(200).json({
-      status: "Success",
+      status: "success",
       message: "Volunteer deleted successfully!",
     });
   } catch (error) {

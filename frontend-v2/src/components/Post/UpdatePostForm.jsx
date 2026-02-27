@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import BaseURL from "../../config";
 import "react-quill/dist/quill.snow.css";
 import Editor from "../Editor/Editor";
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 import {
   TextField,
   Grid,
@@ -66,9 +65,7 @@ const UpdatePostForm = ({ post, open, onSave, onCancel, roleOptions }) => {
     formData.append("roles", JSON.stringify(selectedRoles));
 
     try {
-      const response = await axios.patch(`${BaseURL}/api/post/updatePost/${post._id}`, formData, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const response = await axiosInstance.patch(`/api/post/updatePost/${post._id}`, formData);
       if (response.status === 200) {
         toast.success("News updated successfully");
         const updatedPost = {
@@ -95,11 +92,7 @@ const UpdatePostForm = ({ post, open, onSave, onCancel, roleOptions }) => {
     if (roleIds.length > 0) {
       try {
         const responses = await Promise.all(
-          roleIds.map((roleId) =>
-            axios.get(`${BaseURL}/api/user/getUsersByRoleId/${roleId}`, {
-              headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-            })
-          )
+          roleIds.map((roleId) => axiosInstance.get(`/api/user/getUsersByRoleId/${roleId}`))
         );
         const emails = responses
           .flatMap((r) => r.data?.data?.users?.map((m) => m.email) || [])
@@ -120,10 +113,9 @@ const UpdatePostForm = ({ post, open, onSave, onCancel, roleOptions }) => {
     if (selectedRoles.length > 0) {
       const emailArray = emailList.split(",").map((e) => e.trim()).filter(Boolean);
       try {
-        const response = await axios.post(
-          `${BaseURL}/api/post/notify-users`,
-          { emails: emailArray, subject, messageBody: newsBody },
-          { headers: { Authorization: `Bearer ${localStorage.getItem("token")}`, "Content-Type": "application/json" } }
+        const response = await axiosInstance.post(
+          "/api/post/notify-users",
+          { emails: emailArray, subject, messageBody: newsBody }
         );
         if (response.status === 200) toast.success("Emails sent successfully");
         else toast.error(`Error: ${response.data}`);

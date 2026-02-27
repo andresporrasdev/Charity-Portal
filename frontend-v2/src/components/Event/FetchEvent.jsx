@@ -1,10 +1,9 @@
-import axios from "axios";
-import BaseURL from "../../config";
+import axiosInstance from "../../utils/axiosInstance";
 
 export const fetchEvents = async () => {
   try {
-    const response = await axios.get(`${BaseURL}/api/event/readEvent`);
-    return response.data;
+    const response = await axiosInstance.get("/api/event/readEvent");
+    return response.data.data.events;
   } catch (error) {
     console.error("Error fetching events:", error);
     throw error;
