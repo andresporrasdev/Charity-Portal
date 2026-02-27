@@ -121,7 +121,7 @@ exports.notifyUsersAboutPost = async (req, res) => {
 async function handleDocumentUpload(req, res) {
   try {
     const filename = path.basename(req.file.path);
-    const documentUrl = `${serverBaseUrl}:${process.env.SERVER_PORT}/documents/${filename}`;
+    const documentUrl = `${serverBaseUrl}/documents/${filename}`;
     res.status(200).json({
       status: "success",
       message: "Document uploaded successfully",

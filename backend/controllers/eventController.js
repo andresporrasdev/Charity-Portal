@@ -9,7 +9,7 @@ const serverBaseUrl = process.env.SERVER_BASE_URL;
 async function handleFileUpload(req, res) {
   try {
     const filename = path.basename(req.file.path);
-    const imageUrl = `${serverBaseUrl}:${process.env.SERVER_PORT}/images/${filename}`;
+    const imageUrl = `${serverBaseUrl}/images/${filename}`;
     sendSuccess(res, 200, null, { message: "File uploaded successfully", imageUrl });
     console.log("Image uploaded successfully");
   } catch (error) {
