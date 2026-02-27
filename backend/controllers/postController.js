@@ -27,10 +27,20 @@ exports.addPost = [
 // Get all posts with no role restrictions
 exports.getPostsWithEmptyRoles = async (req, res) => {
   try {
-    const posts = await postModel.find({ roles: { $size: 0 } });
-    res.status(200).json({ status: "success", results: posts.length, data: { posts } });
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const limit = Math.max(0, parseInt(req.query.limit, 10) || 0);
+    const skip = limit ? (page - 1) * limit : 0;
+
+    const filter = { roles: { $size: 0 } };
+    const [posts, totalResults] = await Promise.all([
+      postModel.find(filter).sort({ created: -1 }).skip(skip).limit(limit || undefined),
+      postModel.countDocuments(filter),
+    ]);
+
+    const totalPages = limit ? Math.ceil(totalResults / limit) : 1;
+
+    res.status(200).json({ status: "success", results: posts.length, totalResults, totalPages, currentPage: page, data: { posts } });
   } catch (error) {
-    console.error("An error occurred:", error);
     res.status(500).json({ status: "error", message: "An error occurred while fetching posts." });
   }
 };

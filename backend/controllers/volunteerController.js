@@ -5,9 +5,6 @@ const { sendEmailWithImageAttachment } = require("./../utils/email");
 const Event = require("../models/event");
 const filterObj = require("../utils/filterObj");
 
-// Mock database for demonstration purposes
-let volunteers = [];
-
 // Route to handle volunteer sign-up
 const volunteerSignUp = async (req, res) => {
   // Assuming all validations are done in the frontend
@@ -27,38 +24,45 @@ const volunteerSignUp = async (req, res) => {
   }
 };
 
-// Retrieve all volunteers who are associated with upcoming events only.
+// Retrieve all volunteers associated with upcoming events only.
 const getAllVolunteers = async (req, res) => {
   try {
-    const volunteers = await Volunteer.find().populate("preferredRole", "name").populate("event");
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const limit = Math.max(0, parseInt(req.query.limit, 10) || 0);
 
-    const eventIds = volunteers.map((volunteer) => volunteer.event);
+    const allVolunteers = await Volunteer.find().populate("preferredRole", "name").populate("event");
+
+    const eventIds = allVolunteers.map((v) => v.event);
     const events = await Event.find({ _id: { $in: eventIds } });
     const eventMap = {};
-    events.forEach((event) => {
-      eventMap[event._id] = event;
-    });
+    events.forEach((event) => { eventMap[event._id] = event; });
 
     const currentDate = new Date();
 
-    const volunteersWithData = volunteers
-      .filter((volunteer) => {
-        const event = eventMap[volunteer.event._id];
+    const volunteersWithData = allVolunteers
+      .filter((v) => {
+        const event = eventMap[v.event._id];
         return event && new Date(event.time) > currentDate;
       })
-      .map((volunteer) => ({
-        ...volunteer.toObject(),
-        preferredRole: volunteer.preferredRole ? volunteer.preferredRole.name : null,
-        event: volunteer.event ? eventMap[volunteer.event._id].name : null,
+      .map((v) => ({
+        ...v.toObject(),
+        preferredRole: v.preferredRole ? v.preferredRole.name : null,
+        event: v.event ? eventMap[v.event._id].name : null,
       }));
+
+    const totalResults = volunteersWithData.length;
+    const totalPages = limit ? Math.ceil(totalResults / limit) : 1;
+    const paginated = limit ? volunteersWithData.slice((page - 1) * limit, page * limit) : volunteersWithData;
 
     res.status(200).json({
       status: "success",
-      results: volunteersWithData.length,
-      data: { volunteers: volunteersWithData },
+      results: paginated.length,
+      totalResults,
+      totalPages,
+      currentPage: page,
+      data: { volunteers: paginated },
     });
   } catch (error) {
-    // Handle errors
     res.status(500).json({
       status: "error",
       message: "Error getting volunteers",

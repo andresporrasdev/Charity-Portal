@@ -31,10 +31,19 @@ exports.addEvent = async (req, res) => {
 
 exports.getAllEvents = async (req, res) => {
   try {
-    const events = await Event.find({});
-    sendSuccess(res, 200, { events }, { results: events.length });
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const limit = Math.max(0, parseInt(req.query.limit, 10) || 0); // 0 = no limit
+    const skip = limit ? (page - 1) * limit : 0;
+
+    const [events, totalResults] = await Promise.all([
+      Event.find({}).skip(skip).limit(limit || undefined),
+      Event.countDocuments({}),
+    ]);
+
+    const totalPages = limit ? Math.ceil(totalResults / limit) : 1;
+
+    sendSuccess(res, 200, { events }, { results: events.length, totalResults, totalPages, currentPage: page });
   } catch (error) {
-    console.error("An error occurred:", error);
     sendError(res, "An error occurred while fetching events.");
   }
 };

@@ -5,6 +5,7 @@ import Nav from "./components/Navbar/Nav";
 import Footer from "./components/Footer/Footer";
 import { UserProvider } from "./UserContext";
 import ProtectedRoute from "./router/ProtectedRoute";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 import Home from "./pages/Home";
 import EventPage from "./pages/EventPage";
@@ -27,50 +28,52 @@ function App() {
   return (
     <Router>
       <UserProvider>
-        <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-          <Nav />
-          <Box component="main" sx={{ flexGrow: 1 }}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/event" element={<EventPage />} />
-              <Route path="/past-events" element={<PastEventPage />} />
-              <Route path="/membership" element={<Membership />} />
-              <Route path="/volunteer" element={<Volunteer />} />
-              <Route path="/news" element={<PostPage />} />
-              <Route path="/contact-us" element={<ContactUs />} />
-              <Route path="/gallery" element={<Gallery />} />
-              <Route path="/login" element={<LoginForm />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-              <Route path="/policy" element={<Policy />} />
-              <Route
-                path="/member-manage"
-                element={
-                  <ProtectedRoute requireAdmin>
-                    <MemberManagePage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/volunteer-manage"
-                element={
-                  <ProtectedRoute requireAdmin>
-                    <VolunteerManagePage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/add-news"
-                element={
-                  <ProtectedRoute requireAdmin>
-                    <AddPostForm standalone />
-                  </ProtectedRoute>
-                }
-              />
-            </Routes>
+        <ErrorBoundary>
+          <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+            <Nav />
+            <Box component="main" sx={{ flexGrow: 1 }}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/event" element={<EventPage />} />
+                <Route path="/past-events" element={<PastEventPage />} />
+                <Route path="/membership" element={<Membership />} />
+                <Route path="/volunteer" element={<Volunteer />} />
+                <Route path="/news" element={<PostPage />} />
+                <Route path="/contact-us" element={<ContactUs />} />
+                <Route path="/gallery" element={<Gallery />} />
+                <Route path="/login" element={<LoginForm />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+                <Route path="/policy" element={<Policy />} />
+                <Route
+                  path="/member-manage"
+                  element={
+                    <ProtectedRoute requireAdmin>
+                      <MemberManagePage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/volunteer-manage"
+                  element={
+                    <ProtectedRoute requireAdmin>
+                      <VolunteerManagePage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/add-news"
+                  element={
+                    <ProtectedRoute requireAdmin>
+                      <AddPostForm standalone />
+                    </ProtectedRoute>
+                  }
+                />
+              </Routes>
+            </Box>
+            <Footer />
           </Box>
-          <Footer />
-        </Box>
+        </ErrorBoundary>
       </UserProvider>
     </Router>
   );

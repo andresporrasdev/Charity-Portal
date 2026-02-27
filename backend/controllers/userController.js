@@ -122,24 +122,31 @@ exports.getUserInfo = async (req, res) => {
 
 exports.getAllUsers = async (req, res) => {
   try {
-    //Populate the roles field to fetch role names
-    const query = User.find().populate("roles", "name");
-    // Create the query and set the custom flag to disable the isActive filter
-    query._activeFilterDisabled = true;
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const limit = Math.max(0, parseInt(req.query.limit, 10) || 0);
+    const skip = limit ? (page - 1) * limit : 0;
 
-    // Execute the query and convert Mongoose documents to plain JavaScript objects
-    const users = await query.lean();
+    const countQuery = User.countDocuments();
+    countQuery._activeFilterDisabled = true;
 
-    //const users = await User.find().populate("roles", "name");
+    const fetchQuery = User.find().populate("roles", "name").skip(skip).limit(limit || undefined);
+    fetchQuery._activeFilterDisabled = true;
+
+    const [users, totalResults] = await Promise.all([fetchQuery.lean(), countQuery]);
 
     const usersWithRoleNames = users.map((user) => ({
       ...user,
       roles: user.roles.map((role) => role.name),
     }));
 
+    const totalPages = limit ? Math.ceil(totalResults / limit) : 1;
+
     res.status(200).json({
       status: "success",
       results: usersWithRoleNames.length,
+      totalResults,
+      totalPages,
+      currentPage: page,
       data: { users: usersWithRoleNames },
     });
   } catch (error) {
