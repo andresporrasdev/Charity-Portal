@@ -92,7 +92,7 @@ const AddPostForm = ({ open, onSave, onCancel, roleOptions: propRoleOptions, sta
         else await axiosInstance.post("/api/post/addPost", formData);
         toast.success("News published!");
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to publish news. Please try again later.");
     } finally {
       setLoading(false);

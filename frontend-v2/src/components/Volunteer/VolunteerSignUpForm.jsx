@@ -40,7 +40,6 @@ const VolunteerSignUpForm = () => {
     event: "", parentName: "", agreePolicies: false, understandUnpaid: false,
   });
   const [errors, setErrors] = useState({});
-  const [submissionStatus, setSubmissionStatus] = useState("");
   const [events, setEvents] = useState([]);
   const location = useLocation();
   const [roles, setRoles] = useState([]);
@@ -118,11 +117,9 @@ const VolunteerSignUpForm = () => {
       try {
         await axiosInstance.post("/api/volunteer/volunteerSignUp", formData);
         alert("Volunteer signed up successfully!\nPress OK to return to the events page");
-        setSubmissionStatus("success");
         navigate("/event");
       } catch (error) {
         console.error("Error signing up volunteer:", error);
-        setSubmissionStatus("fail");
       }
     }
   };

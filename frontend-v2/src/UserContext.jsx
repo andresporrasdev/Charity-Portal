@@ -8,31 +8,29 @@ export const UserProvider = ({ children }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      fetchUserInfo();
-    }
-  }, []);
-
   const fetchUserInfo = async () => {
     try {
       const response = await axiosInstance.get("/api/user/userinfo");
       if (response.data.status === "success") {
         const userData = response.data.data.user;
         setUser(userData);
-        console.log("fetchUserInfo:success");
       } else {
-        console.error("Failed to fetch user info:", response.data.message);
         logout();
       }
     } catch (error) {
-      console.error("Error fetching user info:", error);
       if (error.response && error.response.data.message === "Token expired. Please login again.") {
         logout();
       }
     }
   };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      fetchUserInfo();
+    }
+  }, []);
 
   const login = (userData) => {
     setUser(userData);

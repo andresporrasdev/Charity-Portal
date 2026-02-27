@@ -105,7 +105,7 @@ const updateVolunteer = async (req, res) => {
     const volunteerRole = await VolunteerRole.findOne({ name: filteredBody.preferredRole });
 
     if (!volunteerRole) {
-      throw new Error(`Role not found: ${filteredBody.preferredRoleName}`);
+      throw new Error(`Role not found: ${filteredBody.preferredRole}`);
     }
 
     const update = { preferredRole: volunteerRole._id };
@@ -126,7 +126,7 @@ const updateVolunteer = async (req, res) => {
     res.status(200).json({
       status: "success",
       data: {
-        user: volunteer,
+        volunteer,
       },
     });
   } catch (error) {

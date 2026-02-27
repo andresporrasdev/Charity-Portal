@@ -50,7 +50,7 @@ export const isSafeRedirectUrl = (url) => {
 
     // Reject external URLs
     return false;
-  } catch (e) {
+  } catch {
     // If URL parsing fails, it's not safe
     return false;
   }

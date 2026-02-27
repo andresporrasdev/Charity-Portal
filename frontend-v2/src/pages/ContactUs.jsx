@@ -29,7 +29,7 @@ function ContactUs() {
     try {
       await axiosInstance.post("/api/contact/send-contact-email", formData);
       setAlert({ message: "Message sent successfully!", type: "success" });
-    } catch (error) {
+    } catch {
       setAlert({ message: "An error occurred while sending the message.", type: "error" });
     } finally {
       setLoading(false);

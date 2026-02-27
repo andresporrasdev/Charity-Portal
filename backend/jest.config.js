@@ -1,6 +1,7 @@
 /** @type {import('jest').Config} */
 module.exports = {
   testEnvironment: "node",
+  setupFiles: ["./jest.setup.js"], // set required env vars before any test module loads
   testMatch: ["**/__tests__/**/*.test.js"],
   coverageDirectory: "coverage",
   collectCoverageFrom: [

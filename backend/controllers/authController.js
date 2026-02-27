@@ -241,13 +241,16 @@ exports.forgetPassword = async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   //3. send the token back to the user email
-  const resetUrl = `${serverBaseUrl}:${process.env.CLIENT_PORT}/reset-password/${resetToken}`; // currently we use this url for testing purpose
-  const message = `We have received a password reset request. Please use the below link to reset password\n\n${resetUrl}\n\nThis reset password link will be valid only for 10mins.`;
+  const clientPort = process.env.CLIENT_PORT;
+  const resetUrl = clientPort
+    ? `${serverBaseUrl}:${clientPort}/reset-password/${resetToken}`
+    : `${serverBaseUrl}/reset-password/${resetToken}`;
+  const message = `We have received a password reset request. Please use the below link to reset password\n\n${resetUrl}\n\nThis reset password link will be valid only for 10 minutes.`;
 
   try {
     await sendEmail({
       email: user.email,
-      subject: "Password change request recieved",
+      subject: "Password change request received",
       text: message,
     });
 

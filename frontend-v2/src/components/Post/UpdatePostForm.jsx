@@ -81,7 +81,7 @@ const UpdatePostForm = ({ post, open, onSave, onCancel, roleOptions }) => {
       } else {
         toast.error(`Error: ${response.data}`);
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to update news. Please try again later.");
     }
   };

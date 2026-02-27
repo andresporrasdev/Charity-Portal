@@ -185,7 +185,7 @@ exports.getUsersByRoleId = async (req, res) => {
 exports.updateUser = async (req, res) => {
   // check if request data contain password
   if (req.body.password) {
-    res.status(400).json({
+    return res.status(400).json({
       status: "fail",
       message: "You can't update password using this endpoint.",
     });
