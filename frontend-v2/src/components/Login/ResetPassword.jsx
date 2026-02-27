@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 import {
   Box,
   Button,
@@ -14,7 +14,6 @@ import {
   Link,
 } from "@mui/material";
 import { Visibility, VisibilityOff, Lock } from "@mui/icons-material";
-import BaseURL from "../../config";
 import { getSafeRedirectUrl } from "../../utils/urlValidation";
 
 const ResetPassword = ({ token }) => {
@@ -54,7 +53,7 @@ const ResetPassword = ({ token }) => {
     e.preventDefault();
     if (validate()) {
       try {
-        const response = await axios.patch(`${BaseURL}/api/auth/resetPassword/${token}`, { password, confirmPassword });
+        const response = await axiosInstance.patch(`/api/auth/resetPassword/${token}`, { password, confirmPassword });
         if (response.data.status === "success") {
           setErrorMessage(""); setSuccessMessage(response.data.message);
           setRedirectUrl(response.data.redirectUrl);

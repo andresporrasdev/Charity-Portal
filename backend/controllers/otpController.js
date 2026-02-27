@@ -45,6 +45,11 @@ const sendOTPByEmail = async (email, otp) => {
 
 exports.sendOtp = async (req, res) => {
   const { email, source } = req.body;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email || !emailRegex.test(email))
+    return res.status(400).json({ status: "fail", message: "Valid email is required." });
+  if (!["register", "volunteer"].includes(source))
+    return res.status(400).json({ status: "fail", message: "Invalid source." });
   try {
     let existingUser;
 
@@ -113,6 +118,10 @@ exports.sendOtp = async (req, res) => {
 
 exports.verifyOtp = async (req, res) => {
   const { email, otp } = req.body;
+  if (!email || !otp)
+    return res.status(400).json({ status: "fail", message: "Email and OTP are required." });
+  if (!/^\d{6}$/.test(otp))
+    return res.status(400).json({ status: "fail", message: "OTP must be a 6-digit number." });
   try {
     const otpRecord = await Otp.findOne({ email, otp });
 

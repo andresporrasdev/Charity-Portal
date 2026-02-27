@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 import {
   Box,
   Button,
@@ -17,7 +17,6 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff, Lock, Email } from "@mui/icons-material";
 import OtpModal from "../Otp/OtpModal";
-import BaseURL from "../../config";
 import { getSafeRedirectUrl } from "../../utils/urlValidation";
 
 const Register = () => {
@@ -52,7 +51,7 @@ const Register = () => {
     if (!isValidEmail(email)) { setEmailError("Please enter a valid email address."); return; }
     setLoading(true);
     try {
-      const response = await axios.post(`${BaseURL}/api/otp/send-otp`, { email, source: "register" });
+      const response = await axiosInstance.post("/api/otp/send-otp", { email, source: "register" });
       if (response.data.status === "success") {
         setShowOtpModal(true);
       } else if (response.data.status === "fail") {
@@ -69,7 +68,7 @@ const Register = () => {
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${BaseURL}/api/otp/verify-otp`, { email, otp });
+      const response = await axiosInstance.post("/api/otp/verify-otp", { email, otp });
       if (response.data.status === "success") {
         setOtpError(""); setAdditionalFieldsVisible(true); setShowOtpModal(false);
       } else {
@@ -84,7 +83,7 @@ const Register = () => {
     if (!isValidPassword(password)) return;
     if (password !== confirmPassword) return;
     try {
-      const response = await axios.post(`${BaseURL}/api/auth/signup`, { email, password });
+      const response = await axiosInstance.post("/api/auth/signup", { email, password });
       if (response.data.status === "success") {
         setSignupMessage("Successfully signed up! Redirecting to login page...");
         setRedirectUrl(response.data.redirectUrl);

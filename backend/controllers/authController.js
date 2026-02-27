@@ -48,6 +48,10 @@ const signToken = (email) => {
 
 exports.signup = async (req, res) => {
   const { email, password } = req.body;
+  if (!email || !password)
+    return res.status(400).json({ status: "fail", message: "Email and password are required." });
+  if (password.length < 6)
+    return res.status(400).json({ status: "fail", message: "Password must be at least 6 characters." });
   try {
     const query = User.findOne({ email });
     query._activeFilterDisabled = true;
@@ -82,7 +86,7 @@ exports.login = async (req, res) => {
   const { email, password } = req.body;
   // If email or password is missing
   if (!email || !password) {
-    return res.status(400).json({ message: "Please provide both email and password." });
+    return res.status(400).json({ status: "fail", message: "Please provide both email and password." });
   }
 
   try {
@@ -275,6 +279,11 @@ exports.resetPassword = async (req, res, next) => {
       message: "Token is invalid or has expired",
     });
   }
+
+  if (!req.body.password)
+    return res.status(400).json({ status: "fail", message: "Password is required." });
+  if (req.body.password.length < 6)
+    return res.status(400).json({ status: "fail", message: "Password must be at least 6 characters." });
 
   const encryptedPassword = await encryptPassword(req.body.password);
 

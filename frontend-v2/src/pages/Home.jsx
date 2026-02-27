@@ -11,8 +11,7 @@ import {
 import { fetchEvents } from "../components/Event/FetchEvent";
 import EventList from "../components/Event/EventList";
 import PostList from "../components/Post/PostList";
-import BaseURL from "../config";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 import home1 from "../assets/home1.jpg";
 import home2 from "../assets/home2.jpg";
 
@@ -46,10 +45,10 @@ function Home() {
   }, []);
 
   useEffect(() => {
-    axios
-      .get(`${BaseURL}/api/post/getPostsForNonMember`)
+    axiosInstance
+      .get("/api/post/getPostsForNonMember")
       .then((r) => {
-        setPosts(r.data.slice(-3).reverse());
+        setPosts(r.data.data.posts.slice(-3).reverse());
         setLoadingPosts(false);
       })
       .catch(() => { setPosts([]); setLoadingPosts(false); });
