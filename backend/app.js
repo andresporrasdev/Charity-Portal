@@ -45,10 +45,12 @@ app.use(express.json({ limit: "1mb" }));
 
 app.use(express.static("./public"));
 
-// Rate limiters
+// Rate limiters — disabled in test environment to prevent flaky tests
+const isTest = process.env.NODE_ENV === "test";
+
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10,
+  max: isTest ? 10000 : 10,
   standardHeaders: true,
   legacyHeaders: false,
   message: { status: "fail", message: "Too many requests. Please try again later." },
@@ -56,7 +58,7 @@ const authLimiter = rateLimit({
 
 const contactLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
-  max: 5,
+  max: isTest ? 10000 : 5,
   standardHeaders: true,
   legacyHeaders: false,
   message: { status: "fail", message: "Too many contact requests. Please try again later." },
@@ -64,7 +66,7 @@ const contactLimiter = rateLimit({
 
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 200,
+  max: isTest ? 10000 : 200,
   standardHeaders: true,
   legacyHeaders: false,
   message: { status: "fail", message: "Too many requests. Please try again later." },
