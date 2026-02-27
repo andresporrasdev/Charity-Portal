@@ -42,7 +42,8 @@ const EditVolunteerForm = ({ volunteer, roleOptions, onUpdateVolunteer, onClose 
 
   const handleRoleChange = (event) => {
     const { target: { value } } = event;
-    const selectedRoleName = roleOptions.find((role) => role.name === value).name;
+    const found = roleOptions.find((role) => role.name === value);
+    const selectedRoleName = found ? found.name : "";
     setRoleName(selectedRoleName);
     setEditedUser((prev) => ({ ...prev, preferredRole: selectedRoleName }));
   };

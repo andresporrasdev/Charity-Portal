@@ -152,13 +152,14 @@ exports.getAllUsers = async (req, res) => {
 // Route to get users by role ID
 exports.getUsersByRoleId = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.roleId)) {
+      return res.status(400).json({ status: "fail", message: "Invalid role ID." });
+    }
     const users = await User.find({ roles: { $in: [req.params.roleId] } }).populate("roles", "name");
-    console.log("got it?");
     const usersWithRoleNames = users.map((user) => ({
       ...user.toObject(),
       roles: user.roles.map((role) => role.name),
     }));
-    console.log("usersWithRoleNames:", usersWithRoleNames);
 
     res.status(200).json({
       status: "success",
@@ -199,14 +200,14 @@ exports.updateUser = async (req, res) => {
     if (filteredBody.roles && Array.isArray(filteredBody.roles)) {
       filteredBody.roles = filteredBody.roles.map((role) => {
         if (mongoose.Types.ObjectId.isValid(role)) {
-          return mongoose.Types.ObjectId(role);
+          return new mongoose.Types.ObjectId(role);
         } else {
           throw new Error(`Invalid ObjectId: ${role}`);
         }
       });
     }
 
-    const updateUser = await User.findByIdAndUpdate(req.params.id, filteredBody, { runValidators: true, new: true });
+    const updateUser = await User.findByIdAndUpdate(req.params.id, filteredBody, { runValidators: true, new: true }).select("-password");
 
     if (!updateUser) {
       return res.status(404).json({

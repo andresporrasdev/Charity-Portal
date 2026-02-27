@@ -7,6 +7,6 @@ export const fetchEvents = async () => {
     return response.data;
   } catch (error) {
     console.error("Error fetching events:", error);
-    return [];
+    throw error;
   }
 };

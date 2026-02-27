@@ -1,7 +1,4 @@
-const express = require('express');
-const router = express.Router();
 const mongoose = require('mongoose');
-const { purge } = require('../app');
 // Define Schema
 const eventSchema = new mongoose.Schema({
     name: String,

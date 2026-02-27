@@ -93,7 +93,7 @@ exports.login = async (req, res) => {
 
     if (!existingUser) {
       // user didn't buy membership, so doesn't exist in db
-      return res.status(200).json({
+      return res.status(401).json({
         status: "fail",
         message: "User doesn't exist. Please purchase a membership and sign up.",
         link: "/membership",
@@ -104,21 +104,21 @@ exports.login = async (req, res) => {
     if (existingUser.password) {
       const passwordMatch = await existingUser.comparePassword(password);
       if (!passwordMatch) {
-        return res.status(200).json({
+        return res.status(401).json({
           status: "fail",
           message: "Password doesn't match. Please try again.",
         });
       }
 
       if (!existingUser.isActive && !existingUser.isPaid) {
-        return res.status(200).json({
+        return res.status(403).json({
           status: "fail",
           message: "Your membership is expired. Please renew your membership to login.",
           link: "/membership",
         });
       }
     } else {
-      return res.status(200).json({
+      return res.status(403).json({
         status: "fail",
         message: "You already paid for our membership. Please sign up before logging in.",
       });
@@ -126,12 +126,14 @@ exports.login = async (req, res) => {
 
     const token = signToken(email);
 
-    console.log("token from login: ", token);
+    const user = existingUser.toObject();
+    delete user.password;
+
     return res.status(200).json({
       status: "success",
       message: "Login successful",
       token,
-      existingUser,
+      existingUser: user,
       redirectUrl: getSafeRedirectUrl("/"),
     });
   } catch (error) {
@@ -159,7 +161,6 @@ exports.protect = async (req, res, next) => {
   try {
     //2. validate the token
     const decodedToken = await util.promisify(jwt.verify)(token, process.env.SECRET_STR);
-    console.log("decodedToken: ", decodedToken);
 
     //3. If the user exists
     const user = await User.findOne({ email: decodedToken.email });
@@ -254,7 +255,7 @@ exports.forgetPassword = async (req, res, next) => {
     console.error("Error sending reset password email:", error);
     user.passwordResetToken = undefined;
     user.passwordResetTokenExpire = undefined;
-    user.save({ validateFromSave: false });
+    user.save({ validateBeforeSave: false });
 
     return res.status(500).json({
       status: "fail",

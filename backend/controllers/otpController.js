@@ -1,17 +1,18 @@
+const crypto = require("crypto");
 const Otp = require("../models/otp");
 const User = require("../models/user");
 const { sendEmail } = require("./../utils/email");
 
 const generateNumericOTP = (length) => {
   let otp = "";
+  // crypto.randomInt is cryptographically secure, unlike Math.random()
   for (let i = 0; i < length; i++) {
-    otp += Math.floor(Math.random() * 10);
+    otp += crypto.randomInt(0, 10).toString();
   }
   return otp;
 };
 
 const sendOTPByEmail = async (email, otp) => {
-  console.log("Sending OTP to:", email);
   const mailOptions = {
     email: email,
     subject: "Verify your email address to register OTS",
@@ -38,17 +39,13 @@ const sendOTPByEmail = async (email, otp) => {
     return otp;
   } catch (error) {
     console.error("Error sending OTP by email:", error);
-    return res.status(500).json({
-      status: "error",
-      message: "An error occurred while processing the request",
-    });
+    throw error;
   }
 };
 
 exports.sendOtp = async (req, res) => {
   const { email, source } = req.body;
   try {
-    //const existingUser = await User.findOne({ email });
     let existingUser;
 
     const sendOtpAndRespond = async () => {
@@ -60,16 +57,15 @@ exports.sendOtp = async (req, res) => {
         status: "success",
         message: "Sent a verification code successfully",
         data: existingUser,
-        otp: otp,
+        // otp field intentionally omitted — never send OTP to client
       });
     };
 
     if (source === "volunteer") {
-      // Logic specific to volunteer sign up page
       existingUser = await User.findOne({ email });
 
       if (existingUser && existingUser.isActive && existingUser.password) {
-        return res.status(200).json({
+        return res.status(400).json({
           status: "fail",
           message: "User already exists. Please login with your credential.",
           data: existingUser,
@@ -78,41 +74,31 @@ exports.sendOtp = async (req, res) => {
         return await sendOtpAndRespond();
       }
     } else if (source === "register") {
-      // Logic specific to register page
-      console.log("Register page");
       const query = User.findOne({ email });
       query._activeFilterDisabled = true;
       existingUser = await query.lean();
 
       if (existingUser && existingUser.isActive && existingUser.password) {
-        console.log("Register page2");
-
-        return res.status(200).json({
+        return res.status(400).json({
           status: "fail",
           message: "User already exists. Please login with your credential.",
           data: existingUser,
         });
       } else if (existingUser && existingUser.isPaid === false) {
-        console.log("Register page3");
-
-        return res.status(200).json({
+        return res.status(400).json({
           status: "fail",
           message: "Please purchase membership again to renew your membership.",
           data: existingUser,
           link: "/membership",
         });
       } else if (!existingUser) {
-        console.log("Register page4");
-
-        return res.status(200).json({
+        return res.status(400).json({
           status: "fail",
           message: "Please purchase a membership to become a member before signing up.",
           data: existingUser,
           link: "/membership",
         });
       } else {
-        console.log("Register page5");
-
         return await sendOtpAndRespond();
       }
     }
@@ -131,7 +117,7 @@ exports.verifyOtp = async (req, res) => {
     const otpRecord = await Otp.findOne({ email, otp });
 
     if (!otpRecord) {
-      return res.status(200).json({
+      return res.status(400).json({
         status: "fail",
         message: "Invalid OTP. Please try again",
       });

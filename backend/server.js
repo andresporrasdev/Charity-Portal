@@ -21,7 +21,8 @@ mongoose
     await createDummyPost(); // Call a function to create a dummy post
   })
   .catch((error) => {
-    console.log("Some error has occured");
+    console.error("Failed to connect to MongoDB:", error.message);
+    process.exit(1);
   });
 
 async function initializeDatabase() {

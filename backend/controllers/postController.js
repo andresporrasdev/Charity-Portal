@@ -18,18 +18,14 @@ exports.addPost = [
   upload.none(), // Use multer to parse form-data without file uploads
   async (req, res) => {
     const { content, subject, roles = "" } = req.body;
-    console.log("content:", content);
-    console.log("subject:", subject);
-    //   console.log('roles:', roles);
 
     // Convert roles from string to array of ObjectId
-    const rolesArray = roles ? roles.split(",").map((role) => mongoose.Types.ObjectId(role.trim())) : [];
+    const rolesArray = roles ? roles.split(",").map((role) => new mongoose.Types.ObjectId(role.trim())) : [];
 
     const post = new postModel({ content, subject, roles: rolesArray });
 
     try {
       const savedPost = await post.save();
-      console.log("Post saved successfully", savedPost);
       res.status(200).json(savedPost);
     } catch (err) {
       res.status(400).json({ message: err.message });
@@ -61,7 +57,6 @@ exports.updatePost = async (req, res) => {
       return res.status(404).json({ message: "Post not found to update." });
     }
     res.status(200).json(updatedPost);
-    console.log("Post updated successfully", updatedPost);
   } catch (error) {
     res.status(500).json({ message: "An error occurred while updating the post." });
   }
@@ -70,7 +65,6 @@ exports.updatePost = async (req, res) => {
 //Delete a post
 
 exports.deletePost = async (req, res) => {
-  console.log("Request from delete API ", req);
   const postId = req.params.id;
 
   try {
@@ -183,12 +177,10 @@ async function handleFileUpload(req, res) {
     res.status(200).json({
       status: "success",
       message: "File uploaded successfully",
-      imageUrl: imageUrl, // Updated to use the new URL
+      imageUrl: imageUrl,
     });
-    console.log("Image uploaded successfully");
   } catch (error) {
     res.status(500).json({ status: "error", message: error.message });
-    console.log("Error uploading image");
   }
 }
 
@@ -211,7 +203,7 @@ if (!fs.existsSync(uploadDirFiles)) {
 // Set up storage for uploaded documents
 const documentStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, uploadDocDir); // Use the document uploads directory
+    cb(null, uploadDirFiles); // Use the document uploads directory
   },
   filename: function (req, file, cb) {
     cb(null, new Date().toISOString().replace(/:/g, "-") + "-" + file.originalname); // Create a unique filename
@@ -251,10 +243,8 @@ async function handleDocumentUpload(req, res) {
       message: "Document uploaded successfully",
       documentUrl: documentUrl,
     });
-    console.log("Document uploaded successfully");
   } catch (error) {
     res.status(500).json({ status: "error", message: error.message });
-    console.log("Error uploading document");
   }
 }
 

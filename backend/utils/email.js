@@ -13,7 +13,7 @@ const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const REDIRECT_URI = process.env.REDIRECT_URI;
 const SENDING_ADDRESS = process.env.SENDING_ADDRESS;
-let REFRESH_TOKEN = process.env.REFRESH_TOKEN;
+const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
 
 const oauth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
 
@@ -54,16 +54,12 @@ const sendEmail = async (options) => {
       };
 
       const result = await transport.sendMail(mailOptions);
-      console.log("Email sent:", result);
       results.push(result);
     }
     return results;
   } catch (error) {
     console.error("Error sending email:", error);
-    return res.status(500).json({
-      status: "error",
-      message: "An error occurred while processing the request",
-    });
+    throw error;
   }
 };
 

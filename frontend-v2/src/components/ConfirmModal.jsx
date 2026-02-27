@@ -1,18 +1,20 @@
 import React, { useState } from "react";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
 
 const ConfirmModal = ({ title, text, open, onConfirm, onClose, confirmWord }) => {
   const [inputValue, setInputValue] = useState("");
+  const [error, setError] = useState("");
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
+    if (error) setError("");
   };
 
   const handleConfirm = () => {
     if (inputValue === confirmWord) {
       onConfirm();
     } else {
-      alert("The confirmation word does not match.");
+      setError("The confirmation word does not match.");
     }
   };
 
@@ -26,6 +28,7 @@ const ConfirmModal = ({ title, text, open, onConfirm, onClose, confirmWord }) =>
       <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">{text}</DialogContentText>
+        {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
         <TextField
           label={`Type "${confirmWord}" to confirm`}
           variant="outlined"
