@@ -3,6 +3,8 @@ const helmet = require("helmet");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const rateLimit = require("express-rate-limit");
+const swaggerUi = require("swagger-ui-express");
+const swaggerJsdoc = require("swagger-jsdoc");
 
 const userRouter = require("./routes/user");
 const authRouter = require("./routes/auth");
@@ -75,9 +77,41 @@ const generalLimiter = rateLimit({
 // Apply general limiter globally
 app.use(generalLimiter);
 
+// Swagger / OpenAPI docs
+const swaggerSpec = swaggerJsdoc({
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Charity Portal API",
+      version: "1.0.0",
+      description:
+        "REST API for the Charity Portal — manages events, posts, members, volunteers, and contact emails.",
+    },
+    servers: [{ url: "/api", description: "API base path" }],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
+  },
+  apis: ["./routes/*.js"], // JSDoc annotations live in route files
+});
+
+// Relax helmet's CSP for the Swagger UI page only
+app.use(
+  "/api/docs",
+  helmet({ contentSecurityPolicy: false }),
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, { explorer: true })
+);
+
 // Health check (used by Render + CI)
 app.get("/api/health", (req, res) => {
-  res.status(200).json({ status: "ok" });
+  res.status(200).json({ status: "ok", uptime: process.uptime(), environment: process.env.NODE_ENV || "development" });
 });
 
 // Routes

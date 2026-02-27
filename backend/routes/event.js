@@ -3,6 +3,23 @@ const eventController = require("../controllers/eventController");
 const authController = require("../controllers/authController");
 const router = express.Router();
 
+/**
+ * @swagger
+ * /event/readEvent:
+ *   get:
+ *     summary: Get all events (public)
+ *     tags: [Events]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema: { type: integer, default: 1 }
+ *       - in: query
+ *         name: limit
+ *         schema: { type: integer, default: 0, description: "0 = return all" }
+ *     responses:
+ *       200:
+ *         description: List of events with pagination metadata
+ */
 // Public routes
 router.get("/readEvent", eventController.getAllEvents);
 router.get("/getEventById/:id", eventController.getEventById);
