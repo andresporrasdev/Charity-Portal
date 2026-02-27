@@ -1,6 +1,8 @@
 // CONNECT DATABASE
 const dotenv = require("dotenv");
 dotenv.config(); // load environment variables from .env file
+const validateEnv = require("./utils/validateEnv");
+validateEnv(); // fail fast if required vars are missing
 const mongoose = require("mongoose");
 const app = require("./app");
 const { updateUserStatuses, saveAllUsersToDBFromMockFile } = require("./controllers/userController");
