@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
 const Role = require("../models/role");
 const VolunteerRole = require("../models/volunteerRole");
+const Event = require("../models/event");
 const Post = require("../models/postModel");
 const { seedEvents } = require("./seedEvents");
 
@@ -58,11 +58,9 @@ async function initializeVolunteerRoles() {
 
 async function initializeDatabase() {
   try {
-    const collections = await mongoose.connection.db.listCollections().toArray();
-    const collectionNames = collections.map((col) => col.name);
-
-    if (!collectionNames.includes("events")) {
-      console.log("No events collection found, seeding charity events...");
+    const eventCount = await Event.countDocuments();
+    if (eventCount === 0) {
+      console.log("No events found, seeding charity events...");
       await seedEvents();
     }
   } catch (error) {
