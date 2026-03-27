@@ -58,6 +58,11 @@ exports.saveAllUsersToDBFromMockFile = async () => {
     // const users = await getUserDataFromEventBrite(eventId);
     const role = await Role.findOne({ name: "Member" });
 
+    if (!role) {
+      console.warn("Member role not found — skipping user seed.");
+      return;
+    }
+
     if (users.length > 0) {
       for (const user of users) {
         const query = User.findOne({ email: user.email });
