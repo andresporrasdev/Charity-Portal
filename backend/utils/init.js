@@ -1,8 +1,8 @@
-const mongoose = require("mongoose");
 const Role = require("../models/role");
 const VolunteerRole = require("../models/volunteerRole");
 const Event = require("../models/event");
 const Post = require("../models/postModel");
+const { seedEvents } = require("./seedEvents");
 
 async function initializeRoles() {
   const roles = [
@@ -58,32 +58,14 @@ async function initializeVolunteerRoles() {
 
 async function initializeDatabase() {
   try {
-    const collections = await mongoose.connection.db.listCollections().toArray();
-    const collectionNames = collections.map((col) => col.name);
-
-    if (!collectionNames.includes("events")) {
-      console.log("No events collection found, creating a default event...");
-      await createDummyEvent();
+    const eventCount = await Event.countDocuments();
+    if (eventCount === 0) {
+      console.log("No events found, seeding charity events...");
+      await seedEvents();
     }
   } catch (error) {
     console.error("Error initializing database:", error);
   }
-}
-
-async function createDummyEvent() {
-  const dummyEvent = new Event({
-    name: "Sample Event",
-    description: "This is a sample event.",
-    time: "2024-06-05T16:46",
-    place: "Main Hall",
-    pricePublic: "10",
-    priceMember: "5",
-    isMemberOnly: false,
-    imageUrl: "/image/EventImage/event1.png",
-    purchaseURL: "https://www.eventbrite.ca/",
-  });
-  await dummyEvent.save();
-  console.log("Dummy event created successfully!");
 }
 
 async function createDummyPost() {
